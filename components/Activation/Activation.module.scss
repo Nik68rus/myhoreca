@@ -1,0 +1,16 @@
+.message {
+  max-width: 400px;
+  margin: 0 auto;
+  margin-top: 40px;
+
+  p {
+    margin: 0;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 40px;
+}

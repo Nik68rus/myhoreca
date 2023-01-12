@@ -8,14 +8,13 @@ import {
 } from 'sequelize';
 import { UserRole } from '../types/user';
 
-import db from './index';
-
 export interface IUser
   extends Model<InferAttributes<IUser>, InferCreationAttributes<IUser>> {
   id: CreationOptional<number>;
   email: string;
   password: string;
   name: string;
+  activationCode: string;
   isActivated: CreationOptional<boolean>;
   role: CreationOptional<UserRole>;
 }
@@ -37,6 +36,10 @@ const userModel = (sequelize: Sequelize) => {
       allowNull: false,
     },
     name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    activationCode: {
       type: DataTypes.STRING,
       allowNull: false,
     },

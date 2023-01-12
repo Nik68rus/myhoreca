@@ -1,0 +1,10 @@
+@use '../../styles/variables.scss';
+
+.logo {
+  color: variables.$color-default-white;
+  transition: color variables.$trans-default;
+
+  &:hover {
+    color: rgb(231, 187, 187);
+  }
+}

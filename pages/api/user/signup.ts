@@ -1,7 +1,12 @@
-import { isEmail } from './../../../helpers/validation';
-import { IUserRegData } from './../../../types/user';
+import bcrypt from 'bcrypt';
+import { v4 as uuidv4 } from 'uuid';
+import { UserRole } from './../../../types/user';
+import { isEmail } from '../../../helpers/validation';
+import { IUserRegData } from '../../../types/user';
 import { NextApiRequest, NextApiResponse } from 'next';
 import db from '../../../models';
+import UserService from '../../../services/UserService';
+import { handleServerError } from '../../../helpers/error';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
   body: IUserRegData;
@@ -12,7 +17,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'POST') {
-    const { email, name, password, password2 } = req.body;
+    const { email, name, password, password2, role } = req.body;
     const normEmail = email.toLowerCase().trim();
     const normName = name.trim();
     const normPassword = password.trim();
@@ -28,16 +33,10 @@ export default async function handler(
     }
 
     try {
-      db.sequelize.authenticate();
-      db.sequelize.sync();
-      const existingUser = await db.users.findOne({ where: { email } });
-      if (existingUser) {
-        return res.status(422).json('Данный e-mail уже зарегистрирован!');
-      }
-      const user = await db.users.create({ email, name, password });
-      return user;
+      const user = await UserService.create(email, password, name, role);
+      return res.status(201).json(user);
     } catch (error) {
-      return res.status(500).json('Ошибка на сервере!');
+      handleServerError(res, error);
     }
   }
 }

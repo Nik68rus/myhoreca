@@ -1,9 +1,13 @@
 import { Sequelize } from 'sequelize';
-import userModel, { IUser } from './user';
+import userModel from './user';
+import companyModel from './company';
+import tokenModel from './token';
 
 interface DB {
   sequelize: Sequelize;
   users: ReturnType<typeof userModel>;
+  tokens: ReturnType<typeof tokenModel>;
+  companies: ReturnType<typeof companyModel>;
 }
 
 const sequelize = new Sequelize(
@@ -17,9 +21,20 @@ const sequelize = new Sequelize(
   }
 );
 
+const User = userModel(sequelize);
+const Company = companyModel(sequelize);
+const Token = tokenModel(sequelize);
+
+User.hasOne(Token);
+Token.belongsTo(User);
+// Company.hasMany(User);
+// User.belongsTo(Company);
+
 const db: DB = {
   sequelize,
-  users: userModel(sequelize),
+  users: User,
+  tokens: Token,
+  companies: Company,
 };
 
 export default db;

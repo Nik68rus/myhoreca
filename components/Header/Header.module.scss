@@ -1,0 +1,15 @@
+.header {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+}
+
+.headerMain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}

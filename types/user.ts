@@ -10,6 +10,7 @@ export interface IUserRegData {
   name: string;
   password: string;
   password2: string;
+  role?: UserRole;
 }
 
 export interface IUserLoginData {
@@ -20,8 +21,8 @@ export interface IUserLoginData {
 export interface IUserAuthData {
   email: string;
   name: string;
-  isAdmin: boolean;
+  role: UserRole;
   isActivated: boolean;
-  // accessToken: string;
-  // refreshToken: string;
+  accessToken: string;
+  refreshToken: string;
 }
