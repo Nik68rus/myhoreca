@@ -1,29 +1,25 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import { generateToken, validateToken } from './../helpers/token';
+
 import ApiError from '../helpers/error';
 import db from '../models';
-import { UserRole } from '../types/user';
-
-export interface TokenPayload {
-  id: number;
-  email: string;
-  name: string;
-  role: UserRole;
-  isActivated: boolean;
-}
-
+import { TokenPayload, UserRole } from '../types/user';
 class TokenService {
   constructor() {
     db.sequelize.authenticate();
     db.sequelize.sync();
   }
 
-  generateTokens(payload: TokenPayload) {
-    const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
-      expiresIn: '30m',
-    });
-    const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
-      expiresIn: '30d',
-    });
+  async generateTokens(payload: TokenPayload) {
+    const accessToken = await generateToken(
+      payload,
+      process.env.JWT_ACCESS_SECRET,
+      20
+    );
+    const refreshToken = await generateToken(
+      payload,
+      process.env.JWT_REFRESH_SECRET,
+      60 * 60 * 24 * 10
+    );
 
     return {
       accessToken,
@@ -55,31 +51,23 @@ class TokenService {
     return true;
   }
 
-  validateAccessToken(token: string) {
-    console.log(token);
-    if (!token) {
-      return null;
-    }
-
+  async validateAccessToken(token: string) {
     try {
-      const userData = jwt.verify(
-        token,
-        process.env.JWT_ACCESS_SECRET
-      ) as TokenPayload;
-      return userData;
-    } catch (error) {
+      const payload = await validateToken(token, process.env.JWT_ACCESS_SECRET);
+      return payload;
+    } catch (err) {
       return null;
     }
   }
 
   async validateRefreshToken(token: string) {
     try {
-      const userData = jwt.verify(
+      const payload = await validateToken(
         token,
         process.env.JWT_REFRESH_SECRET
-      ) as TokenPayload;
-      return userData;
-    } catch (error) {
+      );
+      return payload;
+    } catch (err) {
       return null;
     }
   }

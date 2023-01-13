@@ -5,6 +5,14 @@ export enum UserRole {
   GUEST = 'guest',
 }
 
+export interface TokenPayload {
+  id: number;
+  email: string;
+  name: string;
+  role: UserRole;
+  isActivated: boolean;
+}
+
 export interface IUserRegData {
   email: string;
   name: string;

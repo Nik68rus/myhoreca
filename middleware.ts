@@ -1,13 +1,43 @@
+import { TokenPayload } from './types/user';
 import { Routes } from './types/routes';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { access } from 'fs';
-import tokenService, { TokenPayload } from './services/TokenService';
-import jwt from 'jsonwebtoken';
+import { validateToken, generateToken } from './helpers/token';
+import { errors } from 'jose';
+import ApiError from './helpers/error';
 
 const protectedRoutes = [Routes.ACCOUNT, Routes.ACTIVATION];
 
-// This function can be marked `async` if using `await` inside
+const updateTokens = async (
+  token: string | undefined,
+  request: NextRequest
+) => {
+  console.log(token);
+
+  if (!token) {
+    return NextResponse.redirect(new URL(Routes.LOGIN, request.url));
+  }
+  try {
+    const data = await validateToken(token, process.env.JWT_REFRESH_SECRET);
+    const user: TokenPayload = {
+      id: data.id,
+      email: data.email,
+      name: data.name,
+      role: data.role,
+      isActivated: data.isActivated,
+    };
+
+    const aToken = await generateToken(user, process.env.JWT_ACCESS_SECRET, 20);
+
+    request.cookies.set('accessToken', aToken);
+    return NextResponse.next();
+  } catch (error) {
+    console.log(error);
+
+    return NextResponse.redirect(new URL(Routes.LOGIN, request.url));
+  }
+};
+
 export async function middleware(request: NextRequest) {
   if (
     !protectedRoutes.some(
@@ -16,21 +46,22 @@ export async function middleware(request: NextRequest) {
   ) {
     return NextResponse.next();
   }
-  const accessToken = request.cookies.get('accessToken');
+  const accessToken = request.cookies.get('accessToken')?.value;
 
   if (!accessToken) {
     return NextResponse.redirect(new URL(Routes.LOGIN, request.url));
   }
 
-  // let userData = await tokenService.validateAccessToken(accessToken.value);
+  try {
+    await validateToken(accessToken, process.env.JWT_ACCESS_SECRET);
+    return NextResponse.next();
+  } catch (error) {
+    if (error instanceof errors.JWTExpired) {
+      const url = new URL('/api/user/refresh', request.url);
+      url.search = `from=${request.url}`;
+      return NextResponse.redirect(url);
+    }
 
-  // console.log(userData);
-
-  // console.log(userData);
-
-  // if (!userData) {
-  //   // return NextResponse.redirect(process.env.APP_URL + Routes.LOGIN);
-  //   return NextResponse.redirect(new URL(Routes.LOGIN, request.url));
-  // }
-  return NextResponse.next();
+    return NextResponse.redirect(new URL(Routes.LOGIN, request.url));
+  }
 }

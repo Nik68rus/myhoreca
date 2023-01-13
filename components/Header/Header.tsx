@@ -1,13 +1,15 @@
 import Link from 'next/link';
-import React from 'react';
+import React, { useContext } from 'react';
 import cx from 'classnames';
 import { Routes } from '../../types/routes';
 import styles from './Header.module.scss';
 import Logo from '../Logo/Logo';
 import { useRouter } from 'next/router';
+import AuthContext from '../../context/AuthContext';
 
 const Header = () => {
   const router = useRouter();
+  const authCtx = useContext(AuthContext);
 
   const isMain = router.pathname === '/';
   return (
@@ -18,9 +20,13 @@ const Header = () => {
         })}
       >
         <Logo />
-        <Link href={Routes.LOGIN} className="button">
-          Войти
-        </Link>
+        {authCtx.isAuth ? (
+          <button className="button">Выйти</button>
+        ) : (
+          <Link href={Routes.LOGIN} className="button">
+            Войти
+          </Link>
+        )}
       </div>
     </header>
   );

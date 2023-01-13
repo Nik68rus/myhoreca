@@ -23,7 +23,7 @@ const tokenModel = (sequelize: Sequelize) =>
     },
     userId: DataTypes.INTEGER,
     refreshToken: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
       unique: true,
     },

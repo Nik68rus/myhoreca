@@ -14,13 +14,15 @@ class UserService {
   }
 
   async generateData(user: IUser) {
-    const tokens = tokenService.generateTokens({
+    const tokens = await tokenService.generateTokens({
       id: user.id,
       email: user.email,
       name: user.name,
       role: user.role,
       isActivated: user.isActivated,
     });
+
+    console.log('Tokens', tokens);
 
     await tokenService.saveTokens(user.id, tokens.refreshToken);
 
