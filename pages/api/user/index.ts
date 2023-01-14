@@ -1,14 +1,15 @@
-import { Routes } from './../../../types/routes';
-import { getCookie, setCookie } from './../../../helpers/cookies';
+import { validateToken } from './../../../helpers/token';
 import { IUserLoginData } from '../../../types/user';
 import { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcrypt';
 import db from '../../../models';
 import UserService from '../../../services/UserService';
-import tokenService from '../../../services/TokenService';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
   body: IUserLoginData;
+  cookies: {
+    accessToken?: string;
+  };
 }
 
 export default async function handler(
@@ -16,8 +17,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'POST') {
+    // Login user
     const { email, password } = req.body;
-    console.log(email, password);
 
     const user = await db.users.findOne({ where: { email } });
 
@@ -29,6 +30,7 @@ export default async function handler(
 
     if (passwordMatch) {
       const data = await UserService.generateData(user);
+      // res.setHeader('set-cookie', `accessToken=${data.accessToken}; httponly;`);
       return res.status(200).json(data);
     } else {
       return res.status(401).json('Неверное имя пользователя или пароль!');
@@ -36,20 +38,21 @@ export default async function handler(
   }
 
   if (req.method === 'GET') {
-    const authHeader = req.headers.authorization;
-    let token;
-    let userData;
-    if (authHeader) {
-      token = authHeader?.split(' ')[1];
-    }
-    if (token) {
-      userData = await tokenService.validateAccessToken(token);
-    }
+    // Check auth
+    const token = req.cookies.accessToken;
 
-    return res.status(200).json(userData);
-    // if (userData) {
-    // } else {
-    //   res.redirect(Routes.LOGIN);
-    // }
+    if (token) {
+      try {
+        const userData = await validateToken(
+          token,
+          process.env.JWT_ACCESS_SECRET
+        );
+        return res.status(200).json(userData);
+      } catch (err) {
+        return res.status(401).json('Токен не валидный');
+      }
+    } else {
+      return res.status(401).json('Пользователь не авторизован');
+    }
   }
 }

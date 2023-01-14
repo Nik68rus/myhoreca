@@ -32,5 +32,4 @@ export interface IUserAuthData {
   role: UserRole;
   isActivated: boolean;
   accessToken: string;
-  refreshToken: string;
 }

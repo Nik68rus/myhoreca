@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useCallback } from 'react';
 import { IUserAuthData, UserRole } from '../types/user';
 
 interface Props {
@@ -6,37 +6,43 @@ interface Props {
 }
 
 interface IAuthContext {
-  authData: IUserAuthData;
-  setAuthData: (data: IUserAuthData) => void;
-  isAuth: boolean;
+  authData: IUserAuthData | null;
+  setAuthData: (data: IUserAuthData | null) => void;
+  loading: boolean;
+  setLoading: (state: boolean) => void;
 }
 
-const initialAuthData: IUserAuthData = {
-  email: '',
-  name: '',
-  role: UserRole.GUEST,
-  isActivated: false,
-  accessToken: '',
-  refreshToken: '',
-};
+// const initialAuthData: IUserAuthData = {
+//   email: '',
+//   name: '',
+//   role: UserRole.GUEST,
+//   isActivated: false,
+//   accessToken: '',
+// };
 
 const AuthContext = createContext<IAuthContext>({
-  authData: initialAuthData,
+  authData: null,
   setAuthData: () => {},
-  isAuth: false,
+  loading: true,
+  setLoading: () => {},
 });
 
 export const AuthContextProvider = (props: Props) => {
-  const [auth, setAuth] = useState(initialAuthData);
+  const [auth, setAuth] = useState<IUserAuthData | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const isAuth = () => !!auth.accessToken;
+  const setAuthData = useCallback((authData: IUserAuthData | null) => {
+    setAuth(authData);
+    setLoading(false);
+  }, []);
 
   return (
     <AuthContext.Provider
       value={{
         authData: auth,
-        setAuthData: setAuth,
-        isAuth: isAuth(),
+        setAuthData,
+        loading,
+        setLoading,
       }}
     >
       {props.children}

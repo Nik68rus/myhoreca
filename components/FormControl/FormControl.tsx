@@ -7,10 +7,11 @@ interface Props {
   type: TInputType;
   id: string;
   name?: string;
-  value: string | number;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  value?: string | number;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
   placeholder?: string;
   hint?: string;
+  ref?: React.RefObject<HTMLInputElement>;
 }
 
 const FormControl = ({
@@ -22,6 +23,7 @@ const FormControl = ({
   onChange,
   placeholder,
   hint,
+  ref,
 }: Props) => {
   return (
     <div className="form__control">
@@ -33,6 +35,7 @@ const FormControl = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder ? placeholder : ''}
+        ref={ref ? ref : null}
       />
       {hint && <span className="form__hint">{hint}</span>}
     </div>

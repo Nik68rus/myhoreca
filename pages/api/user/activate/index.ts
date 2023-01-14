@@ -2,10 +2,11 @@ import { Routes } from './../../../../types/routes';
 import { NextApiRequest, NextApiResponse } from 'next';
 import UserService from '../../../../services/UserService';
 import { handleServerError } from '../../../../helpers/error';
+import MailService from '../../../../services/MailService';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
   query: {
-    code: string;
+    email: string;
   };
 }
 
@@ -14,16 +15,11 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'GET') {
-    const { code } = req.query;
+    const { email } = req.query;
 
     try {
-      const user = await UserService.activate(code);
-      if (user) {
-        return res.redirect(
-          `${Routes.LOGIN}?activated=true&user=${user.email}`
-        );
-      }
-      return res.status(404).json('Пользователь не найден');
+      await MailService.sendActivationMail(email);
+      res.status(200).json('Письмо отправлено');
     } catch (error) {
       handleServerError(res, error);
     }

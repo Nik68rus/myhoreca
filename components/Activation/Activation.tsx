@@ -1,29 +1,37 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useContext, useEffect } from 'react';
+import userAPI from '../../api/userAPI';
 import AuthContext from '../../context/AuthContext';
 import { Routes } from '../../types/routes';
-import styles from './Activation.module.scss';
 
 const Activation = () => {
-  const authCtx = useContext(AuthContext);
+  const { authData } = useContext(AuthContext);
   const router = useRouter();
 
   useEffect(() => {
-    if (!authCtx.isAuth) {
+    if (!authData) {
       router.push(Routes.LOGIN);
     }
-  }, [authCtx.isAuth, router]);
+  }, [authData, router]);
+
+  const repeatHandler = () => {
+    if (authData) {
+      userAPI.sendActivationCode(authData.email);
+    }
+  };
 
   return (
     <div className="container">
-      <div className={styles.message}>
+      <div className="message">
         <p>
           Для продолжения работы следуйте инструкции по активации аккаунта,
           отправленной на Вашу почту.
         </p>
-        <div className={styles.actions}>
-          <button className="button">Отправить снова</button>
+        <div className="message__actions">
+          <button className="button" onClick={repeatHandler}>
+            Отправить снова
+          </button>
           <Link href={Routes.HOME} className="button">
             На главную
           </Link>

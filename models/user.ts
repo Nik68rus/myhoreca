@@ -16,7 +16,10 @@ export interface IUser
   name: string;
   activationCode: string;
   isActivated: CreationOptional<boolean>;
+  isBlocked: CreationOptional<boolean>;
   role: CreationOptional<UserRole>;
+  resetCode: CreationOptional<string | null>;
+  resetCodeExpiration: CreationOptional<Date>;
 }
 
 const userModel = (sequelize: Sequelize) => {
@@ -47,10 +50,16 @@ const userModel = (sequelize: Sequelize) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    isBlocked: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     role: {
       type: DataTypes.ENUM(...Object.values(UserRole)),
       defaultValue: UserRole.GUEST,
     },
+    resetCode: DataTypes.STRING,
+    resetCodeExpiration: DataTypes.DATE,
   });
 
   return User;

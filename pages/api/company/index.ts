@@ -20,8 +20,7 @@ export default async function handler(
     }
 
     try {
-      db.sequelize.authenticate();
-      db.sequelize.sync();
+      db.connect();
       const existingCompany = await db.companies.findOne({
         where: { title: normTitle },
       });

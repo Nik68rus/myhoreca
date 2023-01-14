@@ -8,7 +8,6 @@ import AuthContext from '../../context/AuthContext';
 import { setCookie } from '../../helpers/cookies';
 import { handleError } from '../../helpers/error';
 import { isEmail } from '../../helpers/validation';
-import TokenService from '../../services/TokenService';
 import { Routes } from '../../types/routes';
 import { IUserRegData, UserRole } from '../../types/user';
 import FormControl from '../FormControl/FormControl';
@@ -83,8 +82,6 @@ const AuthForm = () => {
       const user = await userAPI.login(formData.email, formData.password);
       authCtx.setAuthData(user);
       setCookie('accessToken', user.accessToken);
-      setCookie('refreshToken', user.refreshToken);
-      // console.log(TokenService.validateAccessToken(user.accessToken));
 
       if (user.isActivated) {
         router.push(Routes.ACCOUNT);
@@ -103,8 +100,8 @@ const AuthForm = () => {
     try {
       const user = await userAPI.createUser(formData, UserRole.OWNER);
       if (user) {
+        authCtx.setAuthData(user);
         setCookie('accessToken', user.accessToken);
-        setCookie('refreshToken', user.refreshToken);
         router.push(Routes.ACTIVATION);
       }
     } catch (error) {

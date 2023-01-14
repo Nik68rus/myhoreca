@@ -1,39 +1,45 @@
 import { Sequelize } from 'sequelize';
 import userModel from './user';
 import companyModel from './company';
-import tokenModel from './token';
 
 interface DB {
+  connect: () => void;
   sequelize: Sequelize;
   users: ReturnType<typeof userModel>;
-  tokens: ReturnType<typeof tokenModel>;
   companies: ReturnType<typeof companyModel>;
 }
 
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    dialect: 'postgres',
-    host: process.env.DB_HOST,
-    port: +process.env.DB_PORT,
-  }
-);
+const connect = () => {
+  return new Sequelize(
+    process.env.DB_NAME,
+    process.env.DB_USER,
+    process.env.DB_PASSWORD,
+    {
+      dialect: 'postgres',
+      host: process.env.DB_HOST,
+      port: +process.env.DB_PORT,
+    }
+  );
+};
+
+const sequelize = connect();
 
 const User = userModel(sequelize);
 const Company = companyModel(sequelize);
-const Token = tokenModel(sequelize);
 
-User.hasOne(Token);
-Token.belongsTo(User);
 // Company.hasMany(User);
 // User.belongsTo(Company);
 
+let connected = false;
+
 const db: DB = {
+  connect() {
+    this.sequelize = connect();
+    this.sequelize.authenticate();
+    this.sequelize.sync();
+  },
   sequelize,
   users: User,
-  tokens: Token,
   companies: Company,
 };
 

@@ -6,12 +6,19 @@ import styles from './Header.module.scss';
 import Logo from '../Logo/Logo';
 import { useRouter } from 'next/router';
 import AuthContext from '../../context/AuthContext';
+import { deleteCookie } from '../../helpers/cookies';
 
 const Header = () => {
   const router = useRouter();
   const authCtx = useContext(AuthContext);
 
   const isMain = router.pathname === '/';
+
+  const logoutHandler = () => {
+    deleteCookie('accessToken');
+    authCtx.setAuthData(null);
+  };
+
   return (
     <header>
       <div
@@ -20,8 +27,10 @@ const Header = () => {
         })}
       >
         <Logo />
-        {authCtx.isAuth ? (
-          <button className="button">Выйти</button>
+        {authCtx.authData ? (
+          <button className="button" onClick={logoutHandler}>
+            Выйти
+          </button>
         ) : (
           <Link href={Routes.LOGIN} className="button">
             Войти

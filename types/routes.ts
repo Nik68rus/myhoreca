@@ -6,4 +6,5 @@ export enum Routes {
   ACTIVATION = '/activation',
   RECOVER = '/recover',
   ACCOUNT = '/account',
+  PASSWORD = '/new-password',
 }
