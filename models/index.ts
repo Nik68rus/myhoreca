@@ -1,12 +1,14 @@
 import { Sequelize } from 'sequelize';
 import userModel from './user';
 import companyModel from './company';
+import permissionModel from './permission';
 
 interface DB {
   connect: () => void;
   sequelize: Sequelize;
   users: ReturnType<typeof userModel>;
   companies: ReturnType<typeof companyModel>;
+  permission: ReturnType<typeof permissionModel>;
 }
 
 const connect = () => {
@@ -23,12 +25,17 @@ const connect = () => {
 };
 
 const sequelize = connect();
+sequelize.authenticate();
+sequelize.sync();
 
 const User = userModel(sequelize);
 const Company = companyModel(sequelize);
+const Permission = permissionModel(sequelize);
 
-// Company.hasMany(User);
-// User.belongsTo(Company);
+User.hasMany(Permission);
+Permission.belongsTo(User);
+Company.hasMany(Permission);
+Permission.belongsTo(Company);
 
 let connected = false;
 
@@ -41,6 +48,7 @@ const db: DB = {
   sequelize,
   users: User,
   companies: Company,
+  permission: Permission,
 };
 
 export default db;

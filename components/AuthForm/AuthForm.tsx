@@ -100,7 +100,7 @@ const AuthForm = () => {
     try {
       const user = await userAPI.createUser(formData, UserRole.OWNER);
       if (user) {
-        authCtx.setAuthData(user);
+        // authCtx.setAuthData(user);
         setCookie('accessToken', user.accessToken);
         router.push(Routes.ACTIVATION);
       }

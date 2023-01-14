@@ -23,8 +23,14 @@ class UserAPI {
     }
   }
 
-  async sendActivationCode(email: string) {
-    const response = await fetch(`api/user/activate?email=${email}`);
+  async sendActivationCode() {
+    const response = await fetch(`api/user/activate`, {
+      method: 'POST',
+      headers: {
+        'Contetn-Type': 'application/json',
+        Authorization: `Bearer ${getCookie('accessToken')}`,
+      },
+    });
     const data = await response.json();
 
     if (response.ok) {

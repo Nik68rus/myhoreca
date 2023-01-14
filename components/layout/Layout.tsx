@@ -3,6 +3,7 @@ import userAPI from '../../api/userAPI';
 import AuthContext from '../../context/AuthContext';
 import { getCookie } from '../../helpers/cookies';
 import { IUserAuthData } from '../../types/user';
+import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 
 interface Props {
@@ -18,14 +19,17 @@ const Layout = ({ children }: Props) => {
     };
     if (getCookie('accessToken')) {
       getUser();
+    } else {
+      setAuthData(null);
     }
   }, [setAuthData]);
 
   return (
-    <>
+    <div className="wrapper">
       <Header />
       <main>{children}</main>
-    </>
+      <Footer />
+    </div>
   );
 };
 

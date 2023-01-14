@@ -1,0 +1,11 @@
+.cabinet {
+  // background: #000;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex-grow: 1;
+
+  :global(.tabs) {
+    flex-grow: 1;
+  }
+}

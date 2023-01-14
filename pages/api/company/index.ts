@@ -1,10 +1,16 @@
+import { validateToken } from './../../../helpers/token';
 import { ICompany } from './../../../models/company';
 import { isEmail } from './../../../helpers/validation';
 import { NextApiRequest, NextApiResponse } from 'next';
 import db from '../../../models';
+import ApiError, { handleServerError } from '../../../helpers/error';
+import CompanyService from '../../../services/CompanyService';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
   body: ICompany;
+  cookies: {
+    accessToken?: string;
+  };
 }
 
 export default async function handler(
@@ -13,26 +19,19 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     const { title } = req.body;
-    const normTitle = title.trim();
 
-    if (normTitle.length < 3) {
-      return res.status(422).json('Слишком короткое название!');
+    const token = req.cookies.accessToken;
+
+    if (!token) {
+      return res.status(401).json('Пользователь не авторизован!');
     }
 
     try {
-      db.connect();
-      const existingCompany = await db.companies.findOne({
-        where: { title: normTitle },
-      });
-      if (existingCompany) {
-        return res.status(422).json('Данная компания уже зарегистрирована!');
-      }
-      const company = await db.companies.create({ title: normTitle });
-      return res.status(201).json(company);
+      const user = await validateToken(token, process.env.JWT_ACCESS_SECRET);
+      const company = await CompanyService.create(title, user.id);
+      return res.status(201).json(company.title);
     } catch (error) {
-      console.log(error);
-
-      return res.status(500).json('Ошибка на сервере!');
+      handleServerError(res, error);
     }
   }
 }

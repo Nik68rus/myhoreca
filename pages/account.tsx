@@ -1,8 +1,10 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useContext } from 'react';
+import OwnerCabinet from '../components/Cabinets/OwnerCabinet/OwnerCabinet';
 import Spinner from '../components/Spinner/Spinner';
 import AuthContext from '../context/AuthContext';
 import { Routes } from '../types/routes';
+import { UserRole } from '../types/user';
 
 const AccountPage = () => {
   const router = useRouter();
@@ -22,7 +24,7 @@ const AccountPage = () => {
     return <Spinner />;
   }
 
-  return <div className="container">AccountPage</div>;
+  return <>{authData?.role === UserRole.OWNER && <OwnerCabinet />}</>;
 };
 
 export default AccountPage;

@@ -6,19 +6,8 @@ import AuthContext from '../../context/AuthContext';
 import { Routes } from '../../types/routes';
 
 const Activation = () => {
-  const { authData } = useContext(AuthContext);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!authData) {
-      router.push(Routes.LOGIN);
-    }
-  }, [authData, router]);
-
   const repeatHandler = () => {
-    if (authData) {
-      userAPI.sendActivationCode(authData.email);
-    }
+    userAPI.sendActivationCode();
   };
 
   return (
