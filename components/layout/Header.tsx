@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import cx from 'classnames';
 import { Routes } from '../../types/routes';
 import styles from './Header.module.scss';
-import Logo from '../Logo/Logo';
+import Logo from '../Logo';
 import { useRouter } from 'next/router';
 import AuthContext from '../../context/AuthContext';
 import { deleteCookie } from '../../helpers/cookies';

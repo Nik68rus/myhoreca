@@ -27,6 +27,7 @@ export interface IUserLoginData {
 }
 
 export interface IUserAuthData {
+  id: number;
   email: string;
   name: string;
   role: UserRole;

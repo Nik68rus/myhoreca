@@ -4,7 +4,7 @@ import userAPI from '../../api/userAPI';
 import { handleError } from '../../helpers/error';
 import { isEmail } from '../../helpers/validation';
 import { Routes } from '../../types/routes';
-import FormControl from '../FormControl/FormControl';
+import FormControl from './FormControl';
 
 const RecoverForm = () => {
   const [email, setEmail] = useState('');

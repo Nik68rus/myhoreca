@@ -3,8 +3,8 @@ import userAPI from '../../api/userAPI';
 import AuthContext from '../../context/AuthContext';
 import { getCookie } from '../../helpers/cookies';
 import { IUserAuthData } from '../../types/user';
-import Footer from '../Footer/Footer';
-import Header from '../Header/Header';
+import Footer from './Footer';
+import Header from './Header';
 
 interface Props {
   children: React.ReactNode;

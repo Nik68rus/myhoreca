@@ -13,7 +13,19 @@ class CompanyAPI {
       },
       body: JSON.stringify({ title }),
     });
-    const data = (await response.json()) as string;
+    const data = (await response.json()) as ICompany;
+
+    if (!response.ok) {
+      throw new Error(typeof data === 'string' ? data : defaultError);
+    }
+
+    return data;
+  }
+
+  async getCompanies(ownerId: number) {
+    const response = await fetch(`api/company?ownerId=${ownerId}`);
+
+    const data = (await response.json()) as ICompany[];
 
     if (!response.ok) {
       throw new Error(typeof data === 'string' ? data : defaultError);

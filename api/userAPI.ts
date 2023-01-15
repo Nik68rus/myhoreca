@@ -120,6 +120,25 @@ class UserAPI {
 
     return data;
   }
+
+  async inviteEmployee(email: string) {
+    const response = await fetch(`api/user/invite`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getCookie('accessToken')}`,
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(typeof data === 'string' ? data : defaultError);
+    }
+
+    return data;
+  }
 }
 
 export default new UserAPI();

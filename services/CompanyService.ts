@@ -1,3 +1,5 @@
+import { ICompany } from './../models/company';
+import { IPermission } from './../models/permission';
 import { UserRole } from './../types/user';
 import { v4 as uuidv4 } from 'uuid';
 import ApiError from '../helpers/error';
@@ -26,13 +28,22 @@ class CompanyService {
     }
 
     const company = await db.companies.create({ title: normTitle });
-    await db.permission.create({
+    await db.permissions.create({
       companyId: company.id,
       userId: owner,
       role: UserRole.OWNER,
     });
     db.sequelize.close();
     return company;
+  }
+
+  async getList(ownerId: number) {
+    const companies = (await db.permissions.findAll({
+      where: { userId: ownerId, role: UserRole.OWNER },
+      include: db.companies,
+    })) as unknown as IPermission & { company: ICompany }[];
+    db.sequelize.close();
+    return companies.map((com) => com.company);
   }
 }
 

@@ -49,32 +49,11 @@
   }
 
   &--outline {
-    background-color: #fff;
+    background-color: transparent;
     border-color: $color-torch-red;
-
-    span {
-      color: $color-torch-red;
-    }
-
-    svg {
-      path {
-        fill: $color-torch-red;
-      }
-    }
 
     &:hover {
       background-color: $color-torch-red;
-
-      &,
-      span {
-        color: #fff;
-      }
-
-      svg {
-        path {
-          fill: #fff;
-        }
-      }
     }
 
     &:active {
@@ -94,6 +73,10 @@
       background-color: darken($color-success, 17%);
       transform: translateY(1px);
     }
+  }
+
+  &--small {
+    padding: 5px;
   }
 
   &--disabled,

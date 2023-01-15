@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
-import { Routes } from '../../types/routes';
+import { Routes } from '../types/routes';
 import styles from './Logo.module.scss';
 
 const Logo = () => {

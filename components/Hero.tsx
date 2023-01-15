@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React, { useContext } from 'react';
-import AuthContext from '../../context/AuthContext';
-import { Routes } from '../../types/routes';
+import AuthContext from '../context/AuthContext';
+import { Routes } from '../types/routes';
 import styles from './Hero.module.scss';
 
 const Hero = () => {

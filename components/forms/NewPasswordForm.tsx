@@ -5,8 +5,8 @@ import { toast } from 'react-toastify';
 import userAPI from '../../api/userAPI';
 import { handleError } from '../../helpers/error';
 import { Routes } from '../../types/routes';
-import FormControl from '../FormControl/FormControl';
-import Spinner from '../Spinner/Spinner';
+import FormControl from './FormControl';
+import Spinner from '../layout/Spinner';
 
 const NewPasswordForm = () => {
   const router = useRouter();

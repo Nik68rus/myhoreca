@@ -2,10 +2,10 @@ import { useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Routes } from '../types/routes';
 import { IUserLoginData } from '../types/user';
-import AuthForm from '../components/AuthForm/AuthForm';
+import AuthForm from '../components/forms/AuthForm';
 import AuthContext from '../context/AuthContext';
 import { useRouter } from 'next/router';
-import Spinner from '../components/Spinner/Spinner';
+import Spinner from '../components/layout/Spinner';
 
 const LoginPage = () => {
   const { authData, loading } = useContext(AuthContext);

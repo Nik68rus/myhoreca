@@ -2,17 +2,19 @@ import React, { useState } from 'react';
 import cx from 'classnames';
 import styles from './OwnerCabinet.module.scss';
 import Companies from './Companies';
-import Users from './Users';
+import Employees from './Employees';
 import Sales from './Sales';
+import { ICompany } from '../../../models/company';
 
 const tabs = [
   { title: 'Точки', component: Companies },
-  { title: 'Пользователи', component: Users },
+  { title: 'Сотрудники', component: Employees },
   { title: 'Продажи', component: Sales },
 ];
 
 const OwnerCabinet = () => {
   const [activeTab, setActiveTab] = useState(tabs[0]);
+  const [company, setCompany] = useState<ICompany>();
 
   return (
     <section className={cx('container', styles.cabinet)}>
@@ -26,14 +28,20 @@ const OwnerCabinet = () => {
                 ['tabs__control--active']: tab.title === activeTab.title,
               })}
               onClick={() => setActiveTab(tab)}
+              disabled={company === undefined}
             >
               {tab.title}
             </button>
           ))}
         </div>
         <div className="tabs__content">
-          {activeTab.component === Companies && <Companies />}
-          {activeTab.component === Users && <Users />}
+          {activeTab.component === Companies && (
+            <Companies
+              onSelect={(company: ICompany) => setCompany(company)}
+              active={company}
+            />
+          )}
+          {activeTab.component === Employees && <Employees />}
           {activeTab.component === Sales && <Sales />}
         </div>
       </div>

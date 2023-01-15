@@ -8,7 +8,7 @@ interface DB {
   sequelize: Sequelize;
   users: ReturnType<typeof userModel>;
   companies: ReturnType<typeof companyModel>;
-  permission: ReturnType<typeof permissionModel>;
+  permissions: ReturnType<typeof permissionModel>;
 }
 
 const connect = () => {
@@ -48,7 +48,7 @@ const db: DB = {
   sequelize,
   users: User,
   companies: Company,
-  permission: Permission,
+  permissions: Permission,
 };
 
 export default db;

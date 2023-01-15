@@ -10,7 +10,7 @@ import { handleError } from '../../helpers/error';
 import { isEmail } from '../../helpers/validation';
 import { Routes } from '../../types/routes';
 import { IUserRegData, UserRole } from '../../types/user';
-import FormControl from '../FormControl/FormControl';
+import FormControl from './FormControl';
 import styles from './AuthForm.module.scss';
 
 const AuthForm = () => {
