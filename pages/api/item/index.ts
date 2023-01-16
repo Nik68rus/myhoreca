@@ -1,12 +1,14 @@
+import { IItemInput } from './../../../types/item';
+import { IItem } from './../../../models/item';
 import { validateToken } from './../../../helpers/token';
-import { ICompany } from './../../../models/company';
 import { NextApiRequest, NextApiResponse } from 'next';
 import ApiError, { handleServerError } from '../../../helpers/error';
 import CompanyService from '../../../services/CompanyService';
 import PermissionService from '../../../services/PermissionService';
+import ItemService from '../../../services/ItemService';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
-  body: ICompany;
+  body: IItemInput;
   cookies: {
     accessToken?: string;
   };
@@ -17,7 +19,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'POST') {
-    const { title } = req.body;
+    const { title, imageUrl, isCountable } = req.body;
 
     const token = req.cookies.accessToken;
 
@@ -27,8 +29,13 @@ export default async function handler(
 
     try {
       const user = await validateToken(token, process.env.JWT_ACCESS_SECRET);
-      const company = await CompanyService.create(title, user.id);
-      return res.status(201).json(company);
+      const item = await ItemService.create({
+        userId: user.id,
+        title,
+        imageUrl,
+        isCountable,
+      });
+      return res.status(201).json(item);
     } catch (error) {
       handleServerError(res, error);
     }
@@ -36,26 +43,16 @@ export default async function handler(
 
   if (req.method === 'GET') {
     try {
-      const ownerId = req.query.ownerId as string;
-
-      if (!ownerId) {
-        throw ApiError.badRequest('Не указан id пользователя');
-      }
-
       const token = req.cookies.accessToken;
 
       if (!token) {
-        throw ApiError.notAuthenticated('Пользователь не авторизован!');
+        throw ApiError.notAuthenticated('Пользователь не авторизован');
       }
 
       const user = await validateToken(token, process.env.JWT_ACCESS_SECRET);
 
-      if (user.id !== +ownerId) {
-        throw ApiError.notAuthorized('Нет доступа!');
-      }
-
-      const companies = await PermissionService.getUserCompanies(+ownerId);
-      return res.status(200).json(companies);
+      const items = await ItemService.getItems(user.id);
+      return res.status(200).json(items);
     } catch (err) {
       handleServerError(res, err);
     }

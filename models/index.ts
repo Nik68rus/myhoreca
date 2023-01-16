@@ -2,6 +2,8 @@ import { Sequelize } from 'sequelize';
 import userModel from './user';
 import companyModel from './company';
 import permissionModel from './permission';
+import itemModel from './item';
+import companyItemModel from './companyItem';
 
 interface DB {
   connect: () => void;
@@ -9,6 +11,8 @@ interface DB {
   users: ReturnType<typeof userModel>;
   companies: ReturnType<typeof companyModel>;
   permissions: ReturnType<typeof permissionModel>;
+  items: ReturnType<typeof itemModel>;
+  companyItems: ReturnType<typeof companyItemModel>;
 }
 
 const connect = () => {
@@ -31,11 +35,20 @@ sequelize.sync();
 const User = userModel(sequelize);
 const Company = companyModel(sequelize);
 const Permission = permissionModel(sequelize);
+const Item = itemModel(sequelize);
+const CompanyItem = companyItemModel(sequelize);
 
 User.hasMany(Permission);
 Permission.belongsTo(User);
 Company.hasMany(Permission);
 Permission.belongsTo(Company);
+
+User.hasMany(Item);
+Item.belongsTo(User);
+
+Item.belongsToMany(Company, { through: CompanyItem });
+Item.belongsTo(User);
+User.hasMany(Item);
 
 let connected = false;
 
@@ -49,6 +62,8 @@ const db: DB = {
   users: User,
   companies: Company,
   permissions: Permission,
+  items: Item,
+  companyItems: CompanyItem,
 };
 
 export default db;

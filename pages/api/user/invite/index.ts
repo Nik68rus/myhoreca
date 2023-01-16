@@ -1,14 +1,16 @@
-import { validateToken } from './../../../helpers/token';
-import { IUserLoginData, UserRole } from '../../../types/user';
+import { ICompany } from '../../../../models/company';
+import { validateToken } from '../../../../helpers/token';
+import { IUserLoginData, UserRole } from '../../../../types/user';
 import { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcrypt';
-import db from '../../../models';
-import UserService from '../../../services/UserService';
-import ApiError, { handleServerError } from '../../../helpers/error';
+import db from '../../../../models';
+import UserService from '../../../../services/UserService';
+import ApiError, { handleServerError } from '../../../../helpers/error';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
   body: {
     email: string;
+    company: ICompany;
   };
   cookies: {
     accessToken?: string;
@@ -21,7 +23,7 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     // Invite employee
-    const { email } = req.body;
+    const { email, company } = req.body;
     const token = req.cookies.accessToken;
 
     if (!token) {
@@ -35,9 +37,11 @@ export default async function handler(
         throw ApiError.notAuthorized('Не достаточно прав доступа!');
       }
 
-      console.log(email);
+      const from = `${user.name} (${user.email})`;
 
-      return res.status(201).json('Скоро тут будем создавать инвайты');
+      const employee = await UserService.invite(email, from, company);
+
+      return res.status(201).json(employee);
     } catch (error) {
       handleServerError(res, error);
     }

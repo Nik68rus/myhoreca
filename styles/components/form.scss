@@ -52,6 +52,10 @@
     }
   }
 
+  &--checkbox {
+    flex-direction: row;
+  }
+
   &--invalid {
     input {
       border-color: red;

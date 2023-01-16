@@ -26,6 +26,7 @@ const Companies = ({ onSelect, active }: Props) => {
   useEffect(() => {
     const getData = async () => {
       if (authData) {
+        setLoading(true);
         const data = await companyAPI.getCompanies(authData.id);
         setCompanies(data);
       }
@@ -48,10 +49,6 @@ const Companies = ({ onSelect, active }: Props) => {
     setActiveCompany(company);
     onSelect(company);
   };
-
-  if (loading) {
-    return <Spinner />;
-  }
 
   return (
     <div>

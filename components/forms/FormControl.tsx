@@ -12,6 +12,7 @@ interface Props {
   placeholder?: string;
   hint?: string;
   ref?: React.RefObject<HTMLInputElement>;
+  disabled?: boolean;
 }
 
 const FormControl = ({
@@ -24,6 +25,7 @@ const FormControl = ({
   placeholder,
   hint,
   ref,
+  disabled,
 }: Props) => {
   return (
     <div className="form__control">
@@ -36,6 +38,7 @@ const FormControl = ({
         onChange={onChange}
         placeholder={placeholder ? placeholder : ''}
         ref={ref ? ref : null}
+        disabled={disabled ? true : false}
       />
       {hint && <span className="form__hint">{hint}</span>}
     </div>

@@ -1,11 +1,7 @@
-import { ICompany } from './../models/company';
-import { IPermission } from './../models/permission';
 import { UserRole } from './../types/user';
-import { v4 as uuidv4 } from 'uuid';
 import ApiError from '../helpers/error';
 import db from '../models';
-import MailService from './MailService';
-import { generateToken, validateToken } from '../helpers/token';
+import PermissionService from './PermissionService';
 
 class CompanyService {
   constructor() {
@@ -28,22 +24,9 @@ class CompanyService {
     }
 
     const company = await db.companies.create({ title: normTitle });
-    await db.permissions.create({
-      companyId: company.id,
-      userId: owner,
-      role: UserRole.OWNER,
-    });
+    await PermissionService.create(owner, company.id, UserRole.OWNER);
     db.sequelize.close();
     return company;
-  }
-
-  async getList(ownerId: number) {
-    const companies = (await db.permissions.findAll({
-      where: { userId: ownerId, role: UserRole.OWNER },
-      include: db.companies,
-    })) as unknown as IPermission & { company: ICompany }[];
-    db.sequelize.close();
-    return companies.map((com) => com.company);
   }
 }
 

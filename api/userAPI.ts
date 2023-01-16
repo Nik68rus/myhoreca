@@ -1,3 +1,5 @@
+import { IUser } from './../models/user';
+import { ICompany } from './../models/company';
 import { getCookie } from './../helpers/cookies';
 import { toast } from 'react-toastify';
 import { IUserRegData, IUserAuthData, UserRole } from './../types/user';
@@ -59,7 +61,7 @@ class UserAPI {
   }
 
   async checkAuth() {
-    const response = await fetch('api/user', {
+    const response = await fetch('api/user/auth', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -121,17 +123,59 @@ class UserAPI {
     return data;
   }
 
-  async inviteEmployee(email: string) {
+  async inviteEmployee(email: string, company: ICompany) {
     const response = await fetch(`api/user/invite`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${getCookie('accessToken')}`,
       },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email, company }),
     });
 
-    const data = await response.json();
+    const data = (await response.json()) as IUser;
+
+    if (!response.ok) {
+      throw new Error(typeof data === 'string' ? data : defaultError);
+    }
+
+    return data;
+  }
+
+  async getEmployees(companyId: number) {
+    const response = await fetch(`api/user/employees?companyId=${companyId}`);
+
+    const data = (await response.json()) as IUser[];
+
+    if (!response.ok) {
+      throw new Error(typeof data === 'string' ? data : defaultError);
+    }
+
+    return data;
+  }
+
+  async getByCode(code: string) {
+    const response = await fetch(`api/user?code=${code}`);
+
+    const data = (await response.json()) as IUser;
+
+    if (!response.ok) {
+      throw new Error(typeof data === 'string' ? data : defaultError);
+    }
+
+    return data;
+  }
+
+  async activateCashier(userData: IUserRegData) {
+    const response = await fetch(`api/user/signup`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ...userData }),
+    });
+
+    const data = (await response.json()) as IUser;
 
     if (!response.ok) {
       throw new Error(typeof data === 'string' ? data : defaultError);

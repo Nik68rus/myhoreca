@@ -34,3 +34,15 @@ export interface IUserAuthData {
   isActivated: boolean;
   accessToken: string;
 }
+
+export interface IUserUpdateData {
+  // id: number;
+  email: string;
+  name?: string;
+  password?: string;
+  role?: UserRole;
+  isActivated?: boolean;
+  activationCode?: string;
+  recoveryCode?: string;
+  isBlocked?: boolean;
+}

@@ -12,16 +12,20 @@ import { Routes } from '../../types/routes';
 import { IUserRegData, UserRole } from '../../types/user';
 import FormControl from './FormControl';
 import styles from './AuthForm.module.scss';
+import { IUser } from '../../models/user';
 
 const AuthForm = () => {
   const router = useRouter();
   const authCtx = useContext(AuthContext);
   const isLogin = router.pathname === Routes.LOGIN;
-  const isStart = router.pathname === Routes.START;
-  // const isSignup = router.pathname === Routes.SIGNUP;
-
+  let isInvite = false;
+  const code = router.query.code as string | undefined;
   const activated = router.query.activated as string | undefined;
   const user = router.query.user as string | undefined;
+
+  if (code) {
+    isInvite = true;
+  }
 
   const initialState: IUserRegData = {
     email: user ? user : '',
@@ -32,17 +36,29 @@ const AuthForm = () => {
 
   const [formData, setFormData] = useState<IUserRegData>(initialState);
   const [isValid, setIsValid] = useState(false);
+  const [invitedUser, setInvitedUser] = useState<IUser>();
 
   useEffect(() => {
-    if (user) {
+    const getData = async () => {
+      if (code) {
+        const user = await userAPI.getByCode(code);
+        setInvitedUser(user);
+      }
+    };
+
+    getData();
+  }, [code]);
+
+  useEffect(() => {
+    if (user || invitedUser) {
       setFormData({
-        email: user,
+        email: user ? user : invitedUser ? invitedUser.email : '',
         name: '',
         password: '',
         password2: '',
       });
     }
-  }, [user]);
+  }, [user, invitedUser]);
 
   useEffect(() => {
     if (user && activated === 'true') {
@@ -67,11 +83,17 @@ const AuthForm = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const signupSubmitHandler: React.FormEventHandler<HTMLFormElement> = async (
+  const inviteSubmitHandler: React.FormEventHandler<HTMLFormElement> = async (
     e
   ) => {
     e.preventDefault();
     console.log(formData);
+    try {
+      await userAPI.activateCashier(formData);
+      router.push(`${Routes.LOGIN}?activated=true&user=${formData.email}`);
+    } catch (error) {
+      handleError(error);
+    }
   };
 
   const loginSubmitHandler: React.FormEventHandler<HTMLFormElement> = async (
@@ -132,7 +154,15 @@ const AuthForm = () => {
 
   return (
     <div className="container">
-      <form onSubmit={isLogin ? loginSubmitHandler : startSubmitHandler}>
+      <form
+        onSubmit={
+          isLogin
+            ? loginSubmitHandler
+            : isInvite
+            ? inviteSubmitHandler
+            : startSubmitHandler
+        }
+      >
         <div className="form">
           <h2 className="form__title">
             {isLogin ? 'Авторизация' : 'Регистрация'}
@@ -144,6 +174,7 @@ const AuthForm = () => {
             value={email}
             onChange={inputChangeHandler}
             placeholder="Введите e-mail"
+            disabled={invitedUser !== undefined}
           />
           {!isLogin && (
             <FormControl

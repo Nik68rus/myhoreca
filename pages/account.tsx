@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import CashierCabinet from '../components/Cabinets/CashierCabinet/CashierCabinet';
 import OwnerCabinet from '../components/Cabinets/OwnerCabinet/OwnerCabinet';
 import PrivateRoute from '../components/PrivateRoute';
 import AuthContext from '../context/AuthContext';
@@ -9,6 +10,7 @@ const AccountPage = () => {
   return (
     <PrivateRoute>
       {authData?.role === UserRole.OWNER && <OwnerCabinet />}
+      {authData?.role === UserRole.CASHIER && <CashierCabinet />}
     </PrivateRoute>
   );
 };
