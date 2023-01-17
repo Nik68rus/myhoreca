@@ -1,22 +1,25 @@
 import Link from 'next/link';
-import React, { useContext } from 'react';
+import React from 'react';
 import cx from 'classnames';
 import { Routes } from '../../types/routes';
 import styles from './Header.module.scss';
 import Logo from '../Logo';
 import { useRouter } from 'next/router';
-import AuthContext from '../../context/AuthContext';
 import { deleteCookie } from '../../helpers/cookies';
+import { useAppDispatch, useAppSelector } from '../../hooks/store';
+import { resetAuth } from '../../redux/slices/userSlice';
 
 const Header = () => {
   const router = useRouter();
-  const authCtx = useContext(AuthContext);
+  const { authData } = useAppSelector((store) => store.user);
+  const dispatch = useAppDispatch();
 
   const isMain = router.pathname === '/';
 
   const logoutHandler = () => {
     deleteCookie('accessToken');
-    authCtx.setAuthData(null);
+    dispatch(resetAuth());
+    router.push(Routes.LOGIN);
   };
 
   return (
@@ -27,7 +30,7 @@ const Header = () => {
         })}
       >
         <Logo />
-        {authCtx.authData ? (
+        {authData ? (
           <button className="button" onClick={logoutHandler}>
             Выйти
           </button>

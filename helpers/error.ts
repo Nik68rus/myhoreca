@@ -56,5 +56,13 @@ const handleError = (error: any) => {
   toast.error(message);
 };
 
-export { handleServerError, handleError };
+const handleRTKQError = (error: any) => {
+  let message = 'Что-то пошло не так!';
+  if (error.data && typeof error.data === 'string') {
+    message = error.data;
+  }
+  toast.error(message);
+};
+
+export { handleServerError, handleError, handleRTKQError };
 export default ApiError;

@@ -49,7 +49,7 @@ const OwnerCabinet = () => {
               active={company}
             />
           )}
-          {activeTab.component === Employees && (
+          {activeTab.component === Employees && company && (
             <Employees company={company} onGoBack={forceCompanySelection} />
           )}
           {activeTab.component === Sales && <Sales />}

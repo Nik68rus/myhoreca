@@ -1,7 +1,7 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import itemAPI from '../../../api/itemAPI';
-import AuthContext from '../../../context/AuthContext';
 import { handleError } from '../../../helpers/error';
+import { useAppSelector } from '../../../hooks/store';
 import { IItem } from '../../../models/item';
 import { IItemInput } from '../../../types/item';
 import Spinner from '../../layout/Spinner';
@@ -11,7 +11,7 @@ const Items = () => {
   const [itemModal, setItemModal] = useState(false);
   const [items, setItems] = useState<IItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const { authData } = useContext(AuthContext);
+  const { authData } = useAppSelector((store) => store.user);
 
   const addItemHandler = async (itemData: IItemInput) => {
     const createdItem = await itemAPI.createItem(itemData);

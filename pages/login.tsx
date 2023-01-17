@@ -1,14 +1,12 @@
-import { useContext, useEffect, useState } from 'react';
-import Link from 'next/link';
+import { useEffect } from 'react';
 import { Routes } from '../types/routes';
-import { IUserLoginData } from '../types/user';
 import AuthForm from '../components/forms/AuthForm';
-import AuthContext from '../context/AuthContext';
 import { useRouter } from 'next/router';
 import Spinner from '../components/layout/Spinner';
+import { useAppSelector } from '../hooks/store';
 
 const LoginPage = () => {
-  const { authData, loading } = useContext(AuthContext);
+  const { authData, loading } = useAppSelector((store) => store.user);
   const router = useRouter();
 
   useEffect(() => {

@@ -11,7 +11,9 @@ import Modal from './Modal';
 
 type Props = {
   onClose: () => void;
-  onSuccess: (email: string) => Promise<IUser>;
+  onSuccess: (
+    email: string
+  ) => Promise<{ user: IUser | undefined; isSuccess: boolean }>;
 };
 
 const InviteUserModal = ({ onClose, onSuccess }: Props) => {
@@ -22,9 +24,15 @@ const InviteUserModal = ({ onClose, onSuccess }: Props) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const user = await onSuccess(email);
-      toast.success(`Пользователю ${user.email} отправлено приглашение!`);
-      onClose();
+      const result = await onSuccess(email);
+      console.log(result);
+
+      // if (result.isSuccess) {
+      //   toast.success(`Пользователю ${result.user.email} отправлено приглашение!`);
+      //   onClose();
+      // } else {
+      //   throw Error('Что-то пошло не так!');
+      // }
     } catch (error) {
       handleError(error);
     } finally {

@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import cx from 'classnames';
 import companyAPI from '../../../api/companyAPI';
-import AuthContext from '../../../context/AuthContext';
 import { ICompany } from '../../../models/company';
 import AddCompanyModal from '../../modals/AddCompanyModal';
 
 import styles from './Companies.module.scss';
 import { handleError } from '../../../helpers/error';
 import Spinner from '../../layout/Spinner';
+import { useAppSelector } from '../../../hooks/store';
 
 interface Props {
   onSelect: (c: ICompany) => void;
@@ -21,7 +21,7 @@ const Companies = ({ onSelect, active }: Props) => {
     active
   );
   const [loading, setLoading] = useState(true);
-  const { authData } = useContext(AuthContext);
+  const { authData } = useAppSelector((store) => store.user);
 
   useEffect(() => {
     const getData = async () => {

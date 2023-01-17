@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
-import React, { useContext, useEffect } from 'react';
-import AuthContext from '../context/AuthContext';
+import React, { useEffect } from 'react';
+import { useAppSelector } from '../hooks/store';
 import { Routes } from '../types/routes';
 import Spinner from './layout/Spinner';
 
@@ -9,7 +9,7 @@ interface Props {
 }
 
 const PrivateRoute = ({ children }: Props) => {
-  const { authData, loading } = useContext(AuthContext);
+  const { authData, loading } = useAppSelector((store) => store.user);
   const router = useRouter();
 
   useEffect(() => {

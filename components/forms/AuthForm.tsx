@@ -1,31 +1,38 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import companyAPI from '../../api/companyAPI';
 import userAPI from '../../api/userAPI';
-import AuthContext from '../../context/AuthContext';
 import { setCookie } from '../../helpers/cookies';
-import { handleError } from '../../helpers/error';
+import { handleError, handleRTKQError } from '../../helpers/error';
 import { isEmail } from '../../helpers/validation';
 import { Routes } from '../../types/routes';
-import { IUserRegData, UserRole } from '../../types/user';
+import { IUserAuthData, IUserRegData, UserRole } from '../../types/user';
 import FormControl from './FormControl';
-import styles from './AuthForm.module.scss';
 import { IUser } from '../../models/user';
+import { useAppDispatch } from '../../hooks/store';
+import { setAuth } from '../../redux/slices/userSlice';
+import {
+  useCreateUserMutation,
+  useGetByCodeQuery,
+  useLoginMutation,
+  userApi,
+} from '../../redux/api/user';
+import Spinner from '../layout/Spinner';
 
 const AuthForm = () => {
   const router = useRouter();
-  const authCtx = useContext(AuthContext);
-  const isLogin = router.pathname === Routes.LOGIN;
-  let isInvite = false;
-  const code = router.query.code as string | undefined;
-  const activated = router.query.activated as string | undefined;
-  const user = router.query.user as string | undefined;
+  const dispatch = useAppDispatch();
 
-  if (code) {
-    isInvite = true;
-  }
+  // параметр user и activated устанавливается после перехода по ссылке в активационном письме для главного пользователя
+  const user = router.query.user as string | undefined;
+  const activated = router.query.activated as string | undefined;
+
+  // параметр code устанавливается после перехода по ссылке активации из письма для кассира по инвайту
+  const code = router.query.code as string | undefined;
+
+  const isLogin = router.pathname === Routes.LOGIN; // режим логина или регистрации
+  const isInvite = code ? true : false; // заполняем ли профиль по инвайту
 
   const initialState: IUserRegData = {
     email: user ? user : '',
@@ -38,99 +45,9 @@ const AuthForm = () => {
   const [isValid, setIsValid] = useState(false);
   const [invitedUser, setInvitedUser] = useState<IUser>();
 
-  useEffect(() => {
-    const getData = async () => {
-      if (code) {
-        const user = await userAPI.getByCode(code);
-        setInvitedUser(user);
-      }
-    };
-
-    getData();
-  }, [code]);
-
-  useEffect(() => {
-    if (user || invitedUser) {
-      setFormData({
-        email: user ? user : invitedUser ? invitedUser.email : '',
-        name: '',
-        password: '',
-        password2: '',
-      });
-    }
-  }, [user, invitedUser]);
-
-  useEffect(() => {
-    if (user && activated === 'true') {
-      setFormData({
-        email: user,
-        name: '',
-        password: '',
-        password2: '',
-      });
-      toast.success(
-        `Пользователь ${user} успешно активирован! Вы можете войти в аккаунт!`
-      );
-    }
-  }, [user, activated]);
-
   const { email, name, password, password2 } = formData;
 
-  const inputChangeHandler: React.ChangeEventHandler<HTMLInputElement> = (
-    e
-  ) => {
-    const { value, name } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const inviteSubmitHandler: React.FormEventHandler<HTMLFormElement> = async (
-    e
-  ) => {
-    e.preventDefault();
-    console.log(formData);
-    try {
-      await userAPI.activateCashier(formData);
-      router.push(`${Routes.LOGIN}?activated=true&user=${formData.email}`);
-    } catch (error) {
-      handleError(error);
-    }
-  };
-
-  const loginSubmitHandler: React.FormEventHandler<HTMLFormElement> = async (
-    e
-  ) => {
-    e.preventDefault();
-    try {
-      const user = await userAPI.login(formData.email, formData.password);
-      authCtx.setAuthData(user);
-      setCookie('accessToken', user.accessToken);
-
-      if (user.isActivated) {
-        router.push(Routes.ACCOUNT);
-      } else {
-        router.push(Routes.ACTIVATION);
-      }
-    } catch (error) {
-      handleError(error);
-    }
-  };
-
-  const startSubmitHandler: React.FormEventHandler<HTMLFormElement> = async (
-    e
-  ) => {
-    e.preventDefault();
-    try {
-      const user = await userAPI.createUser(formData, UserRole.OWNER);
-      if (user) {
-        // authCtx.setAuthData(user);
-        setCookie('accessToken', user.accessToken);
-        router.push(Routes.ACTIVATION);
-      }
-    } catch (error) {
-      handleError(error);
-    }
-  };
-
+  // валидация формы на фронте
   useEffect(() => {
     if (isLogin) {
       if (isEmail(email) && password.trim().length > 4) {
@@ -152,8 +69,126 @@ const AuthForm = () => {
     }
   }, [isLogin, email, name, password, password2]);
 
+  // перевод формы в режим регистрации пользователя по инвайту
+  const fetchCode = code || 'nocode';
+
+  const { data } = useGetByCodeQuery(fetchCode, {
+    skip: fetchCode === 'nocode',
+  });
+
+  useEffect(() => {
+    if (data) {
+      setInvitedUser(data);
+    }
+  }, [data]);
+
+  //--------------
+
+  useEffect(() => {
+    if (user || invitedUser) {
+      setFormData({
+        email: user ? user : invitedUser ? invitedUser.email : '',
+        name: '',
+        password: '',
+        password2: '',
+      });
+    }
+  }, [user, invitedUser]);
+
+  //перевод формы в режим логина после активации главного пользователя
+  useEffect(() => {
+    if (user && activated === 'true') {
+      setFormData({
+        email: user,
+        name: '',
+        password: '',
+        password2: '',
+      });
+      toast.success(
+        `Пользователь ${user} успешно активирован! Вы можете войти в аккаунт!`
+      );
+    }
+  }, [user, activated]);
+
+  // обработчик изменеия полей формы
+  const inputChangeHandler: React.ChangeEventHandler<HTMLInputElement> = (
+    e
+  ) => {
+    const { value, name } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  // создание главного пользователя
+  const [
+    createUser,
+    { isLoading: creatingUser, error: signupError, data: createdUser },
+  ] = useCreateUserMutation();
+
+  const startSubmitHandler: React.FormEventHandler<HTMLFormElement> = async (
+    e
+  ) => {
+    e.preventDefault();
+    createUser({ ...formData, role: UserRole.OWNER });
+  };
+
+  useEffect(() => {
+    if (signupError) {
+      handleRTKQError(signupError);
+    }
+  }, [signupError]);
+
+  useEffect(() => {
+    if (createdUser) {
+      setCookie('accessToken', createdUser.accessToken);
+      router.push(Routes.ACTIVATION);
+    }
+  }, [createdUser, router]);
+
+  // создание кассира по инвайту
+  const inviteSubmitHandler: React.FormEventHandler<HTMLFormElement> = async (
+    e
+  ) => {
+    e.preventDefault();
+    console.log(formData);
+    try {
+      await userAPI.activateCashier(formData);
+      router.push(`${Routes.LOGIN}?activated=true&user=${formData.email}`);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  // логин пользователя
+  const [
+    loginUser,
+    { isLoading: logining, data: loggedInUser, error: loginError },
+  ] = useLoginMutation();
+  const loginSubmitHandler: React.FormEventHandler<HTMLFormElement> = async (
+    e
+  ) => {
+    e.preventDefault();
+    loginUser({ email: formData.email, password: formData.password });
+  };
+
+  useEffect(() => {
+    if (loginError) {
+      handleRTKQError(loginError);
+    }
+  }, [loginError]);
+
+  useEffect(() => {
+    if (loggedInUser) {
+      setCookie('accessToken', loggedInUser.accessToken);
+      dispatch(setAuth(loggedInUser as IUserAuthData));
+      loggedInUser.isActivated
+        ? router.push(Routes.HOME)
+        : router.push(Routes.ACTIVATION);
+    }
+  }, [loggedInUser, router, dispatch]);
+
   return (
     <div className="container">
+      {(creatingUser || logining) && <Spinner />}
       <form
         onSubmit={
           isLogin

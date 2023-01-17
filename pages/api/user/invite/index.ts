@@ -23,6 +23,8 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     // Invite employee
+    console.log(req.body);
+
     const { email, company } = req.body;
     const token = req.cookies.accessToken;
 

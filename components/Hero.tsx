@@ -1,12 +1,11 @@
 import Link from 'next/link';
-import React, { useContext } from 'react';
-import AuthContext from '../context/AuthContext';
+import { useAppSelector } from '../hooks/store';
 import { Routes } from '../types/routes';
 import { UserRole } from '../types/user';
 import styles from './Hero.module.scss';
 
 const Hero = () => {
-  const { authData } = useContext(AuthContext);
+  const { authData } = useAppSelector((store) => store.user);
 
   return (
     <section className={styles.hero}>

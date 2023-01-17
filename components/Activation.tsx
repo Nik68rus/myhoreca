@@ -1,13 +1,13 @@
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React, { useContext, useEffect } from 'react';
 import userAPI from '../api/userAPI';
-import AuthContext from '../context/AuthContext';
+import { useSendActivationMutation } from '../redux/api/user';
 import { Routes } from '../types/routes';
 
 const Activation = () => {
+  const [repeatCode] = useSendActivationMutation();
+
   const repeatHandler = () => {
-    userAPI.sendActivationCode();
+    repeatCode();
   };
 
   return (
