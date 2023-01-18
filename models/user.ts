@@ -11,6 +11,7 @@ import { UserRole } from '../types/user';
 export interface IUser
   extends Model<InferAttributes<IUser>, InferCreationAttributes<IUser>> {
   id: CreationOptional<number>;
+  spaceId: CreationOptional<number>;
   email: string;
   password: string;
   name: string;
@@ -29,6 +30,7 @@ const userModel = (sequelize: Sequelize) => {
       primaryKey: true,
       autoIncrement: true,
     },
+    spaceId: DataTypes.INTEGER,
     email: {
       type: DataTypes.STRING,
       unique: true,

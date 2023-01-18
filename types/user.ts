@@ -7,32 +7,29 @@ export enum UserRole {
 
 export interface TokenPayload {
   id: number;
+  spaceId: number;
   email: string;
   name: string;
   role: UserRole;
   isActivated: boolean;
-}
-
-export interface IUserRegData {
-  email: string;
-  name: string;
-  password: string;
-  password2: string;
-  role?: UserRole;
 }
 
 export interface IUserLoginData {
   email: string;
   password: string;
 }
-
-export interface IUserAuthData {
-  id: number;
+export interface IUserRegData {
   email: string;
   name: string;
-  role: UserRole;
-  isActivated: boolean;
+  password: string;
+  password2: string;
+  role?: UserRole;
+  space: string;
+}
+
+export interface IUserAuthData extends TokenPayload {
   accessToken: string;
+  refreshToken: string;
 }
 
 export interface IUserUpdateData {

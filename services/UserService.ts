@@ -1,4 +1,5 @@
-import { ICompany } from './../models/company';
+import { userDataDto } from './../helpers/dto';
+import { IShop } from '../models/shop';
 import { IUserAuthData, IUserUpdateData, UserRole } from './../types/user';
 import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
@@ -14,46 +15,39 @@ class UserService {
     db.connect();
   }
 
+  //генерация токенов и информации о пользователе
   async generateData(user: IUser) {
-    const token = await generateToken(
-      {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-        isActivated: user.isActivated,
-      },
+    const accessToken = await generateToken(
+      userDataDto(user),
       process.env.JWT_ACCESS_SECRET,
       60 * 60 * 12 //Токен валиден 12 часов
     );
 
+    const refreshToken = await generateToken(
+      userDataDto(user),
+      process.env.JWT_REFRESH_SECRET,
+      60 * 60 * 24 * 15 //Токен валиден 15 дней
+    );
+
     const result: IUserAuthData = {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role,
-      isActivated: user.isActivated,
-      accessToken: token,
+      ...userDataDto(user),
+      accessToken,
+      refreshToken,
     };
 
     return result;
   }
 
-  async createCashier(email: string) {
-    const activationCode = uuidv4();
-    const user = await db.users.create({
-      email,
-      name: '',
-      password: '',
-      activationCode,
-      role: UserRole.CASHIER,
-    });
+  //создание главного пользователя пространства
+  async create(userData: {
+    email: string;
+    password: string;
+    name: string;
+    role?: UserRole;
+    spaceId: number;
+  }) {
+    const { email, password, name, role, spaceId } = userData;
 
-    // db.sequelize.close();
-    return user;
-  }
-
-  async create(email: string, password: string, name: string, role?: UserRole) {
     const existingUser = await db.users.findOne({ where: { email } });
 
     if (existingUser) {
@@ -68,6 +62,7 @@ class UserService {
       name,
       password: hashedPassword,
       activationCode,
+      spaceId,
       role: role ? role : UserRole.GUEST,
     });
 
@@ -78,6 +73,7 @@ class UserService {
     return this.generateData(user);
   }
 
+  //активация главного пользователя
   async activate(code: string) {
     const user = await db.users.findOne({ where: { activationCode: code } });
 
@@ -93,6 +89,7 @@ class UserService {
     return user;
   }
 
+  //отправка письма с кодом сброса пароля
   async startRecover(email: string) {
     const normEmail = email.trim();
     const user = await db.users.findOne({ where: { email: normEmail } });
@@ -110,6 +107,7 @@ class UserService {
     return 'Ссылка отпралена';
   }
 
+  //валидация ссылки для восстановления пароля из письма
   async validateRecovery(code: string) {
     const user = await db.users.findOne({ where: { resetCode: code } });
 
@@ -126,6 +124,7 @@ class UserService {
     return user.email;
   }
 
+  //завершение восстановления и установка нового пароля
   async finishRecover(code: string, password: string) {
     const user = await db.users.findOne({ where: { resetCode: code } });
 
@@ -149,25 +148,55 @@ class UserService {
     return user;
   }
 
-  async invite(email: string, owner: string, company: ICompany) {
+  //создать пользователя-кассира
+  async createCashier(email: string, spaceId: number) {
+    const activationCode = uuidv4();
+    const user = await db.users.create({
+      email,
+      name: '',
+      password: '',
+      spaceId,
+      activationCode,
+      role: UserRole.CASHIER,
+    });
+
+    // db.sequelize.close();
+    return user;
+  }
+
+  // выслать кассиру приглашение и предоставить доступ
+  async invite(email: string, owner: string, shop: IShop) {
     let employee = await db.users.findOne({ where: { email } });
 
-    if (employee && employee.role === UserRole.CASHIER) {
-      await MailService.sendInviteNotififcationMail(email, owner, company);
-      await PermissionService.create(employee.id, company.id, UserRole.CASHIER);
+    if (employee && employee.role !== UserRole.CASHIER) {
+      throw ApiError.badRequest(
+        'Пользователь зарегистрирован с неверной ролью!'
+      );
     }
 
     if (!employee) {
-      employee = await this.createCashier(email);
-      await MailService.sendInviteActivationMail(employee, owner, company);
-      await PermissionService.create(employee.id, company.id, UserRole.CASHIER);
+      employee = await this.createCashier(email, shop.spaceId);
+      await PermissionService.create(employee.id, shop.id, UserRole.CASHIER);
+      await MailService.sendInviteActivationMail(employee, owner, shop);
+    } else {
+      await PermissionService.create(employee.id, shop.id, UserRole.CASHIER);
+      await MailService.sendInviteNotififcationMail(email, owner, shop);
     }
 
     return employee;
   }
 
+  // получить список сотрудников пространства
+  async getEmployees(spaceId: number) {
+    const employees = await db.users.findAll({ where: { spaceId } });
+    return employees;
+  }
+
   async findByCode(code: string) {
-    const user = await db.users.findOne({ where: { activationCode: code } });
+    const user = await db.users.findOne({
+      where: { activationCode: code },
+      include: db.spaces,
+    });
 
     if (!user) {
       throw ApiError.notFound('Пользователь не найден!');
@@ -176,8 +205,9 @@ class UserService {
     return user;
   }
 
-  async update(data: IUserUpdateData) {
+  async update(data: Partial<IUser>) {
     const {
+      id,
       email,
       name,
       password,
@@ -186,7 +216,7 @@ class UserService {
       activationCode,
       isBlocked,
     } = data;
-    const user = await db.users.findOne({ where: { email } });
+    const user = await db.users.findOne({ where: { id } });
 
     if (!user) {
       throw ApiError.notFound('Пользователь не найден!');
@@ -199,7 +229,7 @@ class UserService {
     if (isActivated) user.isActivated = isActivated;
     if (role) user.role = role;
     if (activationCode) user.activationCode = activationCode;
-    if (isBlocked) user.isBlocked = isBlocked;
+    if (isBlocked !== undefined) user.isBlocked = isBlocked;
 
     await user.save();
 

@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
-import userAPI from '../../api/userAPI';
-import { handleError, handleRTKQError } from '../../helpers/error';
+import { handleRTKQError } from '../../helpers/error';
 import { isEmail } from '../../helpers/validation';
 import { useStartRecoveryMutation } from '../../redux/api/user';
 import { Routes } from '../../types/routes';
@@ -12,15 +11,6 @@ const RecoverForm = () => {
   const [sent, setSent] = useState(false);
 
   const [startRecover, { error, isSuccess }] = useStartRecoveryMutation();
-
-  // const startRecover = async () => {
-  //   try {
-  //     await userAPI.startRecover(email);
-  //     setSent(true);
-  //   } catch (error) {
-  //     handleError(error);
-  //   }
-  // };
 
   const submitHandler: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
@@ -67,7 +57,7 @@ const RecoverForm = () => {
       </h1>
       <form onSubmit={submitHandler}>
         <div className="form">
-          <h2 className="form__title">Восстановление праоля</h2>
+          <h2 className="form__title">Восстановление пароля</h2>
           <FormControl
             label="E-mail"
             type="email"

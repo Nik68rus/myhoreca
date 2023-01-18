@@ -2,11 +2,13 @@ import { configureStore } from '@reduxjs/toolkit';
 import userSlice from './slices/userSlice';
 import { api } from './api';
 import { setupListeners } from '@reduxjs/toolkit/query';
+import ownerSlice from './slices/ownerSlice';
 
 export const store = configureStore({
   reducer: {
     [api.reducerPath]: api.reducer,
     user: userSlice,
+    owner: ownerSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(api.middleware),

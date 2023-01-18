@@ -1,16 +1,18 @@
-import { ICompany } from '../../../../models/company';
+import { IShop } from '../../../../models/shop';
 import { validateToken } from '../../../../helpers/token';
-import { IUserLoginData, UserRole } from '../../../../types/user';
+import { UserRole } from '../../../../types/user';
 import { NextApiRequest, NextApiResponse } from 'next';
-import bcrypt from 'bcrypt';
-import db from '../../../../models';
 import UserService from '../../../../services/UserService';
 import ApiError, { handleServerError } from '../../../../helpers/error';
+import PermissionService from '../../../../services/PermissionService';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
   body: {
     email: string;
-    company: ICompany;
+    shop: IShop;
+  };
+  query: {
+    shopId?: string;
   };
   cookies: {
     accessToken?: string;
@@ -23,9 +25,7 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     // Invite employee
-    console.log(req.body);
-
-    const { email, company } = req.body;
+    const { email, shop } = req.body;
     const token = req.cookies.accessToken;
 
     if (!token) {
@@ -41,7 +41,7 @@ export default async function handler(
 
       const from = `${user.name} (${user.email})`;
 
-      const employee = await UserService.invite(email, from, company);
+      const employee = await UserService.invite(email, from, shop);
 
       return res.status(201).json(employee);
     } catch (error) {
@@ -50,6 +50,32 @@ export default async function handler(
   }
 
   if (req.method === 'GET') {
-    // Accept invite
+    // Get list of company cashiers
+    try {
+      const { shopId } = req.query;
+      const token = req.cookies.accessToken;
+
+      if (!shopId) {
+        throw ApiError.badRequest('Не указан id точки продаж');
+      }
+
+      if (!token) {
+        throw ApiError.notAuthenticated('Пользователь не авторизован');
+      }
+
+      const userData = await validateToken(
+        token,
+        process.env.JWT_ACCESS_SECRET
+      );
+
+      if (userData.role !== UserRole.OWNER) {
+        throw ApiError.notAuthorized('Недостаточно прав!');
+      }
+
+      const users = await PermissionService.getShopCashiers(+shopId);
+      return res.status(200).json(users);
+    } catch (err) {
+      handleServerError(res, err);
+    }
   }
 }

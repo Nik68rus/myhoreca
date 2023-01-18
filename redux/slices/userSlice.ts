@@ -1,10 +1,12 @@
+import { userDataDto } from './../../helpers/dto';
+import { TokenPayload } from './../../types/user';
 import { IUserAuthData } from '../../types/user';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { userApi } from '../api/user';
 
 export interface UserState {
   loading: boolean;
-  authData: IUserAuthData | null;
+  authData: TokenPayload | null;
 }
 
 const initialState: UserState = {
@@ -16,7 +18,7 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setAuth: (state, action: PayloadAction<IUserAuthData>) => {
+    setAuth: (state, action: PayloadAction<TokenPayload>) => {
       state.authData = action.payload;
       state.loading = false;
     },
@@ -29,7 +31,7 @@ const userSlice = createSlice({
     builder.addMatcher(
       userApi.endpoints.checkUserAuth.matchFulfilled,
       (state, { payload }) => {
-        state.authData = payload;
+        state.authData = userDataDto(payload);
         state.loading = false;
       }
     ),

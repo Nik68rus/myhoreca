@@ -1,33 +1,32 @@
-import { UserRole } from './../types/user';
+import { IItemInput } from './../types/item';
 import ApiError from '../helpers/error';
 import db from '../models';
-import PermissionService from './PermissionService';
 
-class CompanyService {
+class SpaceService {
   constructor() {
     db.connect();
   }
 
-  async create(title: string, owner: number) {
+  async create(title: string) {
+    db.sequelize.sync();
     const normTitle = title.trim();
 
     if (normTitle.length < 3) {
       throw ApiError.validation('Слишком короткое название!');
     }
 
-    const existingCompany = await db.companies.findOne({
+    const existingSpace = await db.spaces.findOne({
       where: { title: normTitle },
     });
 
-    if (existingCompany) {
+    if (existingSpace) {
       throw ApiError.badRequest('Данная компания уже зарегистрирована!');
     }
 
-    const company = await db.companies.create({ title: normTitle });
-    await PermissionService.create(owner, company.id, UserRole.OWNER);
+    const newSpace = await db.spaces.create({ title: normTitle });
     db.sequelize.close();
-    return company;
+    return newSpace;
   }
 }
 
-export default new CompanyService();
+export default new SpaceService();

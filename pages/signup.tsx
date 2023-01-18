@@ -1,10 +1,8 @@
-import Link from 'next/link';
 import React from 'react';
-import AuthForm from '../components/forms/AuthForm';
-import { Routes } from '../types/routes';
+import SignupForm from '../components/forms/SignupForm';
 
 const SignupPage = () => {
-  return <AuthForm />;
+  return <SignupForm />;
 };
 
 export default SignupPage;

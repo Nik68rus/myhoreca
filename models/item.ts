@@ -10,9 +10,9 @@ import {
 export interface IItem
   extends Model<InferAttributes<IItem>, InferCreationAttributes<IItem>> {
   id: CreationOptional<number>;
-  userId: CreationOptional<number>;
+  spaceId: CreationOptional<number>;
   title: string;
-  imageUrl: string;
+  imageUrl: CreationOptional<string>;
   isCountable: boolean;
 }
 
@@ -23,16 +23,13 @@ const itemModel = (sequelize: Sequelize) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    userId: DataTypes.INTEGER,
+    spaceId: DataTypes.INTEGER,
     title: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
     },
-    imageUrl: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+    imageUrl: DataTypes.STRING,
     isCountable: DataTypes.BOOLEAN,
   });
 

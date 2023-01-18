@@ -1,26 +1,27 @@
 import React, { useCallback, useState } from 'react';
 import cx from 'classnames';
 import styles from './OwnerCabinet.module.scss';
-import Companies from './Companies';
+import Shops from './Shops';
 import Employees from './Employees';
 import Sales from './Sales';
-import { ICompany } from '../../../models/company';
+import { IShop } from '../../../models/shop';
 import Items from './Items';
-import Menu from './Menu';
+import Stock from './Stock';
+import { useAppSelector } from '../../../hooks/store';
 
 const tabs = [
-  { title: 'Товары', component: Items, specific: false },
-  { title: 'Точки', component: Companies, specific: false },
+  // { title: 'Товары', component: Items, specific: false },
+  { title: 'Точки', component: Shops, specific: false },
   { title: 'Сотрудники', component: Employees, specific: true },
-  { title: 'Меню', component: Menu, specific: true },
+  { title: 'Остатки', component: Stock, specific: true },
   { title: 'Продажи', component: Sales, specific: true },
 ];
 
 const OwnerCabinet = () => {
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  const [company, setCompany] = useState<ICompany>();
+  const { activeShop } = useAppSelector((state) => state.owner);
 
-  const forceCompanySelection = useCallback(() => {
+  const forceShopSelection = useCallback(() => {
     setActiveTab(tabs[0]);
   }, []);
 
@@ -36,25 +37,20 @@ const OwnerCabinet = () => {
                 ['tabs__control--active']: tab.title === activeTab.title,
               })}
               onClick={() => setActiveTab(tab)}
-              disabled={tab.specific && company === undefined}
+              disabled={tab.specific && activeShop === null}
             >
               {tab.title}
             </button>
           ))}
         </div>
         <div className="tabs__content">
-          {activeTab.component === Companies && (
-            <Companies
-              onSelect={(company: ICompany) => setCompany(company)}
-              active={company}
-            />
-          )}
-          {activeTab.component === Employees && company && (
-            <Employees company={company} onGoBack={forceCompanySelection} />
+          {activeTab.component === Shops && <Shops />}
+          {activeTab.component === Employees && activeShop && (
+            <Employees onGoBack={forceShopSelection} />
           )}
           {activeTab.component === Sales && <Sales />}
-          {activeTab.component === Items && <Items />}
-          {activeTab.component === Menu && <Menu company={company} />}
+          {/* {activeTab.component === Items && <Items />} */}
+          {/* {activeTab.component === Stock && <Stock shop={shop} />} */}
         </div>
       </div>
     </section>

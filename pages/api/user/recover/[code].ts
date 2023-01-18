@@ -1,11 +1,7 @@
-// import { Routes } from './../../../../types/routes';
 import { NextApiRequest, NextApiResponse } from 'next';
 import ApiError, { handleServerError } from '../../../../helpers/error';
-import db from '../../../../models';
 import UserService from '../../../../services/UserService';
 import { Routes } from '../../../../types/routes';
-// import UserService from '../../../../services/UserService';
-// import { handleServerError } from '../../../../helpers/error';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
   query: {
@@ -24,10 +20,12 @@ export default async function handler(
   const { code } = req.query;
 
   if (req.method === 'GET') {
+    //переадресация на ссылку для валидации кода сброса
     return res.redirect(`${Routes.PASSWORD}?code=${code}`);
   }
 
   if (req.method === 'POST') {
+    //установка нового пароля
     const { password, password2 } = req.body;
     try {
       if (!password || !password2) {

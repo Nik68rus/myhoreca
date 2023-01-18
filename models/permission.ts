@@ -16,7 +16,7 @@ export interface IPermission
   id: CreationOptional<number>;
   role: UserRole;
   userId: CreationOptional<number>;
-  companyId: CreationOptional<number>;
+  shopId: CreationOptional<number>;
 }
 
 const permissionModel = (sequelize: Sequelize) => {
@@ -31,7 +31,7 @@ const permissionModel = (sequelize: Sequelize) => {
       defaultValue: UserRole.GUEST,
     },
     userId: DataTypes.INTEGER,
-    companyId: DataTypes.INTEGER,
+    shopId: DataTypes.INTEGER,
   });
 
   return Permission;

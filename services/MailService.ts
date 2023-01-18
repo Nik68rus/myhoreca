@@ -1,5 +1,5 @@
 import { IUser } from './../models/user';
-import { ICompany } from './../models/company';
+import { IShop } from '../models/shop';
 import nodemailer, { Transporter } from 'nodemailer';
 import ApiError from '../helpers/error';
 import db from '../models';
@@ -21,7 +21,7 @@ class MailService {
   async sendActivationMail(to: string) {
     const user = await db.users.findOne({ where: { email: to } });
     if (user) {
-      const link = `${process.env.APP_URL}/api/user/activate/${user.activationCode}`;
+      const link = `${process.env.APP_URL}/api/user/activate?code=${user.activationCode}`;
       await this.transporter.sendMail({
         from: process.env.MAIL_USER,
         to,
@@ -58,11 +58,7 @@ class MailService {
     }
   }
 
-  async sendInviteNotififcationMail(
-    to: string,
-    from: string,
-    company: ICompany
-  ) {
+  async sendInviteNotififcationMail(to: string, from: string, company: IShop) {
     await this.transporter.sendMail({
       from: process.env.MAIL_USER,
       to,
@@ -79,9 +75,9 @@ class MailService {
   async sendInviteActivationMail(
     employee: IUser,
     from: string,
-    company: ICompany
+    company: IShop
   ) {
-    const link = `${process.env.APP_URL}/api/user/invite/${employee.activationCode}`;
+    const link = `${process.env.APP_URL}/api/user/employee/${employee.activationCode}`;
 
     await this.transporter.sendMail({
       from: process.env.MAIL_USER,

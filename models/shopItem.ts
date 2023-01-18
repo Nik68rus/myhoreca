@@ -7,26 +7,26 @@ import {
   Sequelize,
 } from 'sequelize';
 
-export interface ICompanyItem
+export interface IShopItem
   extends Model<
-    InferAttributes<ICompanyItem>,
-    InferCreationAttributes<ICompanyItem>
+    InferAttributes<IShopItem>,
+    InferCreationAttributes<IShopItem>
   > {
   id: CreationOptional<number>;
-  companyId: CreationOptional<number>;
+  shopId: CreationOptional<number>;
   itemId: CreationOptional<number>;
   quantity: number;
   price: number;
 }
 
-const companyItemModel = (sequelize: Sequelize) => {
-  const Item = sequelize.define<ICompanyItem>('company-item', {
+const shopItemModel = (sequelize: Sequelize) => {
+  const ShopItem = sequelize.define<IShopItem>('shop-item', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    companyId: DataTypes.INTEGER,
+    shopId: DataTypes.INTEGER,
     itemId: DataTypes.INTEGER,
     quantity: DataTypes.INTEGER,
     price: {
@@ -35,7 +35,7 @@ const companyItemModel = (sequelize: Sequelize) => {
     },
   });
 
-  return Item;
+  return ShopItem;
 };
 
-export default companyItemModel;
+export default shopItemModel;

@@ -1,18 +1,20 @@
 import { Sequelize } from 'sequelize';
 import userModel from './user';
-import companyModel from './company';
+import shopModel from './shop';
 import permissionModel from './permission';
 import itemModel from './item';
-import companyItemModel from './companyItem';
+import shopItemModel from './shopItem';
+import spaceModel from './space';
 
 interface DB {
   connect: () => void;
   sequelize: Sequelize;
+  spaces: ReturnType<typeof spaceModel>;
   users: ReturnType<typeof userModel>;
-  companies: ReturnType<typeof companyModel>;
+  shops: ReturnType<typeof shopModel>;
   permissions: ReturnType<typeof permissionModel>;
   items: ReturnType<typeof itemModel>;
-  companyItems: ReturnType<typeof companyItemModel>;
+  shopItems: ReturnType<typeof shopItemModel>;
 }
 
 const connect = () => {
@@ -32,23 +34,26 @@ const sequelize = connect();
 sequelize.authenticate();
 sequelize.sync();
 
+const Space = spaceModel(sequelize);
 const User = userModel(sequelize);
-const Company = companyModel(sequelize);
+const Shop = shopModel(sequelize);
 const Permission = permissionModel(sequelize);
 const Item = itemModel(sequelize);
-const CompanyItem = companyItemModel(sequelize);
+const ShopItem = shopItemModel(sequelize);
+
+Space.hasMany(User);
+User.belongsTo(Space);
+Space.hasMany(Shop);
+Shop.belongsTo(Space);
+Space.hasMany(Item);
+Item.belongsTo(Space);
 
 User.hasMany(Permission);
 Permission.belongsTo(User);
-Company.hasMany(Permission);
-Permission.belongsTo(Company);
+Shop.hasMany(Permission);
+Permission.belongsTo(Shop);
 
-User.hasMany(Item);
-Item.belongsTo(User);
-
-Item.belongsToMany(Company, { through: CompanyItem });
-Item.belongsTo(User);
-User.hasMany(Item);
+Item.belongsToMany(Shop, { through: ShopItem });
 
 let connected = false;
 
@@ -59,11 +64,12 @@ const db: DB = {
     this.sequelize.sync();
   },
   sequelize,
+  spaces: Space,
   users: User,
-  companies: Company,
+  shops: Shop,
   permissions: Permission,
   items: Item,
-  companyItems: CompanyItem,
+  shopItems: ShopItem,
 };
 
 export default db;

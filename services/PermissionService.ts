@@ -1,5 +1,4 @@
 import { IUser } from './../models/user';
-import { ICompany } from './../models/company';
 import { UserRole } from './../types/user';
 import ApiError from '../helpers/error';
 import db from '../models';
@@ -10,30 +9,29 @@ class PermissionService {
     db.connect();
   }
 
-  async create(userId: number, companyId: number, role: UserRole) {
+  async create(userId: number, shopId: number, role: UserRole) {
     const existing = await db.permissions.findOne({
-      where: { userId, companyId, role },
+      where: { userId, shopId, role },
     });
     if (existing) {
       throw ApiError.badRequest('Данное разрешение уже зарегистрировано!');
     }
 
-    const permission = await db.permissions.create({ userId, companyId, role });
+    const permission = await db.permissions.create({ userId, shopId, role });
     return permission;
   }
 
-  async getUserCompanies(userId: number) {
-    const permissions = (await db.permissions.findAll({
-      where: { userId, role: UserRole.OWNER },
-      include: db.companies,
-    })) as unknown as IPermission & { company: ICompany }[];
+  async getSpaceShops(spaceId: number) {
+    const shops = await db.shops.findAll({
+      where: { spaceId },
+    });
     db.sequelize.close();
-    return permissions.map((perm) => perm.company);
+    return shops;
   }
 
-  async getCompanyCashiers(companyId: number) {
+  async getShopCashiers(shopId: number) {
     const permissions = (await db.permissions.findAll({
-      where: { companyId, role: UserRole.CASHIER },
+      where: { shopId, role: UserRole.CASHIER },
       include: db.users,
     })) as unknown as IPermission & { user: IUser }[];
     db.sequelize.close();

@@ -1,8 +1,8 @@
 import React from 'react';
-import AuthForm from '../components/forms/AuthForm';
+import SignupForm from '../components/forms/SignupForm';
 
 const StartPage = () => {
-  return <AuthForm />;
+  return <SignupForm />;
 };
 
 export default StartPage;

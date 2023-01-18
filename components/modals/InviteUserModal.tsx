@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import companyAPI from '../../api/companyAPI';
-import userAPI from '../../api/userAPI';
-import { handleError, handleRTKQError } from '../../helpers/error';
-import { ICompany } from '../../models/company';
+import { handleRTKQError } from '../../helpers/error';
+import { useAppSelector } from '../../hooks/store';
 import { IUser } from '../../models/user';
 import { useInviteEmployeeMutation } from '../../redux/api/user';
 import FormControl from '../forms/FormControl';
@@ -12,19 +10,20 @@ import Modal from './Modal';
 
 type Props = {
   onClose: () => void;
-  // onSuccess: () => void;
-  company: ICompany;
 };
 
-const InviteUserModal = ({ onClose, company }: Props) => {
+const InviteUserModal = ({ onClose }: Props) => {
   const [email, setEmail] = useState('');
+  const { activeShop } = useAppSelector((store) => store.owner);
 
-  const [inviteEmployee, { data: invitedUser, isSuccess, isLoading, error }] =
+  const [inviteEmployee, { data: invitedUser, isLoading, error }] =
     useInviteEmployeeMutation();
 
   const submitHandler: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    inviteEmployee({ email, company });
+    if (activeShop) {
+      inviteEmployee({ email, shop: activeShop });
+    }
   };
 
   useEffect(() => {
@@ -38,7 +37,6 @@ const InviteUserModal = ({ onClose, company }: Props) => {
       toast.success(
         `Пользователю ${invitedUser.email} отправлено приглашение!`
       );
-      // onSuccess();
       onClose();
     }
   }, [invitedUser, onClose]);

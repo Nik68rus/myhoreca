@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { FaCheckCircle, FaMinusCircle } from 'react-icons/fa';
 import { handleRTKQError } from '../../../helpers/error';
-import { ICompany } from '../../../models/company';
+import { useAppSelector } from '../../../hooks/store';
+import { IShop } from '../../../models/shop';
 import {
   useEditEmployeeMutation,
   useGetEmployeesQuery,
@@ -13,25 +14,25 @@ import InviteUserModal from '../../modals/InviteUserModal';
 import styles from './Employees.module.scss';
 
 interface Props {
-  company: ICompany;
   onGoBack: () => void;
 }
 
-const Employees = ({ company, onGoBack }: Props) => {
+const Employees = ({ onGoBack }: Props) => {
   const [inviteModalVisible, setInviteModalVisible] = useState(false);
+  const { activeShop } = useAppSelector((store) => store.owner);
 
   const {
     data: employees,
     isLoading: loading,
     error,
     refetch,
-  } = useGetEmployeesQuery(company.id, { refetchOnFocus: true });
+  } = useGetEmployeesQuery(activeShop?.id || 0, { skip: !activeShop });
 
   useEffect(() => {
-    if (!company) {
+    if (!activeShop) {
       onGoBack();
     }
-  }, [company, onGoBack]);
+  }, [activeShop, onGoBack]);
 
   useEffect(() => {
     refetch();
@@ -58,13 +59,14 @@ const Employees = ({ company, onGoBack }: Props) => {
             <li key={employee.id} className={styles.item}>
               {employee.email}
               {employee.isActivated ? <FaCheckCircle /> : <FaMinusCircle />}
+              <span className="tag">{employee.role}</span>
               <button
                 className="button button--small"
                 onClick={() => {
                   blockHandler(employee.id, !employee.isBlocked);
                 }}
               >
-                Заблокировать
+                {employee.isBlocked ? 'Разблокировать' : 'Заблокировать'}
               </button>
             </li>
           ))}
@@ -76,11 +78,7 @@ const Employees = ({ company, onGoBack }: Props) => {
         Пригласить
       </button>
       {inviteModalVisible && (
-        <InviteUserModal
-          onClose={() => setInviteModalVisible(false)}
-          // onSuccess={inviteHandler}
-          company={company}
-        />
+        <InviteUserModal onClose={() => setInviteModalVisible(false)} />
       )}
     </>
   );

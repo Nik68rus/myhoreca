@@ -1,12 +1,13 @@
-import { validateToken } from './../../../helpers/token';
-import { ICompany } from './../../../models/company';
+import { UserRole } from './../../../types/user';
+import { validateToken } from '../../../helpers/token';
+import { IShop } from '../../../models/shop';
 import { NextApiRequest, NextApiResponse } from 'next';
 import ApiError, { handleServerError } from '../../../helpers/error';
-import CompanyService from '../../../services/CompanyService';
 import PermissionService from '../../../services/PermissionService';
+import ShopService from '../../../services/ShopService';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
-  body: ICompany;
+  body: IShop;
   cookies: {
     accessToken?: string;
   };
@@ -17,31 +18,27 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'POST') {
+    // Создание новой точки продаж
     const { title } = req.body;
-
     const token = req.cookies.accessToken;
-
     if (!token) {
-      return res.status(401).json('Пользователь не авторизован!');
+      throw ApiError.notAuthenticated('Пользователь не авторизован!');
     }
-
     try {
       const user = await validateToken(token, process.env.JWT_ACCESS_SECRET);
-      const company = await CompanyService.create(title, user.id);
-      return res.status(201).json(company);
+      if (user.role !== UserRole.OWNER) {
+        throw ApiError.notAuthorized('Недостаточно прав!');
+      }
+      const shop = await ShopService.create(title, user.spaceId, user.id);
+      return res.status(201).json(shop);
     } catch (error) {
       handleServerError(res, error);
     }
   }
 
   if (req.method === 'GET') {
+    // получение всех точек продаж пространства
     try {
-      const ownerId = req.query.ownerId as string;
-
-      if (!ownerId) {
-        throw ApiError.badRequest('Не указан id пользователя');
-      }
-
       const token = req.cookies.accessToken;
 
       if (!token) {
@@ -50,12 +47,14 @@ export default async function handler(
 
       const user = await validateToken(token, process.env.JWT_ACCESS_SECRET);
 
-      if (user.id !== +ownerId) {
-        throw ApiError.notAuthorized('Нет доступа!');
+      let shops: IShop[] = [];
+
+      if (user.role === UserRole.OWNER) {
+        shops = await ShopService.getShops(user.spaceId);
+        return res.status(200).json(shops);
       }
 
-      const companies = await PermissionService.getUserCompanies(+ownerId);
-      return res.status(200).json(companies);
+      throw ApiError.notAuthorized('Недостаточно прав!');
     } catch (err) {
       handleServerError(res, err);
     }

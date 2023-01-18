@@ -13,8 +13,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'POST') {
+    //Начать восстановление пароля и отправить письмо
     const { email } = req.body;
-    console.log(email);
 
     try {
       const user = await UserService.startRecover(email);
@@ -25,6 +25,7 @@ export default async function handler(
   }
 
   if (req.method === 'GET') {
+    //проверить код восстановления после перехода по ссылке из письма
     const code = req.query.code as string;
     if (code) {
       try {

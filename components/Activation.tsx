@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import userAPI from '../api/userAPI';
 import { useSendActivationMutation } from '../redux/api/user';
 import { Routes } from '../types/routes';
 
