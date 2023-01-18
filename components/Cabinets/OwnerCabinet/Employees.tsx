@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { FaCheckCircle, FaMinusCircle } from 'react-icons/fa';
-import userAPI from '../../../api/userAPI';
-import { handleError } from '../../../helpers/error';
+import { handleRTKQError } from '../../../helpers/error';
 import { ICompany } from '../../../models/company';
-import { IUser } from '../../../models/user';
 import {
+  useEditEmployeeMutation,
   useGetEmployeesQuery,
   useInviteEmployeeMutation,
 } from '../../../redux/api/user';
@@ -26,7 +25,7 @@ const Employees = ({ company, onGoBack }: Props) => {
     isLoading: loading,
     error,
     refetch,
-  } = useGetEmployeesQuery(company.id);
+  } = useGetEmployeesQuery(company.id, { refetchOnFocus: true });
 
   useEffect(() => {
     if (!company) {
@@ -38,15 +37,16 @@ const Employees = ({ company, onGoBack }: Props) => {
     refetch();
   }, [refetch]);
 
-  const [inviteEmployee, { data: invitedUser, isSuccess }] =
-    useInviteEmployeeMutation();
+  const [editEmployee, { error: editingError }] = useEditEmployeeMutation();
 
-  const inviteHandler = async (email: string) => {
-    console.log({ email, company });
+  useEffect(() => {
+    if (editingError) {
+      handleRTKQError(editingError);
+    }
+  }, [editingError]);
 
-    inviteEmployee({ email, company });
-    // refetch();
-    return { user: invitedUser, isSuccess };
+  const blockHandler = (id: number, status: boolean) => {
+    editEmployee({ id, isBlocked: status });
   };
 
   return (
@@ -58,7 +58,14 @@ const Employees = ({ company, onGoBack }: Props) => {
             <li key={employee.id} className={styles.item}>
               {employee.email}
               {employee.isActivated ? <FaCheckCircle /> : <FaMinusCircle />}
-              <button className="button button--small">Заблокировать</button>
+              <button
+                className="button button--small"
+                onClick={() => {
+                  blockHandler(employee.id, !employee.isBlocked);
+                }}
+              >
+                Заблокировать
+              </button>
             </li>
           ))}
         </ul>
@@ -71,7 +78,8 @@ const Employees = ({ company, onGoBack }: Props) => {
       {inviteModalVisible && (
         <InviteUserModal
           onClose={() => setInviteModalVisible(false)}
-          onSuccess={inviteHandler}
+          // onSuccess={inviteHandler}
+          company={company}
         />
       )}
     </>

@@ -4,6 +4,7 @@ import { IUserAuthData } from '../types/user';
 
 export const api = createApi({
   reducerPath: 'api',
+  tagTypes: ['Employee'],
   baseQuery: fetchBaseQuery({ baseUrl: `api/` }),
   endpoints: () => ({}),
 });

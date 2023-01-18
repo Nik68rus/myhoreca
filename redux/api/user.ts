@@ -12,6 +12,7 @@ interface IResetPassword {
 }
 
 export const userApi = api.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
     // проверить статус авторизации
     checkUserAuth: builder.query<IUserAuthData, void>({
@@ -21,6 +22,7 @@ export const userApi = api.injectEndpoints({
     // получить список сотрудников торговой точки
     getEmployees: builder.query<IUser[], number>({
       query: (companyId) => `user/employees?companyId=${companyId}`,
+      providesTags: ['Employee'],
     }),
 
     //получить данные о пользователе по коду инвайта
@@ -92,6 +94,7 @@ export const userApi = api.injectEndpoints({
         method: 'POST',
         body,
       }),
+      invalidatesTags: ['Employee'],
     }),
 
     //активация профиля и заполнение личных данных сотрудником
@@ -101,6 +104,16 @@ export const userApi = api.injectEndpoints({
         method: 'PATCH',
         body,
       }),
+    }),
+
+    //редактирование пользователя администратором
+    editEmployee: builder.mutation<IUser, Partial<IUser>>({
+      query: (body) => ({
+        url: `user/${body.id}`,
+        method: 'PATCH',
+        body,
+      }),
+      invalidatesTags: ['Employee'],
     }),
   }),
 });
@@ -117,4 +130,5 @@ export const {
   useFinishRecoveryMutation,
   useInviteEmployeeMutation,
   useActivateEmployeeMutation,
+  useEditEmployeeMutation,
 } = userApi;

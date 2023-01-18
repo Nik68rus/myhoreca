@@ -2,9 +2,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import userAPI from '../../api/userAPI';
 import { setCookie } from '../../helpers/cookies';
-import { handleError, handleRTKQError } from '../../helpers/error';
+import { handleRTKQError } from '../../helpers/error';
 import { isEmail } from '../../helpers/validation';
 import { Routes } from '../../types/routes';
 import { IUserAuthData, IUserRegData, UserRole } from '../../types/user';
@@ -13,6 +12,7 @@ import { IUser } from '../../models/user';
 import { useAppDispatch } from '../../hooks/store';
 import { setAuth } from '../../redux/slices/userSlice';
 import {
+  useActivateEmployeeMutation,
   useCreateUserMutation,
   useGetByCodeQuery,
   useLoginMutation,
@@ -72,7 +72,7 @@ const AuthForm = () => {
   // перевод формы в режим регистрации пользователя по инвайту
   const fetchCode = code || 'nocode';
 
-  const { data } = useGetByCodeQuery(fetchCode, {
+  const { data, isLoading: inviteChecking } = useGetByCodeQuery(fetchCode, {
     skip: fetchCode === 'nocode',
   });
 
@@ -95,7 +95,7 @@ const AuthForm = () => {
     }
   }, [user, invitedUser]);
 
-  //перевод формы в режим логина после активации главного пользователя
+  //перевод формы в режим логина после активации пользователя
   useEffect(() => {
     if (user && activated === 'true') {
       setFormData({
@@ -145,18 +145,33 @@ const AuthForm = () => {
   }, [createdUser, router]);
 
   // создание кассира по инвайту
+  const [
+    activateEmployee,
+    {
+      isLoading: activatingEmployee,
+      error: activatingError,
+      isSuccess: activatingSuccess,
+    },
+  ] = useActivateEmployeeMutation();
   const inviteSubmitHandler: React.FormEventHandler<HTMLFormElement> = async (
     e
   ) => {
     e.preventDefault();
     console.log(formData);
-    try {
-      await userAPI.activateCashier(formData);
-      router.push(`${Routes.LOGIN}?activated=true&user=${formData.email}`);
-    } catch (error) {
-      handleError(error);
-    }
+    activateEmployee(formData);
   };
+
+  useEffect(() => {
+    if (activatingError) {
+      handleRTKQError(activatingError);
+    }
+  }, [activatingError]);
+
+  useEffect(() => {
+    if (activatingSuccess) {
+      router.push(`${Routes.LOGIN}?activated=true&user=${formData.email}`);
+    }
+  }, [activatingSuccess, router, formData.email]);
 
   // логин пользователя
   const [
@@ -188,7 +203,9 @@ const AuthForm = () => {
 
   return (
     <div className="container">
-      {(creatingUser || logining) && <Spinner />}
+      {(creatingUser || logining || inviteChecking || activatingEmployee) && (
+        <Spinner />
+      )}
       <form
         onSubmit={
           isLogin
