@@ -76,12 +76,8 @@ export default async function handler(
           // Изменение другого пользователя адмиинистратором
           const user = await UserService.update(req.body);
           return res.status(200).json(user);
-        } else {
-          //Изменение своих данных
         }
-        return res.status(200).json(userData);
-      } else {
-        return res.status(401).json('Пользователь не авторизован');
+        throw ApiError.notAuthorized('Недостаточно прав');
       }
     } catch (error) {
       handleServerError(res, error);
