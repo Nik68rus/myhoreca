@@ -1,10 +1,7 @@
 import { IItemInput } from './../../../types/item';
-import { IItem } from './../../../models/item';
 import { validateToken } from './../../../helpers/token';
 import { NextApiRequest, NextApiResponse } from 'next';
 import ApiError, { handleServerError } from '../../../helpers/error';
-import CompanyService from '../../../services/ShopService';
-import PermissionService from '../../../services/PermissionService';
 import ItemService from '../../../services/ItemService';
 
 interface ExtendedNextApiRequest extends NextApiRequest {

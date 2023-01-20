@@ -1,3 +1,4 @@
+import * as pg from 'pg';
 import { Sequelize } from 'sequelize';
 import userModel from './user';
 import shopModel from './shop';
