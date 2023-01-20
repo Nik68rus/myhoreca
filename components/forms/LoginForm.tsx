@@ -78,9 +78,7 @@ const LoginForm = () => {
   };
 
   useEffect(() => {
-    if (loginError) {
-      handleRTKQError(loginError);
-    }
+    handleRTKQError(loginError);
   }, [loginError]);
 
   useEffect(() => {

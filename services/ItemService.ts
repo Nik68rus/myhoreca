@@ -28,8 +28,9 @@ class ItemService {
     return newItem;
   }
 
-  async getItems(userId: number) {
-    const items = await db.items.findAll({ where: { userId } });
+  async getItems(spaceId: number) {
+    db.sequelize.sync();
+    const items = await db.items.findAll({ where: { spaceId } });
     return items;
   }
 }

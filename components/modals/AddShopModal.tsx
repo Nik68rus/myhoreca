@@ -16,9 +16,7 @@ const AddShopModal = ({ onClose }: Props) => {
   const [createShop, { error, isLoading, isSuccess }] = useCreateShopMutation();
 
   useEffect(() => {
-    if (error) {
-      handleRTKQError(error);
-    }
+    handleRTKQError(error);
   }, [error]);
 
   useEffect(() => {

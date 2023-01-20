@@ -4,7 +4,7 @@ import cx from 'classnames';
 type TInputType = 'email' | 'password' | 'text' | 'number' | 'tel';
 
 interface Props {
-  label: string;
+  label?: string;
   type: TInputType;
   id: string;
   name?: string;
@@ -32,7 +32,7 @@ const FormControl = ({
 }: Props) => {
   return (
     <div className={cx('form__control', className ? className : '')}>
-      <label htmlFor={id}>{label}</label>
+      {label && <label htmlFor={id}>{label}</label>}
       <input
         type={type}
         id={id}

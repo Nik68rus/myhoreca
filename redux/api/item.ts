@@ -11,11 +11,13 @@ export const itemApi = api.injectEndpoints({
         method: 'POST',
         body,
       }),
+      invalidatesTags: ['Item'],
     }),
 
     //получение всех товаров пространства
     getItems: builder.query<IItem[], void>({
       query: () => 'item',
+      providesTags: ['Item'],
     }),
   }),
 });

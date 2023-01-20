@@ -1,0 +1,25 @@
+@use '../../../styles/variables.scss';
+
+.item {
+  padding: 12px 0;
+  border-bottom: variables.$border-light-dashed;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  align-items: center;
+
+  & :global(.form__control) {
+    flex-grow: 1;
+    margin-bottom: 0;
+  }
+
+  & :global(.button--icon) {
+    min-height: 41px;
+    min-width: 41px;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 4px;
+}

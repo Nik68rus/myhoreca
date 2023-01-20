@@ -95,4 +95,17 @@
       opacity: 0.7;
     }
   }
+
+  &--icon {
+    padding: 8px;
+    background-color: $color-input-bg;
+    color: $color-text-muted;
+    min-width: auto;
+
+    &:hover,
+    &:focus {
+      background-color: $color-input-focus;
+      box-shadow: none;
+    }
+  }
 }

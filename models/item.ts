@@ -10,6 +10,7 @@ import {
 export interface IItem
   extends Model<InferAttributes<IItem>, InferCreationAttributes<IItem>> {
   id: CreationOptional<number>;
+  categoryId: CreationOptional<number>;
   spaceId: CreationOptional<number>;
   title: string;
   imageUrl: CreationOptional<string>;
@@ -23,6 +24,7 @@ const itemModel = (sequelize: Sequelize) => {
       primaryKey: true,
       autoIncrement: true,
     },
+    categoryId: DataTypes.INTEGER,
     spaceId: DataTypes.INTEGER,
     title: {
       type: DataTypes.STRING,

@@ -15,6 +15,7 @@ export interface IUser
   email: string;
   password: string;
   name: string;
+  avatarUrl: CreationOptional<string>;
   activationCode: string;
   isActivated: CreationOptional<boolean>;
   isBlocked: CreationOptional<boolean>;
@@ -44,6 +45,7 @@ const userModel = (sequelize: Sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    avatarUrl: DataTypes.STRING,
     activationCode: {
       type: DataTypes.STRING,
       allowNull: false,

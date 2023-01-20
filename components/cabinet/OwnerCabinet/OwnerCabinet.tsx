@@ -29,9 +29,7 @@ const OwnerCabinet = () => {
   }, [shops, dispatch]);
 
   useEffect(() => {
-    if (error) {
-      handleRTKQError(error);
-    }
+    handleRTKQError(error);
   }, [error]);
 
   return (

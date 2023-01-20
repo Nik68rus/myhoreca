@@ -79,9 +79,7 @@ const NewPasswordForm = () => {
 
   //обработка ошибки установки пароля
   useEffect(() => {
-    if (settingError) {
-      handleRTKQError(settingError);
-    }
+    handleRTKQError(settingError);
   }, [settingError]);
 
   //успех установки пароля

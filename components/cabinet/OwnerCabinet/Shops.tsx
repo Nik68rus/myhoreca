@@ -22,9 +22,7 @@ const Shops = () => {
   const { data: shops, isLoading, error } = useGetShopsQuery();
 
   useEffect(() => {
-    if (error) {
-      handleRTKQError(error);
-    }
+    handleRTKQError(error);
   }, [error]);
 
   const shopClickHandler = (shop: IShop) => {

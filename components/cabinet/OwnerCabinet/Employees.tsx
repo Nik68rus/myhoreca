@@ -20,9 +20,7 @@ const Employees = () => {
   } = useGetEmployeesQuery(activeShop?.id || 0, { skip: !activeShop });
 
   useEffect(() => {
-    if (loadingError) {
-      handleRTKQError(loadingError);
-    }
+    handleRTKQError(loadingError);
   }, [loadingError]);
 
   return (
@@ -37,12 +35,19 @@ const Employees = () => {
               </li>
             ))}
           </ul>
-        ) : (
+        ) : activeShop ? (
           <p>В данной точке еще нет кассиров</p>
+        ) : (
+          <p>Выберите точку</p>
         )}
-        <button className="button" onClick={() => setInviteModalVisible(true)}>
-          Пригласить
-        </button>
+        {activeShop && (
+          <button
+            className="button"
+            onClick={() => setInviteModalVisible(true)}
+          >
+            Пригласить
+          </button>
+        )}
       </Card>
       {inviteModalVisible && (
         <InviteUserModal onClose={() => setInviteModalVisible(false)} />

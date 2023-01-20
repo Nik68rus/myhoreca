@@ -58,10 +58,12 @@ const handleError = (error: any) => {
 
 const handleRTKQError = (error: any) => {
   let message = 'Что-то пошло не так!';
-  if (error.data && typeof error.data === 'string') {
+  if (error && error.data && typeof error.data === 'string') {
     message = error.data;
   }
-  toast.error(message);
+  if (error) {
+    toast.error(message);
+  }
 };
 
 export { handleServerError, handleError, handleRTKQError };

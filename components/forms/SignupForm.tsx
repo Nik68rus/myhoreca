@@ -111,9 +111,7 @@ const SignupForm = () => {
   };
 
   useEffect(() => {
-    if (signupError) {
-      handleRTKQError(signupError);
-    }
+    handleRTKQError(signupError);
   }, [signupError]);
 
   useEffect(() => {
@@ -148,9 +146,7 @@ const SignupForm = () => {
   };
 
   useEffect(() => {
-    if (activatingError) {
-      handleRTKQError(activatingError);
-    }
+    handleRTKQError(activatingError);
   }, [activatingError]);
 
   useEffect(() => {

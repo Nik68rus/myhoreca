@@ -42,16 +42,21 @@ export default async function handler(
   }
 
   if (req.method === 'GET') {
-    try {
-      const token = req.cookies.accessToken;
+    const token = req.cookies.accessToken;
 
-      if (!token) {
-        throw ApiError.notAuthenticated('Пользователь не авторизован');
+    if (!token) {
+      throw ApiError.notAuthenticated('Пользователь не авторизован');
+    }
+
+    try {
+      let user;
+      try {
+        user = await validateToken(token, process.env.JWT_ACCESS_SECRET);
+      } catch (error) {
+        throw ApiError.notAuthenticated('Токен не валидный!');
       }
 
-      const user = await validateToken(token, process.env.JWT_ACCESS_SECRET);
-
-      const items = await ItemService.getItems(user.id);
+      const items = await ItemService.getItems(user.spaceId);
       return res.status(200).json(items);
     } catch (err) {
       handleServerError(res, err);

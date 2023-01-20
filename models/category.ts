@@ -7,15 +7,18 @@ import {
   Sequelize,
 } from 'sequelize';
 
-export interface IShop
-  extends Model<InferAttributes<IShop>, InferCreationAttributes<IShop>> {
+export interface ICategory
+  extends Model<
+    InferAttributes<ICategory>,
+    InferCreationAttributes<ICategory>
+  > {
   id: CreationOptional<number>;
   spaceId: CreationOptional<number>;
   title: string;
 }
 
-const shopModel = (sequelize: Sequelize) => {
-  const Shop = sequelize.define<IShop>('shop', {
+const categoryModel = (sequelize: Sequelize) => {
+  const Category = sequelize.define<ICategory>('category', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -28,7 +31,7 @@ const shopModel = (sequelize: Sequelize) => {
     },
   });
 
-  return Shop;
+  return Category;
 };
 
-export default shopModel;
+export default categoryModel;

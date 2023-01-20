@@ -19,9 +19,7 @@ const UserControl = ({ user }: Props) => {
   };
 
   useEffect(() => {
-    if (editingError) {
-      handleRTKQError(editingError);
-    }
+    handleRTKQError(editingError);
   }, [editingError]);
 
   return (

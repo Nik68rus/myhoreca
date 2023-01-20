@@ -5,6 +5,7 @@ import permissionModel from './permission';
 import itemModel from './item';
 import shopItemModel from './shopItem';
 import spaceModel from './space';
+import categoryModel from './category';
 
 interface DB {
   connect: () => void;
@@ -15,6 +16,7 @@ interface DB {
   permissions: ReturnType<typeof permissionModel>;
   items: ReturnType<typeof itemModel>;
   shopItems: ReturnType<typeof shopItemModel>;
+  categories: ReturnType<typeof categoryModel>;
 }
 
 const connect = () => {
@@ -40,16 +42,26 @@ const Shop = shopModel(sequelize);
 const Permission = permissionModel(sequelize);
 const Item = itemModel(sequelize);
 const ShopItem = shopItemModel(sequelize);
+const Category = categoryModel(sequelize);
 
 Space.hasMany(User);
 User.belongsTo(Space);
+
 Space.hasMany(Shop);
 Shop.belongsTo(Space);
+
 Space.hasMany(Item);
 Item.belongsTo(Space);
 
+Space.hasMany(Category);
+Category.belongsTo(Space);
+
+Item.belongsTo(Category);
+Category.hasMany(Item);
+
 User.hasMany(Permission);
 Permission.belongsTo(User);
+
 Shop.hasMany(Permission);
 Permission.belongsTo(Shop);
 
@@ -70,6 +82,7 @@ const db: DB = {
   permissions: Permission,
   items: Item,
   shopItems: ShopItem,
+  categories: Category,
 };
 
 export default db;

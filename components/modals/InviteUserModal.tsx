@@ -27,9 +27,7 @@ const InviteUserModal = ({ onClose }: Props) => {
   };
 
   useEffect(() => {
-    if (error) {
-      handleRTKQError(error);
-    }
+    handleRTKQError(error);
   }, [error]);
 
   useEffect(() => {
