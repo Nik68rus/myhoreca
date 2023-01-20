@@ -20,6 +20,7 @@ interface DB {
   categories: ReturnType<typeof categoryModel>;
 }
 
+console.log(pg.Client.name);
 const connect = () => {
   return new Sequelize(
     process.env.DB_NAME,
