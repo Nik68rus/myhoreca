@@ -1,6 +1,9 @@
+@use '../../styles/variables.scss';
+
 .footer {
   text-align: center;
   padding: 20px 0;
+  color: variables.$color-default-white;
 }
 
 .fixedFooter {

@@ -12,7 +12,7 @@
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
+    border-radius: $border-radius-m;
 
     &.invalid {
       border-color: red;
@@ -35,20 +35,26 @@
   margin-bottom: 20px;
 
   label {
-    margin-bottom: 5px;
+    margin-bottom: 4px;
     padding-left: 16px;
+    font-size: 14px;
+    font-weight: 600;
   }
 
   input {
     font-size: 16px;
-    padding: 8px 16px;
-    border-radius: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    transition: border-color 0.3s ease;
+    padding: 10px 20px;
+    border-radius: $border-radius-s;
+    border: 1px solid $color-input-bg;
+    background-color: $color-input-bg;
+    transition: all $trans-default;
+    cursor: pointer;
+    outline: none;
 
     &:hover,
     &:focus {
-      border: 1px solid rgba(0, 0, 0, 0.3);
+      background-color: $color-input-focus;
+      border-color: $color-input-focus;
     }
   }
 

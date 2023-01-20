@@ -13,6 +13,10 @@ import { setAuth } from '../../redux/slices/userSlice';
 import { useLoginMutation } from '../../redux/api/user';
 import Spinner from '../layout/Spinner';
 import { userDataDto } from '../../helpers/dto';
+import Card from '../ui/Card';
+import styles from './Form.module.scss';
+import cx from 'classnames';
+import Heading from '../ui/Heading';
 
 const LoginForm = () => {
   const router = useRouter();
@@ -90,11 +94,13 @@ const LoginForm = () => {
   }, [loggedInUser, router, dispatch]);
 
   return (
-    <div className="container">
+    <div className={cx('container', styles.formContainer)}>
       {logining && <Spinner />}
       <form onSubmit={loginSubmitHandler}>
-        <div className="form">
-          <h2 className="form__title">Авторизация</h2>
+        <Card className="form">
+          <Heading level={3} className="form__title mb-4">
+            Авторизация
+          </Heading>
           <FormControl
             label="E-mail"
             type="email"
@@ -118,7 +124,7 @@ const LoginForm = () => {
               Войти
             </button>
           </div>
-        </div>
+        </Card>
       </form>
     </div>
   );

@@ -5,6 +5,10 @@ import { isEmail } from '../../helpers/validation';
 import { useStartRecoveryMutation } from '../../redux/api/user';
 import { Routes } from '../../types/routes';
 import FormControl from './FormControl';
+import Card from '../ui/Card';
+import styles from './Form.module.scss';
+import cx from 'classnames';
+import Heading from '../ui/Heading';
 
 const RecoverForm = () => {
   const [email, setEmail] = useState('');
@@ -32,32 +36,35 @@ const RecoverForm = () => {
   if (sent) {
     return (
       <section className="container">
-        <div className="message">
+        <Card className="message">
           <p>
             Для сброса пароля следуйте инструкции, отправленной на вашу почту{' '}
             {email}
           </p>
           <div className="message__actions">
-            <button className="button" onClick={() => startRecover(email)}>
+            <button
+              className="button button--heavy"
+              onClick={() => startRecover(email)}
+            >
               Отправить снова
             </button>
             <Link href={Routes.HOME} className="button">
               На главную
             </Link>
           </div>
-        </div>
+        </Card>
       </section>
     );
   }
 
   return (
-    <section className="container">
+    <section className={cx('container', styles.formContainer)}>
       <h1 className="visually-hidden">
         Страница восстановления забытого пароля
       </h1>
       <form onSubmit={submitHandler}>
-        <div className="form">
-          <h2 className="form__title">Восстановление пароля</h2>
+        <Card className="form">
+          <Heading level={3}>Восстановление пароля</Heading>
           <FormControl
             label="E-mail"
             type="email"
@@ -72,7 +79,7 @@ const RecoverForm = () => {
               Отправить
             </button>
           </div>
-        </div>
+        </Card>
       </form>
     </section>
   );

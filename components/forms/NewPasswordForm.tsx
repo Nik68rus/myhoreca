@@ -10,6 +10,10 @@ import {
   useFinishRecoveryMutation,
   useValidateRecoveryQuery,
 } from '../../redux/api/user';
+import Card from '../ui/Card';
+import styles from './Form.module.scss';
+import cx from 'classnames';
+import Heading from '../ui/Heading';
 
 const NewPasswordForm = () => {
   const router = useRouter();
@@ -103,12 +107,12 @@ const NewPasswordForm = () => {
   }
 
   return (
-    <div className="container">
-      <div className="form">
+    <div className={cx('container', styles.formContainer)}>
+      <Card className="form">
         {isLoading && <Spinner />}
         {isSuccess && (
           <form onSubmit={submitHandler}>
-            <h2 className="form__title">Сброс пароля</h2>
+            <Heading level={3}>Сброс пароля</Heading>
             <FormControl
               label="Новый пароль"
               type="password"
@@ -135,7 +139,7 @@ const NewPasswordForm = () => {
             </div>
           </form>
         )}
-      </div>
+      </Card>
     </div>
   );
 };

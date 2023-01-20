@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { FaTimes } from 'react-icons/fa';
+import Heading from '../ui/Heading';
 
 type Props = {
   children: React.ReactNode;
@@ -44,7 +45,9 @@ const Modal = ({ children, onClose, heading }: Props) => {
           >
             <FaTimes />
           </button>
-          <h2 className="modal__heading">{heading}</h2>
+          <Heading level={3} className="modal__heading">
+            {heading}
+          </Heading>
           <div className="modal__body">{children}</div>
         </div>
       </section>,

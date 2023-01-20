@@ -3,6 +3,7 @@ import { useAppSelector } from '../hooks/store';
 import { Routes } from '../types/routes';
 import { UserRole } from '../types/user';
 import styles from './Hero.module.scss';
+import Heading from './ui/Heading';
 
 const Hero = () => {
   const { authData } = useAppSelector((store) => store.user);
@@ -16,7 +17,7 @@ const Hero = () => {
       </div>
       {authData && authData.role === UserRole.OWNER && (
         <div className={styles.details}>
-          <h1 className="heading heading--h1">Здравствуйте, {authData.name}</h1>
+          <Heading level={1}>Здравствуйте, {authData.name}</Heading>
           <p> Скоро здесь будут основные данные за сегодняшний день</p>
           <Link href={Routes.ACCOUNT} className="button">
             Кабинет директора
@@ -25,7 +26,7 @@ const Hero = () => {
       )}
       {authData && authData.role === UserRole.CASHIER && (
         <div className={styles.details}>
-          <h1 className="heading heading--h1">Здравствуйте, {authData.name}</h1>
+          <Heading level={1}>Здравствуйте, {authData.name}</Heading>
           <p> Вы можете приступить к работе</p>
           <Link href={Routes.ACCOUNT} className="button">
             Кабинет кассира
@@ -34,7 +35,7 @@ const Hero = () => {
       )}
       {!authData && (
         <div className={styles.details}>
-          <h1>My HoReCa</h1>
+          <Heading level={1}>My HoReCa</Heading>
           <p>Контролируйте удаленно свой бизнес</p>
           <Link href={Routes.START} className="button">
             Зарегистрироваться

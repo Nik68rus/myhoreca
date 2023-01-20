@@ -28,7 +28,7 @@ export default async function handler(
       const user = await UserService.activate(code);
       if (user) {
         return res.redirect(
-          `${Routes.LOGIN}?user=${user.email}&activation=true}`
+          `${Routes.LOGIN}?user=${user.email}&activation=true`
         );
       }
       return ApiError.notFound('Пользователь не найден');

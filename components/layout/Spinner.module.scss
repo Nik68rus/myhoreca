@@ -9,7 +9,7 @@
 .spinner {
   width: 50px;
   height: 50px;
-  border: 10px solid #f3f3f3;
+  border: 10px solid #d4bcbc;
   border-top: 10px solid #383636;
   border-radius: 50%;
   animation: spinner 1.5s linear infinite;
@@ -26,4 +26,12 @@
   left: 0;
   background-color: rgba($color: #000000, $alpha: 0.5);
   z-index: 10;
+}
+
+.containerBlock {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
 }

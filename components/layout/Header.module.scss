@@ -1,15 +1,59 @@
+@use '../../styles/variables.scss';
+
 .header {
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   display: flex;
+  // justify-content: flex-end;
   justify-content: space-between;
   align-items: center;
   z-index: 10;
+  background-color: variables.$color-default-white;
+  color: variables.$color-default-black;
+  box-shadow: variables.$card-shadow;
 }
 
 .headerMain {
   position: fixed;
+  box-shadow: none;
+  color: variables.$color-default-white;
+  background-color: transparent;
+  padding-top: 20px;
+  padding-bottom: 20px;
   top: 0;
   left: 0;
   right: 0;
+
+  svg {
+    color: variables.$color-default-white;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 16px;
+}
+
+.shopTitle {
+  font-weight: 700;
+  min-width: 200px;
+  margin: 0;
+}
+
+.date {
+  color: variables.$color-text-muted;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.shop {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.label {
+  font-size: 12px;
+  color: variables.$color-text-muted;
+  line-height: 1;
 }

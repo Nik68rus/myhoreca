@@ -18,6 +18,10 @@ import {
 import Spinner from '../layout/Spinner';
 import { toast } from 'react-toastify';
 import { ISpace } from '../../models/space';
+import Card from '../ui/Card';
+import styles from './Form.module.scss';
+import cx from 'classnames';
+import Heading from '../ui/Heading';
 
 const initialState: IUserRegData = {
   email: '',
@@ -157,11 +161,13 @@ const SignupForm = () => {
   }, [activatingSuccess, router, formData.email]);
 
   return (
-    <div className="container">
+    <div className={cx('container', styles.formContainer)}>
       {(creatingUser || inviteChecking || activatingEmployee) && <Spinner />}
       <form onSubmit={isInvite ? inviteSubmitHandler : startSubmitHandler}>
-        <div className="form">
-          <h2 className="form__title">Регистрация</h2>
+        <Card className="form">
+          <Heading level={3} className="form__title mb-4">
+            Регистрация
+          </Heading>
           <FormControl
             label="E-mail"
             type="email"
@@ -213,7 +219,7 @@ const SignupForm = () => {
               Зарегистрироваться
             </button>
           </div>
-        </div>
+        </Card>
       </form>
     </div>
   );

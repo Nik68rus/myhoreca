@@ -40,6 +40,7 @@ const AddShopModal = ({ onClose }: Props) => {
         <div className="form">
           <form onSubmit={submitHandler}>
             <FormControl
+              className="mb-8"
               label="Название"
               type="text"
               id="title"

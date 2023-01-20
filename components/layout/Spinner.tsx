@@ -1,10 +1,15 @@
 import React from 'react';
-import classes from './Spinner.module.scss';
+// import cx from 'classnames';
+import styles from './Spinner.module.scss';
 
-const Spinner = () => {
+interface Props {
+  block?: boolean;
+}
+
+const Spinner = ({ block }: Props) => {
   return (
-    <div className={classes.container}>
-      <div className={classes.spinner} />
+    <div className={block ? styles.containerBlock : styles.container}>
+      <div className={styles.spinner} />
     </div>
   );
 };

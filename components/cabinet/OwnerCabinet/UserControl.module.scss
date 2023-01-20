@@ -1,0 +1,29 @@
+@use '../../../styles/variables.scss';
+
+.userLine {
+  width: 100%;
+  max-width: 700px;
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr 2fr 50px 150px;
+  gap: 24px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.mail {
+  font-size: 16px;
+}
+
+.status {
+  color: variables.$color-success;
+  justify-self: center;
+
+  &.blocked {
+    color: variables.$color-torch-red;
+  }
+
+  &.waiting {
+    color: variables.$color-neon-blue;
+  }
+}

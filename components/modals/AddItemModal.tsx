@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import companyAPI from '../../api/companyAPI';
 import { handleError } from '../../helpers/error';
 import { IItem } from '../../models/item';
 import { IItemInput } from '../../types/item';
@@ -11,15 +10,16 @@ import Modal from './Modal';
 
 type Props = {
   onClose: () => void;
-  onSuccess: (item: IItemInput) => Promise<IItem>;
 };
 
-const AddItemModal = ({ onClose, onSuccess }: Props) => {
+const AddItemModal = ({ onClose }: Props) => {
   const [formData, setFormData] = useState({
     title: '',
     imageUrl: '',
     isCountable: true,
   });
+
+  const onSuccess = (data: any) => {};
 
   const [loading, setLoading] = useState(false);
 

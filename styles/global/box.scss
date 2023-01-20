@@ -1,0 +1,33 @@
+/* padding */
+@for $i from 1 through 15 {
+  .p-#{$i} {
+    padding: calc(var(--offset-base-size) * #{$i});
+  }
+  .pl-#{$i} {
+    padding-left: calc(var(--offset-base-size) * #{$i});
+  }
+  .pr-#{$i} {
+    padding-right: calc(var(--offset-base-size) * #{$i});
+  }
+  .pt-#{$i} {
+    padding-top: calc(var(--offset-base-size) * #{$i});
+  }
+  .pb-#{$i} {
+    padding-bottom: calc(var(--offset-base-size) * #{$i});
+  }
+  .m-#{$i} {
+    margin: calc(var(--offset-base-size) * #{$i});
+  }
+  .ml-#{$i} {
+    margin-left: calc(var(--offset-base-size) * #{$i});
+  }
+  .mr-#{$i} {
+    margin-right: calc(var(--offset-base-size) * #{$i});
+  }
+  .mt-#{$i} {
+    margin-top: calc(var(--offset-base-size) * #{$i});
+  }
+  .mb-#{$i} {
+    margin-bottom: calc(var(--offset-base-size) * #{$i});
+  }
+}

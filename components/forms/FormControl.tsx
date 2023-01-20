@@ -1,4 +1,5 @@
 import React from 'react';
+import cx from 'classnames';
 
 type TInputType = 'email' | 'password' | 'text' | 'number' | 'tel';
 
@@ -13,6 +14,7 @@ interface Props {
   hint?: string;
   ref?: React.RefObject<HTMLInputElement>;
   disabled?: boolean;
+  className?: string;
 }
 
 const FormControl = ({
@@ -26,9 +28,10 @@ const FormControl = ({
   hint,
   ref,
   disabled,
+  className,
 }: Props) => {
   return (
-    <div className="form__control">
+    <div className={cx('form__control', className ? className : '')}>
       <label htmlFor={id}>{label}</label>
       <input
         type={type}

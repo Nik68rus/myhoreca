@@ -1,3 +1,5 @@
+@use '../../../styles/variables.scss';
+
 .list {
   margin: 0;
   padding: 0;
@@ -6,12 +8,8 @@
 }
 
 .item {
-  margin: 0;
-  padding: 0;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  margin-bottom: 12px;
+  border-bottom: variables.$border-light-dashed;
 
   &:last-child {
     margin-bottom: 0;

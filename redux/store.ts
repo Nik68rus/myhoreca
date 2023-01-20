@@ -3,11 +3,13 @@ import userSlice from './slices/userSlice';
 import { api } from './api';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import ownerSlice from './slices/ownerSlice';
+import layoutSlice from './slices/layoutSlice';
 
 export const store = configureStore({
   reducer: {
     [api.reducerPath]: api.reducer,
     user: userSlice,
+    layout: layoutSlice,
     owner: ownerSlice,
   },
   middleware: (getDefaultMiddleware) =>

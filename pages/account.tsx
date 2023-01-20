@@ -1,5 +1,5 @@
-import CashierCabinet from '../components/Cabinets/CashierCabinet/CashierCabinet';
-import OwnerCabinet from '../components/Cabinets/OwnerCabinet/OwnerCabinet';
+import CashierCabinet from '../components/cabinet/CashierCabinet/CashierCabinet';
+import OwnerCabinet from '../components/cabinet/OwnerCabinet/OwnerCabinet';
 import PrivateRoute from '../components/PrivateRoute';
 import { useAppSelector } from '../hooks/store';
 import { UserRole } from '../types/user';
