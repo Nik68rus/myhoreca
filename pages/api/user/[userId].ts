@@ -1,8 +1,6 @@
 import { UserRole } from './../../../types/user';
-import { validateToken } from './../../../helpers/token';
-import { IUserLoginData } from '../../../types/user';
+import { getUser } from './../../../helpers/token';
 import { NextApiRequest, NextApiResponse } from 'next';
-import bcrypt from 'bcrypt';
 import db from '../../../models';
 import UserService from '../../../services/UserService';
 import { IUser } from '../../../models/user';
@@ -67,10 +65,7 @@ export default async function handler(
       }
 
       if (token) {
-        const userData = await validateToken(
-          token,
-          process.env.JWT_ACCESS_SECRET
-        );
+        const userData = await getUser(req);
 
         if (userData.role === UserRole.OWNER) {
           // Изменение другого пользователя адмиинистратором

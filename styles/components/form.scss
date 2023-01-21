@@ -58,14 +58,18 @@
     }
   }
 
-  &--checkbox {
-    flex-direction: row;
-  }
-
   &--invalid {
     input {
       border-color: red;
     }
+  }
+}
+
+.form__control--checkbox {
+  flex-direction: row;
+
+  input {
+    width: 22px;
   }
 }
 

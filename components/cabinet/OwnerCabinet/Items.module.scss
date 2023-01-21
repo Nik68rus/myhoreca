@@ -1,3 +1,5 @@
+@use '../../../styles/variables.scss';
+
 .actions {
   display: flex;
   gap: 12px;
@@ -6,4 +8,16 @@
 .empty {
   margin: 0;
   margin-bottom: 24px;
+}
+
+.list {
+  border-top: variables.$border-light-dashed;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 24px;
+}
+
+.item {
+  border-bottom: variables.$border-light-dashed;
 }

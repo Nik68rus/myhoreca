@@ -7,7 +7,7 @@ class ItemService {
     db.connect();
   }
 
-  async create(item: IItemInput & { userId: number }) {
+  async create(item: IItemInput & { spaceId: number }) {
     db.sequelize.sync();
     const normTitle = item.title.trim();
 
@@ -16,11 +16,11 @@ class ItemService {
     }
 
     const existingItem = await db.items.findOne({
-      where: { title: normTitle },
+      where: { title: normTitle, spaceId: item.spaceId },
     });
 
     if (existingItem) {
-      throw ApiError.badRequest('Данная компания уже зарегистрирована!');
+      throw ApiError.badRequest('Данный товар уже зарегистрирован!');
     }
 
     const newItem = await db.items.create({ ...item, title: normTitle });
@@ -30,8 +30,16 @@ class ItemService {
 
   async getItems(spaceId: number) {
     db.sequelize.sync();
-    const items = await db.items.findAll({ where: { spaceId } });
+    const items = await db.items.findAll({
+      where: { spaceId },
+      include: [{ model: db.categories, attributes: ['title'] }],
+    });
     return items;
+  }
+
+  async getById(itemId: number) {
+    const item = await db.items.findByPk(itemId);
+    return item;
   }
 }
 

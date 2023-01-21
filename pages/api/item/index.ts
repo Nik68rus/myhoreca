@@ -1,14 +1,11 @@
 import { IItemInput } from './../../../types/item';
-import { validateToken } from './../../../helpers/token';
+import { getUser } from './../../../helpers/token';
 import { NextApiRequest, NextApiResponse } from 'next';
-import ApiError, { handleServerError } from '../../../helpers/error';
+import { handleServerError } from '../../../helpers/error';
 import ItemService from '../../../services/ItemService';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
   body: IItemInput;
-  cookies: {
-    accessToken?: string;
-  };
 }
 
 export default async function handler(
@@ -16,18 +13,13 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'POST') {
-    const { title, imageUrl, isCountable } = req.body;
-
-    const token = req.cookies.accessToken;
-
-    if (!token) {
-      return res.status(401).json('Пользователь не авторизован!');
-    }
+    const { title, imageUrl, isCountable, categoryId } = req.body;
 
     try {
-      const user = await validateToken(token, process.env.JWT_ACCESS_SECRET);
+      const user = await getUser(req);
       const item = await ItemService.create({
-        userId: user.id,
+        spaceId: user.spaceId,
+        categoryId,
         title,
         imageUrl,
         isCountable,
@@ -39,20 +31,8 @@ export default async function handler(
   }
 
   if (req.method === 'GET') {
-    const token = req.cookies.accessToken;
-
-    if (!token) {
-      throw ApiError.notAuthenticated('Пользователь не авторизован');
-    }
-
     try {
-      let user;
-      try {
-        user = await validateToken(token, process.env.JWT_ACCESS_SECRET);
-      } catch (error) {
-        throw ApiError.notAuthenticated('Токен не валидный!');
-      }
-
+      const user = await getUser(req);
       const items = await ItemService.getItems(user.spaceId);
       return res.status(200).json(items);
     } catch (err) {

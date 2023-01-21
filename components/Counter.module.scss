@@ -1,0 +1,41 @@
+@use '../styles/variables.scss';
+
+.counter {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.group {
+  display: flex;
+
+  input {
+    border: none;
+    background-color: variables.$color-input-bg;
+    transition: background-color variables.$trans-default;
+    cursor: pointer;
+    text-align: center;
+    width: 80px;
+    padding: 10px;
+    font-weight: 700;
+
+    &:hover,
+    &:focus {
+      background-color: variables.$color-input-focus;
+    }
+  }
+
+  :global(.button) {
+    min-width: auto;
+  }
+}
+
+.dec {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.inc {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}

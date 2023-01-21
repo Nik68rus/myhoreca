@@ -1,4 +1,4 @@
-import { validateToken } from './../../../helpers/token';
+import { getUser } from './../../../helpers/token';
 import { IUserLoginData } from '../../../types/user';
 import { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcrypt';
@@ -8,9 +8,6 @@ import ApiError, { handleServerError } from '../../../helpers/error';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
   body: IUserLoginData;
-  cookies: {
-    accessToken?: string;
-  };
 }
 
 export default async function handler(
@@ -19,19 +16,10 @@ export default async function handler(
 ) {
   if (req.method === 'GET') {
     // Check auth
-    const token = req.cookies.accessToken;
-
-    if (token) {
-      try {
-        const userData = await validateToken(
-          token,
-          process.env.JWT_ACCESS_SECRET
-        );
-        return res.status(200).json(userData);
-      } catch (err) {
-        return res.status(401).json('Токен не валидный');
-      }
-    } else {
+    try {
+      const userData = await getUser(req);
+      return res.status(200).json(userData);
+    } catch (err) {
       return res.status(401).json('Пользователь не авторизован');
     }
   }
@@ -51,7 +39,7 @@ export default async function handler(
         const data = await UserService.generateData(user);
         return res.status(200).json(data);
       } else {
-        throw ApiError.validation('Пароли не совпадают!');
+        throw ApiError.notAuthorized('Пароли не совпадают!');
       }
     } catch (error) {
       handleServerError(res, error);

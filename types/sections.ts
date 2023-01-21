@@ -2,6 +2,6 @@ export enum Section {
   ITEMS = 'Товары',
   SHOPS = 'Точки',
   EMPLOYYES = 'Сотрудники',
-  STOCK = 'Остатки',
+  STOCK = 'Асортимент',
   SALES = 'Продажи',
 }

@@ -1,3 +1,4 @@
+import { IItemInput, IItemWithCategory } from './../../types/item';
 import { IItem } from './../../models/item';
 import { api } from '../api';
 
@@ -5,7 +6,7 @@ export const itemApi = api.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
     //создание товара
-    createItem: builder.mutation<IItem, string>({
+    createItem: builder.mutation<IItem, IItemInput>({
       query: (body) => ({
         url: 'item/',
         method: 'POST',
@@ -15,7 +16,7 @@ export const itemApi = api.injectEndpoints({
     }),
 
     //получение всех товаров пространства
-    getItems: builder.query<IItem[], void>({
+    getItems: builder.query<IItemWithCategory[], void>({
       query: () => 'item',
       providesTags: ['Item'],
     }),

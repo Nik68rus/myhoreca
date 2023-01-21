@@ -1,40 +1,43 @@
-import React, { useState } from 'react';
-import { toast } from 'react-toastify';
-import { handleError } from '../../helpers/error';
-import { IItem } from '../../models/item';
-import { IItemInput } from '../../types/item';
+import React, { useState, useEffect } from 'react';
+import { ICategory } from '../../models/category';
+import { useCreateItemMutation } from '../../redux/api/item';
 import Checkbox from '../forms/Checkbox';
 import FormControl from '../forms/FormControl';
+import Select from '../forms/Select';
 import Spinner from '../layout/Spinner';
 import Modal from './Modal';
+import styles from './AddItemModal.module.scss';
+import { handleRTKQError } from '../../helpers/error';
 
 type Props = {
   onClose: () => void;
+  categories: ICategory[];
 };
 
-const AddItemModal = ({ onClose }: Props) => {
+const AddItemModal = ({ onClose, categories }: Props) => {
   const [formData, setFormData] = useState({
+    categoryId: categories[0].id,
     title: '',
     imageUrl: '',
     isCountable: true,
   });
 
-  const onSuccess = (data: any) => {};
-
-  const [loading, setLoading] = useState(false);
+  const [createItem, { isLoading, error, isSuccess }] = useCreateItemMutation();
 
   const submitHandler: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    try {
-      setLoading(true);
-      await onSuccess(formData);
-      onClose();
-    } catch (err) {
-      handleError(err);
-    } finally {
-      setLoading(false);
-    }
+    createItem(formData);
   };
+
+  useEffect(() => {
+    handleRTKQError(error);
+  }, [error]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      onClose();
+    }
+  }, [onClose, isSuccess]);
 
   const inputChangeHandler: React.ChangeEventHandler<HTMLInputElement> = (
     e
@@ -50,12 +53,21 @@ const AddItemModal = ({ onClose }: Props) => {
     setFormData({ ...formData, [name]: checked });
   };
 
+  const selectHandler = (cat: ICategory) => {
+    setFormData({ ...formData, categoryId: cat.id });
+  };
+
   return (
     <>
-      {loading && <Spinner />}
+      {isLoading && <Spinner />}
       <Modal onClose={onClose} heading="Добавить товар">
         <div className="form">
-          <form onSubmit={submitHandler}>
+          <form onSubmit={submitHandler} className={styles.form}>
+            <Select
+              items={categories}
+              label="Категория: "
+              onSelect={selectHandler}
+            />
             <FormControl
               label="Название"
               type="text"

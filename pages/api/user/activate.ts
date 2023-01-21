@@ -1,4 +1,4 @@
-import { validateToken } from '../../../helpers/token';
+import { getUser } from './../../../helpers/token';
 import { Routes } from '../../../types/routes';
 import { NextApiRequest, NextApiResponse } from 'next';
 import UserService from '../../../services/UserService';
@@ -36,18 +36,13 @@ export default async function handler(
       handleServerError(res, error);
     }
   }
+
   if (req.method === 'POST') {
     //повторная отпрака кода активации по требованию пользователя
-    const { accessToken } = req.cookies;
     try {
-      if (accessToken) {
-        const user = await validateToken(
-          accessToken,
-          process.env.JWT_ACCESS_SECRET
-        );
-        await MailService.sendActivationMail(user.email);
-        res.status(200).json('Письмо отправлено');
-      }
+      const user = await getUser(req);
+      await MailService.sendActivationMail(user.email);
+      return res.status(200).json('Письмо отправлено');
     } catch (error) {
       handleServerError(res, error);
     }

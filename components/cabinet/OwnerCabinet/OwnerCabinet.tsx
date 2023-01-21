@@ -41,8 +41,8 @@ const OwnerCabinet = () => {
         {activeSection === Section.SHOPS && <Shops />}
         {activeSection === Section.EMPLOYYES && <Employees />}
         {activeSection === Section.SALES && <Sales />}
+        {activeSection === Section.STOCK && <Stock />}
         {/* {activeTab.component === Items && <Items />} */}
-        {/* {activeTab.component === Stock && <Stock shop={shop} />} */}
       </section>
     </div>
   );

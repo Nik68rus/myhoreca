@@ -33,6 +33,11 @@ class ShopService {
     const shops = await db.shops.findAll({ where: { spaceId } });
     return shops;
   }
+
+  async getById(id: number) {
+    const shop = await db.shops.findByPk(id);
+    return shop;
+  }
 }
 
 export default new ShopService();

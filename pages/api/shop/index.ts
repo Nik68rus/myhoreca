@@ -1,16 +1,11 @@
-import { UserRole } from './../../../types/user';
-import { validateToken } from '../../../helpers/token';
+import { getAdmin, getUser } from './../../../helpers/token';
 import { IShop } from '../../../models/shop';
 import { NextApiRequest, NextApiResponse } from 'next';
-import ApiError, { handleServerError } from '../../../helpers/error';
-import PermissionService from '../../../services/PermissionService';
+import { handleServerError } from '../../../helpers/error';
 import ShopService from '../../../services/ShopService';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
   body: IShop;
-  cookies: {
-    accessToken?: string;
-  };
 }
 
 export default async function handler(
@@ -20,15 +15,8 @@ export default async function handler(
   if (req.method === 'POST') {
     // Создание новой точки продаж
     const { title } = req.body;
-    const token = req.cookies.accessToken;
-    if (!token) {
-      throw ApiError.notAuthenticated('Пользователь не авторизован!');
-    }
     try {
-      const user = await validateToken(token, process.env.JWT_ACCESS_SECRET);
-      if (user.role !== UserRole.OWNER) {
-        throw ApiError.notAuthorized('Недостаточно прав!');
-      }
+      const user = await getAdmin(req);
       const shop = await ShopService.create(title, user.spaceId, user.id);
       return res.status(201).json(shop);
     } catch (error) {
@@ -39,22 +27,9 @@ export default async function handler(
   if (req.method === 'GET') {
     // получение всех точек продаж пространства
     try {
-      const token = req.cookies.accessToken;
-
-      if (!token) {
-        throw ApiError.notAuthenticated('Пользователь не авторизован!');
-      }
-
-      const user = await validateToken(token, process.env.JWT_ACCESS_SECRET);
-
-      let shops: IShop[] = [];
-
-      if (user.role === UserRole.OWNER) {
-        shops = await ShopService.getShops(user.spaceId);
-        return res.status(200).json(shops);
-      }
-
-      throw ApiError.notAuthorized('Недостаточно прав!');
+      const user = await getUser(req);
+      const shops = await ShopService.getShops(user.spaceId);
+      return res.status(200).json(shops);
     } catch (err) {
       handleServerError(res, err);
     }

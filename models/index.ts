@@ -69,6 +69,12 @@ Permission.belongsTo(Shop);
 
 Item.belongsToMany(Shop, { through: ShopItem });
 
+// Shop.hasMany(ShopItem);
+// ShopItem.belongsTo(Shop);
+
+// Item.hasMany(ShopItem);
+// ShopItem.belongsTo(Item);
+
 let connected = false;
 
 const db: DB = {
