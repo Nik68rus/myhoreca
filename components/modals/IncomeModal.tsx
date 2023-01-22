@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { handleRTKQError } from '../../helpers/error';
 import { useAppSelector } from '../../hooks/store';
-import { IArrivalInput, IItemWithCategory } from '../../types/item';
+import { IArrivalInput } from '../../types/item';
 import Counter from '../Counter';
 import FormControl from '../forms/FormControl';
 import Spinner from '../layout/Spinner';
@@ -9,10 +9,11 @@ import Heading from '../ui/Heading';
 import Modal from './Modal';
 import styles from './IncomeModal.module.scss';
 import { useCreateArrivalMutation } from '../../redux/api/arrival';
+import { IItem } from '../../models/item';
 
 type Props = {
   onClose: () => void;
-  item: IItemWithCategory;
+  item: IItem;
 };
 
 const IncomeModal = ({ onClose, item }: Props) => {

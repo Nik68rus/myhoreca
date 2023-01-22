@@ -7,7 +7,7 @@ class ItemService {
     db.connect();
   }
 
-  async create(item: IItemInput & { spaceId: number }) {
+  async create(item: IItemInput & { spaceId: number; isVisible: boolean }) {
     db.sequelize.sync();
     const normTitle = item.title.trim();
 
@@ -32,7 +32,6 @@ class ItemService {
     db.sequelize.sync();
     const items = await db.items.findAll({
       where: { spaceId },
-      include: [{ model: db.categories, attributes: ['title'] }],
     });
     return items;
   }

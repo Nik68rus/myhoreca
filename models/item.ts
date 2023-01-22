@@ -15,6 +15,7 @@ export interface IItem
   title: string;
   imageUrl: CreationOptional<string>;
   isCountable: boolean;
+  isVisible: boolean;
 }
 
 const itemModel = (sequelize: Sequelize) => {
@@ -33,6 +34,7 @@ const itemModel = (sequelize: Sequelize) => {
     },
     imageUrl: DataTypes.STRING,
     isCountable: DataTypes.BOOLEAN,
+    isVisible: DataTypes.BOOLEAN,
   });
 
   return Item;

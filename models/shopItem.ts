@@ -17,6 +17,7 @@ export interface IShopItem
   itemId: CreationOptional<number>;
   quantity: CreationOptional<number>;
   price: number;
+  createdAt: CreationOptional<Date>;
 }
 
 const shopItemModel = (sequelize: Sequelize) => {
@@ -26,19 +27,14 @@ const shopItemModel = (sequelize: Sequelize) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    shopId: {
-      type: DataTypes.INTEGER,
-      // unique: false,
-    },
-    itemId: {
-      type: DataTypes.INTEGER,
-      // unique: false,
-    },
+    shopId: DataTypes.INTEGER,
+    itemId: DataTypes.INTEGER,
     quantity: DataTypes.INTEGER,
     price: {
       type: DataTypes.FLOAT,
       allowNull: false,
     },
+    createdAt: DataTypes.DATE,
   });
 
   return ShopItem;

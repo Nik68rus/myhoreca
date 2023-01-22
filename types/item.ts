@@ -7,11 +7,11 @@ export interface IItemInput {
   categoryId: number;
 }
 
-export interface IItemWithCategory extends IItem {
-  category: {
-    title: string;
-  };
-}
+// export interface IItemWithCategory extends IItem {
+//   category: {
+//     title: string;
+//   };
+// }
 
 export interface IArrivalInput {
   shopId: number;
@@ -21,7 +21,5 @@ export interface IArrivalInput {
 }
 
 export interface IArrivalWithItem extends IShopItem {
-  item: {
-    title: string;
-  };
+  item: IItem;
 }

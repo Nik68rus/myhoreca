@@ -5,8 +5,6 @@ import { useGetEmployeesQuery } from '../../../redux/api/user';
 import Spinner from '../../layout/Spinner';
 import InviteUserModal from '../../modals/InviteUserModal';
 import Card from '../../ui/Card';
-
-import styles from './Employees.module.scss';
 import UserControl from './UserControl';
 
 const Employees = () => {
@@ -25,30 +23,32 @@ const Employees = () => {
 
   return (
     <>
-      {loading && <Spinner />}
-      <Card>
-        {employees && employees.length ? (
-          <ul className={styles.list}>
-            {employees.map((employee) => (
-              <li key={employee.id} className={styles.item}>
-                <UserControl user={employee} />
-              </li>
-            ))}
-          </ul>
-        ) : activeShop ? (
-          <p>В данной точке еще нет кассиров</p>
-        ) : (
-          <p>Выберите точку</p>
-        )}
-        {activeShop && (
-          <button
-            className="button"
-            onClick={() => setInviteModalVisible(true)}
-          >
-            Пригласить
-          </button>
-        )}
-      </Card>
+      {loading && <Spinner block={true} />}
+      {!loading && (
+        <Card>
+          {employees && employees.length ? (
+            <ul className="list">
+              {employees.map((employee) => (
+                <li key={employee.id}>
+                  <UserControl user={employee} />
+                </li>
+              ))}
+            </ul>
+          ) : activeShop ? (
+            <p>В данной точке еще нет кассиров</p>
+          ) : (
+            <p>Выберите точку</p>
+          )}
+          {activeShop && (
+            <button
+              className="button"
+              onClick={() => setInviteModalVisible(true)}
+            >
+              Пригласить
+            </button>
+          )}
+        </Card>
+      )}
       {inviteModalVisible && (
         <InviteUserModal onClose={() => setInviteModalVisible(false)} />
       )}

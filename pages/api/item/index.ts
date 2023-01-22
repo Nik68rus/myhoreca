@@ -23,6 +23,7 @@ export default async function handler(
         title,
         imageUrl,
         isCountable,
+        isVisible: true,
       });
       return res.status(201).json(item);
     } catch (error) {

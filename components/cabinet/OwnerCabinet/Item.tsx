@@ -1,14 +1,16 @@
-import Image from 'next/image';
 import React, { useState } from 'react';
-import { FaEdit, FaPlus } from 'react-icons/fa';
-import { IItemWithCategory } from '../../../types/item';
+import { FaEdit, FaEye, FaEyeSlash, FaPlus } from 'react-icons/fa';
+import { IItem } from '../../../models/item';
+import { useGetCategoriesQuery } from '../../../redux/api/category';
+import { useEditItemMutation } from '../../../redux/api/item';
+import AddItemModal from '../../modals/AddItemModal';
+// import { IItemWithCategory } from '../../../types/item';
 import IncomeModal from '../../modals/IncomeModal';
 import Position from '../../Position';
-import Heading from '../../ui/Heading';
 import styles from './Item.module.scss';
 
 interface Props {
-  item: IItemWithCategory;
+  item: IItem;
 }
 
 const Item = ({ item }: Props) => {
@@ -21,6 +23,13 @@ const Item = ({ item }: Props) => {
     setEditing(true);
   };
 
+  const { data: categories } = useGetCategoriesQuery();
+  const [editItem] = useEditItemMutation();
+
+  const visibilityToggleHandler = () => {
+    editItem({ id: item.id, isVisible: !item.isVisible });
+  };
+
   return (
     <div className={styles.item}>
       <Position item={item} />
@@ -28,14 +37,22 @@ const Item = ({ item }: Props) => {
         <button
           className="button button--icon"
           aria-label="Редактировать"
-          // onClick={editStartHandler}
+          onClick={() => setEditing(true)}
         >
           <FaEdit />
         </button>
 
         <button
           className="button button--icon"
-          aria-label="Редактировать"
+          aria-label={item.isVisible ? 'Скрыть' : 'Вернуть'}
+          onClick={visibilityToggleHandler}
+        >
+          {item.isVisible ? <FaEyeSlash /> : <FaEye />}
+        </button>
+
+        <button
+          className="button button--icon"
+          aria-label="Приход"
           onClick={() => setIncomeModalVisible(true)}
         >
           <FaPlus />
@@ -43,6 +60,13 @@ const Item = ({ item }: Props) => {
       </div>
       {incomeModalVisible && (
         <IncomeModal item={item} onClose={() => setIncomeModalVisible(false)} />
+      )}
+      {editing && (
+        <AddItemModal
+          onClose={() => setEditing(false)}
+          categories={categories || []}
+          item={item}
+        />
       )}
     </div>
   );

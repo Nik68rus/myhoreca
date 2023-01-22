@@ -8,10 +8,12 @@ import CategoryModal from '../../modals/CategoryModal';
 import Card from '../../ui/Card';
 import Item from './Item';
 import styles from './Items.module.scss';
+import cx from 'classnames';
 
 const Items = () => {
   const [itemModalVisible, setItemModalVisible] = useState(false);
   const [catModalVisible, setCatModalVisible] = useState(false);
+  const [hidden, setHidden] = useState(false);
 
   const { data: items, isLoading, error } = useGetItemsQuery();
   const {
@@ -31,18 +33,40 @@ const Items = () => {
       {!isLoading && (
         <Card>
           {items && items.length ? (
-            <ul className={styles.list}>
-              {items
-                .slice()
-                .sort((a, b) => {
-                  return a.isCountable ? -1 : 1;
-                })
-                .map((item) => (
-                  <li key={item.id} className={styles.item}>
-                    <Item item={item} />
-                  </li>
-                ))}
-            </ul>
+            <>
+              <div className={styles.tabs}>
+                <button
+                  onClick={() => setHidden(false)}
+                  className={cx(styles.tabControl, {
+                    [styles.tabControlActive]: !hidden,
+                  })}
+                >
+                  Популярные
+                </button>
+                <button
+                  onClick={() => setHidden(true)}
+                  className={cx(styles.tabControl, {
+                    [styles.tabControlActive]: hidden,
+                  })}
+                >
+                  Скрытые
+                </button>
+              </div>
+
+              <ul className="list">
+                {items
+                  .slice()
+                  .filter((item) => item.isVisible === !hidden)
+                  .sort((a, b) => {
+                    return a.isCountable ? -1 : 1;
+                  })
+                  .map((item) => (
+                    <li key={item.id}>
+                      <Item item={item} />
+                    </li>
+                  ))}
+              </ul>
+            </>
           ) : (
             <p className={styles.empty}>Товаров пока нет</p>
           )}

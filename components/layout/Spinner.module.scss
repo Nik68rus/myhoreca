@@ -15,23 +15,23 @@
   animation: spinner 1.5s linear infinite;
 }
 
-.container {
-  display: grid;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 100vw;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: rgba($color: #000000, $alpha: 0.5);
-  z-index: 10;
-}
-
 .containerBlock {
   display: grid;
   justify-content: center;
   align-items: center;
   height: 100%;
   width: 100%;
+}
+
+.container {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba($color: #000000, $alpha: 0.5);
+  z-index: 10;
 }

@@ -62,7 +62,7 @@ export default async function handler(
       await getUser(req);
       const items = await db.shopItems.findAll({
         where: { shopId },
-        // include: [db.items],
+        include: [{ model: db.items }],
       });
       return res.status(200).json(items);
     } catch (err) {

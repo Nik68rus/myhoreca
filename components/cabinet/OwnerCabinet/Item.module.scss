@@ -2,19 +2,17 @@
 
 .item {
   display: flex;
-  padding: 12px;
   gap: 12px;
-  transition: background-color variables.$trans-default;
-
-  &:hover {
-    background-color: variables.$color-input-focus;
-  }
 }
 
 .actions {
   flex-grow: 1;
   display: flex;
   gap: 12px;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
+
+  :global(.button):last-child {
+    margin-left: auto;
+  }
 }
