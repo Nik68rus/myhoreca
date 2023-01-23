@@ -14,7 +14,7 @@ type Props = {
 
 const InviteUserModal = ({ onClose }: Props) => {
   const [email, setEmail] = useState('');
-  const { activeShop } = useAppSelector((store) => store.owner);
+  const { activeShop } = useAppSelector((store) => store.shop);
 
   const [inviteEmployee, { data: invitedUser, isLoading, error }] =
     useInviteEmployeeMutation();

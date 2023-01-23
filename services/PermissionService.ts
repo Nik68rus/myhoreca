@@ -1,3 +1,4 @@
+import { IShop } from './../models/shop';
 import { IUser } from './../models/user';
 import { UserRole } from './../types/user';
 import ApiError from '../helpers/error';
@@ -39,6 +40,17 @@ class PermissionService {
       include: db.users,
     })) as unknown as IPermission & { user: IUser }[];
     return permissions.map((perm) => perm.user);
+  }
+
+  async getCashierShops(userId: number) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
+    const permissions = (await db.permissions.findAll({
+      where: { userId, role: UserRole.CASHIER },
+      include: db.shops,
+    })) as unknown as IPermission & { shop: IShop }[];
+    return permissions.map((perm) => perm.shop);
   }
 }
 

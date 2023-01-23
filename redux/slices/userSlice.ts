@@ -1,6 +1,5 @@
 import { userDataDto } from './../../helpers/dto';
 import { TokenPayload } from './../../types/user';
-import { IUserAuthData } from '../../types/user';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { userApi } from '../api/user';
 

@@ -1,3 +1,4 @@
+import { TokenPayload } from './../types/user';
 import { UserRole } from '../types/user';
 import ApiError from '../helpers/error';
 import db from '../models';
@@ -34,6 +35,8 @@ class ShopService {
     const shops = await db.shops.findAll({ where: { spaceId } });
     return shops;
   }
+
+  async getWorkShops(user: TokenPayload) {}
 
   async getById(id: number) {
     await db.sequelize.authenticate();

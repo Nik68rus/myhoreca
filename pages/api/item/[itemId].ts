@@ -24,7 +24,7 @@ export default async function handler(
         throw ApiError.notAuthorized('Недостаточно прав');
       if (title) item.title = title;
       if (imageUrl) item.imageUrl = imageUrl;
-      if (isCountable) item.isCountable = isCountable;
+      if (isCountable !== undefined) item.isCountable = isCountable;
       if (categoryId) item.categoryId = categoryId;
       if (isVisible !== undefined) item.isVisible = isVisible;
       await item.save();

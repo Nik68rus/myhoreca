@@ -27,9 +27,6 @@ const StockItem = ({ item }: Props) => {
   const [newPrice, setNewPrice] = useState(item.price);
   const [writeOff, setWriteOff] = useState(false);
 
-  const [removing, setRemoving] = useState(false);
-  const [amount, setAmount] = useState(item.quantity);
-
   const [deletePosition, { error: deleteError, isLoading: deleting }] =
     useDeletePositionMutation();
 

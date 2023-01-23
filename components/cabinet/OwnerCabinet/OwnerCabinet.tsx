@@ -12,7 +12,7 @@ import Heading from '../../ui/Heading';
 import Card from '../../ui/Card';
 import { Section } from '../../../types/sections';
 import { useGetShopsQuery } from '../../../redux/api/shop';
-import { setActiveShop } from '../../../redux/slices/ownerSlice';
+import { setActiveShop } from '../../../redux/slices/shopSlice';
 import { handleRTKQError } from '../../../helpers/error';
 import Spinner from '../../layout/Spinner';
 

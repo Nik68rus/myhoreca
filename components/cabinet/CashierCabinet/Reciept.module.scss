@@ -1,0 +1,7 @@
+@use '../../../styles/variables.scss';
+
+.reciept {
+  min-width: 300px;
+  background-color: variables.$color-default-white;
+  flex-shrink: 0;
+}

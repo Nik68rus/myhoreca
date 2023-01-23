@@ -10,7 +10,7 @@ import cx from 'classnames';
 
 const Stock = () => {
   const [countable, setCountable] = useState(true);
-  const { activeShop } = useAppSelector((store) => store.owner);
+  const { activeShop } = useAppSelector((store) => store.shop);
   const {
     data: stockItems,
     isLoading,

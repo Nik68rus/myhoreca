@@ -7,7 +7,7 @@ import { handleRTKQError } from '../../../helpers/error';
 import Spinner from '../../layout/Spinner';
 import { useAppDispatch, useAppSelector } from '../../../hooks/store';
 import { useGetShopsQuery } from '../../../redux/api/shop';
-import { setActiveShop } from '../../../redux/slices/ownerSlice';
+import { setActiveShop } from '../../../redux/slices/shopSlice';
 import { shopDto } from '../../../helpers/dto';
 import Heading from '../../ui/Heading';
 import styles from './Shops.module.scss';
@@ -16,7 +16,7 @@ import ShopButton from './ShopButton';
 
 const Shops = () => {
   const [addShopVisible, setAddShopVisible] = useState(false);
-  const { activeShop } = useAppSelector((store) => store.owner);
+  const { activeShop } = useAppSelector((store) => store.shop);
   const dispatch = useAppDispatch();
 
   const { data: shops, isLoading, error } = useGetShopsQuery();

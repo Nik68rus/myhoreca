@@ -1,8 +1,10 @@
+import { UserRole } from './../../../types/user';
 import { getAdmin, getUser } from './../../../helpers/token';
 import { IShop } from '../../../models/shop';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { handleServerError } from '../../../helpers/error';
 import ShopService from '../../../services/ShopService';
+import PermissionService from '../../../services/PermissionService';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
   body: IShop;
@@ -28,7 +30,12 @@ export default async function handler(
     // получение всех точек продаж пространства
     try {
       const user = await getUser(req);
-      const shops = await ShopService.getShops(user.spaceId);
+      let shops: IShop[] = [];
+      if (user.role === UserRole.OWNER) {
+        shops = await ShopService.getShops(user.spaceId);
+      } else if (user.role === UserRole.CASHIER) {
+        shops = await PermissionService.getCashierShops(user.id);
+      }
       return res.status(200).json(shops);
     } catch (err) {
       handleServerError(res, err);

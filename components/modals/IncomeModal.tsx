@@ -32,7 +32,7 @@ const IncomeModal = ({ onClose, item }: Props) => {
     createArrival(data);
   };
 
-  const { activeShop } = useAppSelector((store) => store.owner);
+  const { activeShop } = useAppSelector((store) => store.shop);
 
   const [createArrival, { isLoading, error, isSuccess }] =
     useCreateArrivalMutation();

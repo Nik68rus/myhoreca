@@ -3,7 +3,7 @@ import { FaPlus, FaStore } from 'react-icons/fa';
 import { IShop } from '../../../models/shop';
 import cx from 'classnames';
 import styles from './ShopButton.module.scss';
-import { setActiveShop } from '../../../redux/slices/ownerSlice';
+import { setActiveShop } from '../../../redux/slices/shopSlice';
 import { useAppDispatch, useAppSelector } from '../../../hooks/store';
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
 }
 
 const ShopButton = ({ shop, onAdd }: Props) => {
-  const { activeShop } = useAppSelector((store) => store.owner);
+  const { activeShop } = useAppSelector((store) => store.shop);
   const dispatch = useAppDispatch();
 
   const clickHandler = (shop: IShop) => {

@@ -33,7 +33,7 @@ const WriteOffModal = ({ onClose, item }: Props) => {
     writeOffItem(data);
   };
 
-  const { activeShop } = useAppSelector((store) => store.owner);
+  const { activeShop } = useAppSelector((store) => store.shop);
 
   const [writeOffItem, { error, isLoading, isSuccess }] =
     useCreateWriteoffMutation();

@@ -9,7 +9,7 @@ import UserControl from './UserControl';
 
 const Employees = () => {
   const [inviteModalVisible, setInviteModalVisible] = useState(false);
-  const { activeShop } = useAppSelector((store) => store.owner);
+  const { activeShop } = useAppSelector((store) => store.shop);
 
   const {
     data: employees,

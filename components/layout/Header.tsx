@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import cx from 'classnames';
 import { Routes } from '../../types/routes';
 import styles from './Header.module.scss';
@@ -11,12 +11,15 @@ import { resetAuth } from '../../redux/slices/userSlice';
 import User from '../User';
 import { setActiveSection } from '../../redux/slices/layoutSlice';
 import { Section } from '../../types/sections';
+import { IShop } from '../../models/shop';
+import SelectShopModal from '../modals/SelectShopModal';
 
 const Header = () => {
   const router = useRouter();
   const { authData } = useAppSelector((store) => store.user);
-  const { activeShop } = useAppSelector((store) => store.owner);
+  const { activeShop } = useAppSelector((store) => store.shop);
   const dispatch = useAppDispatch();
+  const [shopModalVisible, setShopModalVisible] = useState(false);
 
   const isMain = router.pathname === '/';
   const isAccount = router.pathname === Routes.ACCOUNT;
@@ -40,16 +43,16 @@ const Header = () => {
           <>
             <div className={styles.shop}>
               <span className={styles.label}>Выбрана точка:</span>
-              {activeShop ? (
+              {/* {activeShop ? (
                 <p className={styles.shopTitle}>{activeShop.title}</p>
-              ) : (
-                <button
-                  className="button button--text"
-                  onClick={() => dispatch(setActiveSection(Section.SHOPS))}
-                >
-                  Выбрать
-                </button>
-              )}
+              ) : ( */}
+              <button
+                className="button button--text"
+                onClick={() => setShopModalVisible(true)}
+              >
+                {activeShop ? activeShop.title : 'Выбрать'}
+              </button>
+              {/* )} */}
             </div>
             <div className={styles.date}>
               {new Date().toLocaleDateString('ru-RU', {
@@ -75,6 +78,9 @@ const Header = () => {
           )}
         </div>
       </div>
+      {shopModalVisible && (
+        <SelectShopModal onClose={() => setShopModalVisible(false)} />
+      )}
     </header>
   );
 };

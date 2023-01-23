@@ -1,16 +1,16 @@
-import { IShopData } from './../../types/shop';
+import { IShopData } from '../../types/shop';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export interface OwnerState {
+export interface ShopState {
   activeShop: null | IShopData;
 }
 
-const initialState: OwnerState = {
+const initialState: ShopState = {
   activeShop: null,
 };
 
-const ownerSlice = createSlice({
-  name: 'owner',
+const shopSlice = createSlice({
+  name: 'shop',
   initialState,
   reducers: {
     setActiveShop: (state, action: PayloadAction<IShopData>) => {
@@ -23,6 +23,6 @@ const ownerSlice = createSlice({
   },
 });
 
-export const { setActiveShop, resetActiveShop } = ownerSlice.actions;
+export const { setActiveShop, resetActiveShop } = shopSlice.actions;
 
-export default ownerSlice.reducer;
+export default shopSlice.reducer;
