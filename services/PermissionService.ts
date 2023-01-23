@@ -5,11 +5,14 @@ import db from '../models';
 import { IPermission } from '../models/permission';
 
 class PermissionService {
-  constructor() {
-    db.connect();
-  }
+  // constructor() {
+  //   db.connect();
+  // }
 
   async create(userId: number, shopId: number, role: UserRole) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
     const existing = await db.permissions.findOne({
       where: { userId, shopId, role },
     });
@@ -22,19 +25,25 @@ class PermissionService {
   }
 
   async getSpaceShops(spaceId: number) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
     const shops = await db.shops.findAll({
       where: { spaceId },
     });
-    db.sequelize.close();
+    // db.sequelize.close();
     return shops;
   }
 
   async getShopCashiers(shopId: number) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
     const permissions = (await db.permissions.findAll({
       where: { shopId, role: UserRole.CASHIER },
       include: db.users,
     })) as unknown as IPermission & { user: IUser }[];
-    db.sequelize.close();
+    // db.sequelize.close();
     return permissions.map((perm) => perm.user);
   }
 }

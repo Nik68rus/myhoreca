@@ -30,7 +30,7 @@ const Header = () => {
   return (
     <header>
       <div
-        className={cx('container mb-6', styles.header, {
+        className={cx('container', styles.header, {
           [styles.headerMain]: isMain,
           [styles.headerNoLogo]: isAccount,
         })}

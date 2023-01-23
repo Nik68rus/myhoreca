@@ -20,9 +20,12 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     const { shopId, itemId, price, quantity } = req.body;
-    db.shopItems.sync({ force: false });
+    // db.shopItems.sync({ force: false });
 
     try {
+      await db.sequelize.authenticate();
+      await db.sequelize.sync();
+
       const user = await getAdmin(req);
       const shop = await ShopService.getById(shopId);
       const item = await ItemService.getById(itemId);
@@ -58,6 +61,9 @@ export default async function handler(
   if (req.method === 'GET') {
     const { shopId } = req.query;
     try {
+      await db.sequelize.authenticate();
+      await db.sequelize.sync();
+
       if (!shopId) throw ApiError.badRequest('Не предоставлен id магазина');
       await getUser(req);
       const items = await db.shopItems.findAll({

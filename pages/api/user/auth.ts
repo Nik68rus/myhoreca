@@ -27,6 +27,9 @@ export default async function handler(
     // Login user
     const { email, password } = req.body;
     try {
+      await db.sequelize.authenticate();
+      await db.sequelize.sync();
+
       const user = await db.users.findOne({ where: { email } });
 
       if (!user) {

@@ -15,14 +15,14 @@
 
 .headerMain {
   position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   box-shadow: none;
   color: variables.$color-default-white;
   background-color: transparent;
   padding-top: 20px;
   padding-bottom: 20px;
-  top: 0;
-  left: 0;
-  right: 0;
 
   svg {
     color: variables.$color-default-white;

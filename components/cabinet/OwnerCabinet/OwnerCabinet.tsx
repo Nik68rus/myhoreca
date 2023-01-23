@@ -33,7 +33,7 @@ const OwnerCabinet = () => {
   }, [error]);
 
   return (
-    <div className="container">
+    <div className="container pt-6">
       {isLoading && <Spinner />}
       <Heading level={3}>Личный кабинет руководителя</Heading>
       <section className={styles.cabinet}>

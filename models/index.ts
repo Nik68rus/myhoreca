@@ -78,9 +78,9 @@ ShopItem.belongsTo(Item);
 let connected = false;
 
 const db: DB = {
-  connect() {
+  async connect() {
     this.sequelize = connect();
-    this.sequelize.authenticate();
+    await this.sequelize.authenticate();
     this.sequelize.sync();
   },
   sequelize,

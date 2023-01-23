@@ -3,12 +3,14 @@ import ApiError from '../helpers/error';
 import db from '../models';
 
 class SpaceService {
-  constructor() {
-    db.connect();
-  }
+  // constructor() {
+  //   db.connect();
+  // }
 
   async create(title: string) {
-    db.sequelize.sync();
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
     const normTitle = title.trim();
 
     if (normTitle.length < 3) {
@@ -24,7 +26,7 @@ class SpaceService {
     }
 
     const newSpace = await db.spaces.create({ title: normTitle });
-    db.sequelize.close();
+    // db.sequelize.close();
     return newSpace;
   }
 }

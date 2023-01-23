@@ -23,6 +23,9 @@ export default async function handler(
 ) {
   if (req.method === 'PATCH') {
     try {
+      await db.sequelize.authenticate();
+      await db.sequelize.sync();
+
       const token = req.cookies.accessToken;
       const userId = req.query.userId;
       const code = req.query.code;

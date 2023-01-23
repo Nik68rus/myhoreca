@@ -16,6 +16,9 @@ export default async function handler(
     const { id, title } = req.body;
 
     try {
+      await db.sequelize.authenticate();
+      await db.sequelize.sync();
+
       const user = await getAdmin(req);
       const cat = await db.categories.findOne({
         where: { spaceId: user.spaceId, id },

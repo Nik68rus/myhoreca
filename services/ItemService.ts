@@ -3,12 +3,13 @@ import ApiError from '../helpers/error';
 import db from '../models';
 
 class ItemService {
-  constructor() {
-    db.connect();
-  }
+  // constructor() {
+  //   db.connect();
+  // }
 
   async create(item: IItemInput & { spaceId: number; isVisible: boolean }) {
-    db.sequelize.sync();
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
     const normTitle = item.title.trim();
 
     if (normTitle.length < 3) {
@@ -24,12 +25,13 @@ class ItemService {
     }
 
     const newItem = await db.items.create({ ...item, title: normTitle });
-    db.sequelize.close();
+    // db.sequelize.close();
     return newItem;
   }
 
   async getItems(spaceId: number) {
-    db.sequelize.sync();
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
     const items = await db.items.findAll({
       where: { spaceId },
     });
@@ -37,6 +39,9 @@ class ItemService {
   }
 
   async getById(itemId: number) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
     const item = await db.items.findByPk(itemId);
     return item;
   }

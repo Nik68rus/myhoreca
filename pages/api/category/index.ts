@@ -17,6 +17,9 @@ export default async function handler(
     const { title } = req.body;
 
     try {
+      await db.sequelize.authenticate();
+      await db.sequelize.sync();
+
       const user = await getAdmin(req);
 
       const existingCat = await db.categories.findOne({
@@ -40,6 +43,9 @@ export default async function handler(
 
   if (req.method === 'GET') {
     try {
+      await db.sequelize.authenticate();
+      await db.sequelize.sync();
+
       const user = await getUser(req);
       const categories = await db.categories.findAll({
         where: { spaceId: user.spaceId },

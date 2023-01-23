@@ -21,6 +21,8 @@ export default async function handler(
     const { id, price } = req.body;
 
     try {
+      await db.sequelize.authenticate();
+      await db.sequelize.sync();
       const user = await getAdmin(req);
       const shopItem = await db.shopItems.findByPk(id);
       if (!price) throw ApiError.badRequest('Не указана цена!');
@@ -37,6 +39,8 @@ export default async function handler(
     const id = req.query.arrivalId as string;
 
     try {
+      await db.sequelize.authenticate();
+      await db.sequelize.sync();
       const user = await getAdmin(req);
       const shopItem = (await db.shopItems.findOne({
         where: { id: +id },

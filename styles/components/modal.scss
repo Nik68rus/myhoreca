@@ -30,6 +30,7 @@
   padding: 60px;
   border-radius: $border-radius-l;
   position: relative;
+  max-height: 100vh;
 }
 
 .modal__close-btn {
@@ -54,4 +55,8 @@
 
 .modal__heading {
   margin-bottom: 30px;
+}
+
+.modal__body {
+  overflow: auto;
 }

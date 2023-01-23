@@ -11,9 +11,9 @@ import { generateToken } from '../helpers/token';
 import PermissionService from './PermissionService';
 
 class UserService {
-  constructor() {
-    db.connect();
-  }
+  // constructor() {
+  //   db.connect();
+  // }
 
   //генерация токенов и информации о пользователе
   async generateData(user: IUser) {
@@ -46,6 +46,9 @@ class UserService {
     role?: UserRole;
     spaceId: number;
   }) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
     const { email, password, name, role, spaceId } = userData;
 
     const existingUser = await db.users.findOne({ where: { email } });
@@ -66,7 +69,7 @@ class UserService {
       role: role ? role : UserRole.GUEST,
     });
 
-    db.sequelize.close();
+    // db.sequelize.close();
 
     await MailService.sendActivationMail(email);
 
@@ -75,6 +78,9 @@ class UserService {
 
   //активация главного пользователя
   async activate(code: string) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
     const user = await db.users.findOne({ where: { activationCode: code } });
 
     if (!user) {
@@ -84,13 +90,16 @@ class UserService {
     user.isActivated = true;
 
     await user.save();
-    db.sequelize.close();
+    // db.sequelize.close();
 
     return user;
   }
 
   //отправка письма с кодом сброса пароля
   async startRecover(email: string) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
     const normEmail = email.trim();
     const user = await db.users.findOne({ where: { email: normEmail } });
 
@@ -103,12 +112,15 @@ class UserService {
     user.resetCodeExpiration = new Date(Date.now() + 2 * 60 * 60 * 1000);
     await user.save();
     await MailService.sendRecoveryMail(normEmail);
-    db.sequelize.close();
+    // db.sequelize.close();
     return 'Ссылка отпралена';
   }
 
   //валидация ссылки для восстановления пароля из письма
   async validateRecovery(code: string) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
     const user = await db.users.findOne({ where: { resetCode: code } });
 
     if (!user) {
@@ -119,13 +131,16 @@ class UserService {
       throw ApiError.badRequest('Время действия ссылки истекло!');
     }
 
-    db.sequelize.close();
+    // db.sequelize.close();
 
     return user.email;
   }
 
   //завершение восстановления и установка нового пароля
   async finishRecover(code: string, password: string) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
     const user = await db.users.findOne({ where: { resetCode: code } });
 
     if (!user) {
@@ -143,13 +158,16 @@ class UserService {
     user.resetCodeExpiration = new Date(Date.now());
 
     await user.save();
-    db.sequelize.close();
+    // db.sequelize.close();
 
     return user;
   }
 
   //создать пользователя-кассира
   async createCashier(email: string, spaceId: number) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
     const activationCode = uuidv4();
     const user = await db.users.create({
       email,
@@ -166,6 +184,9 @@ class UserService {
 
   // выслать кассиру приглашение и предоставить доступ
   async invite(email: string, owner: string, shop: IShop) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
     let employee = await db.users.findOne({ where: { email } });
 
     if (employee && employee.role !== UserRole.CASHIER) {
@@ -188,11 +209,17 @@ class UserService {
 
   // получить список сотрудников пространства
   async getEmployees(spaceId: number) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
     const employees = await db.users.findAll({ where: { spaceId } });
     return employees;
   }
 
   async findByCode(code: string) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
     const user = await db.users.findOne({
       where: { activationCode: code },
       include: db.spaces,
@@ -206,6 +233,9 @@ class UserService {
   }
 
   async update(data: Partial<IUser>) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
     const {
       id,
       email,
