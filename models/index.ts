@@ -7,6 +7,8 @@ import itemModel from './item';
 import shopItemModel from './shopItem';
 import spaceModel from './space';
 import categoryModel from './category';
+import consumptionModel from './consumption';
+import consumptionItemModel from './consumptionItem';
 
 interface DB {
   connect: () => void;
@@ -18,9 +20,12 @@ interface DB {
   items: ReturnType<typeof itemModel>;
   shopItems: ReturnType<typeof shopItemModel>;
   categories: ReturnType<typeof categoryModel>;
+  consumptions: ReturnType<typeof consumptionModel>;
+  consumptionItems: ReturnType<typeof consumptionItemModel>;
 }
 
 console.log(pg.Client.name);
+
 const connect = () => {
   return new Sequelize(
     process.env.DB_NAME,
@@ -45,6 +50,8 @@ const Permission = permissionModel(sequelize);
 const Item = itemModel(sequelize);
 const ShopItem = shopItemModel(sequelize);
 const Category = categoryModel(sequelize);
+const Consumption = consumptionModel(sequelize);
+const ConsumptionItem = consumptionItemModel(sequelize);
 
 Space.hasMany(User);
 User.belongsTo(Space);
@@ -75,13 +82,24 @@ ShopItem.belongsTo(Shop);
 Item.hasMany(ShopItem);
 ShopItem.belongsTo(Item);
 
+Shop.hasMany(Consumption);
+Consumption.belongsTo(Shop);
+
+User.hasMany(Consumption);
+Consumption.belongsTo(User);
+
+Consumption.hasMany(ConsumptionItem);
+ConsumptionItem.belongsTo(Consumption);
+
+ConsumptionItem.belongsTo(Item);
+
 let connected = false;
 
 const db: DB = {
   async connect() {
-    this.sequelize = connect();
+    // this.sequelize = connect();
     await this.sequelize.authenticate();
-    this.sequelize.sync();
+    await this.sequelize.sync();
   },
   sequelize,
   spaces: Space,
@@ -91,6 +109,8 @@ const db: DB = {
   items: Item,
   shopItems: ShopItem,
   categories: Category,
+  consumptions: Consumption,
+  consumptionItems: ConsumptionItem,
 };
 
 export default db;

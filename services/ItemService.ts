@@ -3,13 +3,10 @@ import ApiError from '../helpers/error';
 import db from '../models';
 
 class ItemService {
-  // constructor() {
-  //   db.connect();
-  // }
-
   async create(item: IItemInput & { spaceId: number; isVisible: boolean }) {
     await db.sequelize.authenticate();
     await db.sequelize.sync();
+
     const normTitle = item.title.trim();
 
     if (normTitle.length < 3) {
@@ -25,7 +22,6 @@ class ItemService {
     }
 
     const newItem = await db.items.create({ ...item, title: normTitle });
-    // db.sequelize.close();
     return newItem;
   }
 
@@ -34,6 +30,7 @@ class ItemService {
     await db.sequelize.sync();
     const items = await db.items.findAll({
       where: { spaceId },
+      order: [['title', 'ASC']],
     });
     return items;
   }

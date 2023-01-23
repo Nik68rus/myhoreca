@@ -8,9 +8,10 @@ interface Props {
   initialValue?: number;
   step?: number;
   onChange: (n: number) => void;
+  className?: string;
 }
 
-const Counter = ({ label, initialValue, step, onChange }: Props) => {
+const Counter = ({ label, initialValue, step, onChange, className }: Props) => {
   const [value, setValue] = useState(initialValue || 1);
   const currentStep = step || 1;
 
@@ -28,7 +29,7 @@ const Counter = ({ label, initialValue, step, onChange }: Props) => {
   }, [value, onChange]);
 
   return (
-    <div className={styles.counter}>
+    <div className={cx(styles.counter, className ? className : '')}>
       {label && <label className={styles.label}>{label}</label>}
       <div className={styles.group}>
         <button

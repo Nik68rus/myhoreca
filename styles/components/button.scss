@@ -97,10 +97,11 @@
   }
 
   &--icon {
-    padding: 8px;
+    padding: 12px;
     background-color: $color-input-bg;
     color: $color-text-muted;
     min-width: auto;
+    font-size: 18px;
 
     &:hover,
     &:focus {

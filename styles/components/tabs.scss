@@ -1,0 +1,41 @@
+.tabs {
+  display: flex;
+  gap: 20px;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: -30px;
+    right: -30px;
+    bottom: -1px;
+    height: 1px;
+    background-color: $color-border-light;
+  }
+}
+
+.tabs__control {
+  background-color: transparent;
+  border: none;
+  color: $color-text-muted;
+  font-family: $ff-nunito;
+  font-weight: 600;
+  padding-top: 5px;
+  padding-bottom: 20px;
+  cursor: pointer;
+  position: relative;
+}
+
+.tabs__control--active {
+  color: $color-default-black;
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 3px;
+    background-color: $color-neon-blue;
+    z-index: 2;
+  }
+}

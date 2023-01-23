@@ -5,10 +5,6 @@ import db from '../models';
 import { IPermission } from '../models/permission';
 
 class PermissionService {
-  // constructor() {
-  //   db.connect();
-  // }
-
   async create(userId: number, shopId: number, role: UserRole) {
     await db.sequelize.authenticate();
     await db.sequelize.sync();
@@ -31,7 +27,6 @@ class PermissionService {
     const shops = await db.shops.findAll({
       where: { spaceId },
     });
-    // db.sequelize.close();
     return shops;
   }
 
@@ -43,7 +38,6 @@ class PermissionService {
       where: { shopId, role: UserRole.CASHIER },
       include: db.users,
     })) as unknown as IPermission & { user: IUser }[];
-    // db.sequelize.close();
     return permissions.map((perm) => perm.user);
   }
 }

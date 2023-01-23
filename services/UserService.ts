@@ -11,10 +11,6 @@ import { generateToken } from '../helpers/token';
 import PermissionService from './PermissionService';
 
 class UserService {
-  // constructor() {
-  //   db.connect();
-  // }
-
   //генерация токенов и информации о пользователе
   async generateData(user: IUser) {
     const accessToken = await generateToken(
@@ -69,8 +65,6 @@ class UserService {
       role: role ? role : UserRole.GUEST,
     });
 
-    // db.sequelize.close();
-
     await MailService.sendActivationMail(email);
 
     return this.generateData(user);
@@ -90,8 +84,6 @@ class UserService {
     user.isActivated = true;
 
     await user.save();
-    // db.sequelize.close();
-
     return user;
   }
 
@@ -112,7 +104,6 @@ class UserService {
     user.resetCodeExpiration = new Date(Date.now() + 2 * 60 * 60 * 1000);
     await user.save();
     await MailService.sendRecoveryMail(normEmail);
-    // db.sequelize.close();
     return 'Ссылка отпралена';
   }
 
@@ -130,8 +121,6 @@ class UserService {
     if (user.resetCodeExpiration < new Date(Date.now())) {
       throw ApiError.badRequest('Время действия ссылки истекло!');
     }
-
-    // db.sequelize.close();
 
     return user.email;
   }
@@ -158,7 +147,6 @@ class UserService {
     user.resetCodeExpiration = new Date(Date.now());
 
     await user.save();
-    // db.sequelize.close();
 
     return user;
   }
@@ -178,7 +166,6 @@ class UserService {
       role: UserRole.CASHIER,
     });
 
-    // db.sequelize.close();
     return user;
   }
 

@@ -4,10 +4,6 @@ import db from '../models';
 import PermissionService from './PermissionService';
 
 class ShopService {
-  // constructor() {
-  //   db.connect();
-  // }
-
   async create(title: string, spaceId: number, userId: number) {
     await db.sequelize.authenticate();
     await db.sequelize.sync();
@@ -28,7 +24,6 @@ class ShopService {
 
     const shop = await db.shops.create({ title: normTitle, spaceId });
     await PermissionService.create(userId, shop.id, UserRole.OWNER);
-    // db.sequelize.close();
     return shop;
   }
 

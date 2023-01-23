@@ -34,19 +34,19 @@ const Items = () => {
         <Card>
           {items && items.length ? (
             <>
-              <div className={styles.tabs}>
+              <div className="tabs">
                 <button
                   onClick={() => setHidden(false)}
-                  className={cx(styles.tabControl, {
-                    [styles.tabControlActive]: !hidden,
+                  className={cx('tabs__control', {
+                    ['tabs__control--active']: !hidden,
                   })}
                 >
                   Популярные
                 </button>
                 <button
                   onClick={() => setHidden(true)}
-                  className={cx(styles.tabControl, {
-                    [styles.tabControlActive]: hidden,
+                  className={cx('tabs__control', {
+                    ['tabs__control--active']: hidden,
                   })}
                 >
                   Скрытые
@@ -57,9 +57,6 @@ const Items = () => {
                 {items
                   .slice()
                   .filter((item) => item.isVisible === !hidden)
-                  .sort((a, b) => {
-                    return a.isCountable ? -1 : 1;
-                  })
                   .map((item) => (
                     <li key={item.id}>
                       <Item item={item} />

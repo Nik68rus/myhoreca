@@ -23,3 +23,26 @@ export interface IArrivalInput {
 export interface IArrivalWithItem extends IShopItem {
   item: IItem;
 }
+
+export interface IConsumptionItemInput {
+  itemId: number;
+  price: number;
+  toGo?: boolean;
+}
+
+export interface IConsumptionInput {
+  shopId: number;
+  isSale?: boolean;
+  byCard?: boolean;
+  isDiscount?: boolean;
+  comment?: string;
+  items: IConsumptionItemInput[];
+  total?: number;
+}
+
+export interface IWriteOff {
+  shopId: number;
+  itemId: number;
+  quantity: number;
+  comment?: string;
+}

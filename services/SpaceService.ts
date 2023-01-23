@@ -1,12 +1,7 @@
-import { IItemInput } from './../types/item';
 import ApiError from '../helpers/error';
 import db from '../models';
 
 class SpaceService {
-  // constructor() {
-  //   db.connect();
-  // }
-
   async create(title: string) {
     await db.sequelize.authenticate();
     await db.sequelize.sync();
@@ -26,7 +21,6 @@ class SpaceService {
     }
 
     const newSpace = await db.spaces.create({ title: normTitle });
-    // db.sequelize.close();
     return newSpace;
   }
 }

@@ -6,7 +6,12 @@ import styles from './Categories.module.scss';
 import CatItem from './CatItem';
 
 const Categories = () => {
-  const { data: categories, isLoading, error } = useGetCategoriesQuery();
+  const {
+    data: categories,
+    isLoading,
+    error,
+    isFetching,
+  } = useGetCategoriesQuery();
 
   useEffect(() => {
     handleRTKQError(error);
@@ -14,6 +19,7 @@ const Categories = () => {
 
   return (
     <>
+      {isFetching && <Spinner />}
       {isLoading && <Spinner block={true} />}
       {categories && categories.length ? (
         <ul className={styles.list}>

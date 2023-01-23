@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaEdit, FaEye, FaEyeSlash, FaPlus } from 'react-icons/fa';
+import { handleRTKQError } from '../../../helpers/error';
 import { IItem } from '../../../models/item';
 import { useGetCategoriesQuery } from '../../../redux/api/category';
 import { useEditItemMutation } from '../../../redux/api/item';
+import Spinner from '../../layout/Spinner';
 import AddItemModal from '../../modals/AddItemModal';
 // import { IItemWithCategory } from '../../../types/item';
 import IncomeModal from '../../modals/IncomeModal';
@@ -24,7 +26,11 @@ const Item = ({ item }: Props) => {
   };
 
   const { data: categories } = useGetCategoriesQuery();
-  const [editItem] = useEditItemMutation();
+  const [editItem, { isLoading, error }] = useEditItemMutation();
+
+  useEffect(() => {
+    handleRTKQError(error);
+  }, [error]);
 
   const visibilityToggleHandler = () => {
     editItem({ id: item.id, isVisible: !item.isVisible });
@@ -42,13 +48,17 @@ const Item = ({ item }: Props) => {
           <FaEdit />
         </button>
 
-        <button
-          className="button button--icon"
-          aria-label={item.isVisible ? 'Скрыть' : 'Вернуть'}
-          onClick={visibilityToggleHandler}
-        >
-          {item.isVisible ? <FaEyeSlash /> : <FaEye />}
-        </button>
+        {isLoading ? (
+          <Spinner inline={true} />
+        ) : (
+          <button
+            className="button button--icon"
+            aria-label={item.isVisible ? 'Скрыть' : 'Вернуть'}
+            onClick={visibilityToggleHandler}
+          >
+            {item.isVisible ? <FaEyeSlash /> : <FaEye />}
+          </button>
+        )}
 
         <button
           className="button button--icon"

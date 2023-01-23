@@ -14,6 +14,7 @@ import {
 import { IArrivalWithItem } from '../../../types/item';
 import Counter from '../../Counter';
 import Spinner from '../../layout/Spinner';
+import WriteOffModal from '../../modals/WriteOffModal';
 import Position from '../../Position';
 import styles from './StockItem.module.scss';
 
@@ -24,6 +25,7 @@ const StockItem = ({ item }: Props) => {
   const [editPrice, { error, isSuccess, isLoading }] = useEditPriceMutation();
   const [editing, setEditing] = useState(false);
   const [newPrice, setNewPrice] = useState(item.price);
+  const [writeOff, setWriteOff] = useState(false);
 
   const [removing, setRemoving] = useState(false);
   const [amount, setAmount] = useState(item.quantity);
@@ -98,9 +100,14 @@ const StockItem = ({ item }: Props) => {
             <button className="button button--icon" onClick={editStartHandler}>
               <FaDollarSign />
             </button>
-            <button className="button button--icon">
-              <FaMinus />
-            </button>
+            {item.item.isCountable && (
+              <button
+                className="button button--icon"
+                onClick={() => setWriteOff(true)}
+              >
+                <FaMinus />
+              </button>
+            )}
           </>
         )}
       </div>
@@ -113,6 +120,9 @@ const StockItem = ({ item }: Props) => {
             minute: '2-digit',
           })}
         </span>
+      )}
+      {writeOff && (
+        <WriteOffModal item={item} onClose={() => setWriteOff(false)} />
       )}
     </li>
   );

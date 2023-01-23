@@ -23,8 +23,8 @@ export default async function handler(
     // db.shopItems.sync({ force: false });
 
     try {
-      await db.sequelize.authenticate();
-      await db.sequelize.sync();
+      // await db.sequelize.authenticate();
+      // await db.sequelize.sync();
 
       const user = await getAdmin(req);
       const shop = await ShopService.getById(shopId);
@@ -69,6 +69,7 @@ export default async function handler(
       const items = await db.shopItems.findAll({
         where: { shopId },
         include: [{ model: db.items }],
+        order: [[db.items, 'title', 'ASC']],
       });
       return res.status(200).json(items);
     } catch (err) {

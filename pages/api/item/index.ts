@@ -3,6 +3,7 @@ import { getUser } from './../../../helpers/token';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { handleServerError } from '../../../helpers/error';
 import ItemService from '../../../services/ItemService';
+import db from '../../../models';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
   body: IItemInput;
@@ -33,6 +34,7 @@ export default async function handler(
 
   if (req.method === 'GET') {
     try {
+      db.items.sync({ force: false });
       const user = await getUser(req);
       const items = await ItemService.getItems(user.spaceId);
       return res.status(200).json(items);

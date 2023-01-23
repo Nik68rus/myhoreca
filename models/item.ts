@@ -30,7 +30,6 @@ const itemModel = (sequelize: Sequelize) => {
     title: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
     },
     imageUrl: DataTypes.STRING,
     isCountable: DataTypes.BOOLEAN,
