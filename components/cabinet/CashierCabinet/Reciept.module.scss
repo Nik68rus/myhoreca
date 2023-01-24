@@ -1,7 +1,112 @@
 @use '../../../styles/variables.scss';
 
 .reciept {
-  min-width: 300px;
+  width: 300px;
   background-color: variables.$color-default-white;
   flex-shrink: 0;
+  flex-grow: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+}
+
+.container {
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+  overflow: auto;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.date {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  color: variables.$color-text-muted;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.total {
+  margin-top: auto;
+  font-weight: 700;
+  border-bottom: variables.$border-light;
+  width: 100%;
+  text-align: end;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+
+  b {
+    font-size: 26px;
+  }
+}
+
+.modifiers {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 10px;
+  padding-top: 20px;
+}
+
+.checkbox {
+  flex-direction: column-reverse;
+  align-items: center;
+
+  label {
+    padding-left: 0;
+  }
+
+  input {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.actions {
+  display: flex;
+}
+
+.button {
+  width: 50%;
+  border: none;
+  padding: 20px 10px;
+  color: variables.$color-default-white;
+  cursor: pointer;
+  transition: background-color variables.$trans-default;
+
+  &:disabled {
+    filter: grayscale(1);
+    pointer-events: none;
+  }
+
+  &Ok {
+    background-color: variables.$color-success;
+    &:hover {
+      background-color: darken(variables.$color-success, 15%);
+    }
+  }
+
+  &Cancel {
+    background-color: variables.$color-torch-red;
+
+    &:hover {
+      background-color: darken(variables.$color-torch-red, 15%);
+    }
+  }
 }

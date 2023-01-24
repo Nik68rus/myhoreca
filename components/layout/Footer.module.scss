@@ -3,7 +3,13 @@
 .footer {
   text-align: center;
   padding: 20px 0;
-  color: variables.$color-default-white;
+  background-color: variables.$color-default-white;
+  border-top: variables.$border-light;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
 }
 
 .fixedFooter {
@@ -11,4 +17,11 @@
   bottom: 0;
   left: 0;
   right: 0;
+  background-color: transparent;
+  color: variables.$color-default-white;
+  border-top: none;
+
+  .container {
+    justify-content: center;
+  }
 }

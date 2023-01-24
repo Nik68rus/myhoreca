@@ -5,7 +5,6 @@ import Card from '../../ui/Card';
 import { useGetArrivalsQuery } from '../../../redux/api/arrival';
 import { useAppSelector } from '../../../hooks/store';
 import Spinner from '../../layout/Spinner';
-import StockItem from '../OwnerCabinet/StockItem';
 import { handleRTKQError } from '../../../helpers/error';
 import { useGetCategoriesQuery } from '../../../redux/api/category';
 import { IArrivalWithItem } from '../../../types/item';
@@ -24,7 +23,11 @@ const Store = () => {
     skip: !activeShop,
   });
 
-  const { data: categories, error: catError } = useGetCategoriesQuery();
+  const {
+    data: categories,
+    error: catError,
+    isLoading: catLoading,
+  } = useGetCategoriesQuery();
 
   useEffect(() => {
     handleRTKQError(error);
@@ -45,37 +48,45 @@ const Store = () => {
     }
   }, [activeCategory, items]);
 
+  // useEffect(() => {
+  //   if (items) {
+  //     refetch();
+  //   }
+  // }, [refetch, items]);
+
   return (
-    <section className={cx('container', styles.store)}>
-      {isLoading ? (
-        <Spinner block={true} />
+    <>
+      {isLoading || catLoading ? (
+        <Spinner />
       ) : (
-        <Card>
-          <div className="tabs">
-            {categories &&
-              categories.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setActiveCategory(cat.id)}
-                  className={cx('tabs__control', {
-                    ['tabs__control--active']: cat.id === activeCategory,
-                  })}
-                >
-                  {cat.title}
-                </button>
-              ))}
-          </div>
-          <ul className={styles.list}>
-            {filteredItems &&
-              filteredItems.map((item) => (
-                <li key={item.id}>
-                  <StoreItem item={item} />
-                </li>
-              ))}
-          </ul>
-        </Card>
+        <section className={cx('container', styles.store)}>
+          <Card>
+            <div className="tabs">
+              {categories &&
+                categories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => setActiveCategory(cat.id)}
+                    className={cx('tabs__control', {
+                      ['tabs__control--active']: cat.id === activeCategory,
+                    })}
+                  >
+                    {cat.title}
+                  </button>
+                ))}
+            </div>
+            <ul className={styles.list}>
+              {filteredItems &&
+                filteredItems.map((item, i) => (
+                  <li key={item.id}>
+                    <StoreItem item={item} />
+                  </li>
+                ))}
+            </ul>
+          </Card>
+        </section>
       )}
-    </section>
+    </>
   );
 };
 

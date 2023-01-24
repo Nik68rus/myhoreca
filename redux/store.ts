@@ -4,6 +4,7 @@ import { api } from './api';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import shopSlice from './slices/shopSlice';
 import layoutSlice from './slices/layoutSlice';
+import recieptSlice from './slices/recieptSlice';
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     user: userSlice,
     layout: layoutSlice,
     shop: shopSlice,
+    reciept: recieptSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(api.middleware),

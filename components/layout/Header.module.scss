@@ -10,7 +10,8 @@
   z-index: 10;
   background-color: variables.$color-default-white;
   color: variables.$color-default-black;
-  box-shadow: variables.$card-shadow;
+  // box-shadow: variables.$card-shadow;
+  box-shadow: 0 10px 40px rgb(0 0 0 / 10%);
   border-bottom: variables.$border-light;
 }
 
@@ -20,6 +21,7 @@
   left: 0;
   right: 0;
   box-shadow: none;
+  border: none;
   color: variables.$color-default-white;
   background-color: transparent;
   padding-top: 20px;
