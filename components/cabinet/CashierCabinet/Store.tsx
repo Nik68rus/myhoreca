@@ -14,9 +14,10 @@ const Store = () => {
   const { activeShop } = useAppSelector((store) => store.shop);
   const [activeCategory, setActiveCategory] = useState(0);
   const [filteredItems, setFilteredItems] = useState<IArrivalWithItem[]>([]);
+  const [items, setItems] = useState<IArrivalWithItem[]>([]);
 
   const {
-    data: items,
+    data: arrivals,
     error,
     isLoading,
   } = useGetArrivalsQuery(activeShop ? activeShop.id : 0, {
@@ -39,6 +40,12 @@ const Store = () => {
       setActiveCategory(categories[0].id);
     }
   }, [categories]);
+
+  useEffect(() => {
+    if (arrivals?.length) {
+      setItems(arrivals);
+    }
+  }, [arrivals]);
 
   useEffect(() => {
     if (items) {
