@@ -12,5 +12,6 @@ declare namespace NodeJS {
     readonly MAIL_HOST: string;
     readonly MAIL_PORT: string;
     readonly APP_URL: string;
+    readonly NEXT_PUBLIC_TEST: string;
   }
 }

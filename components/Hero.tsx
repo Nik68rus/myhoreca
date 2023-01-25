@@ -35,7 +35,7 @@ const Hero = () => {
       )}
       {!authData && (
         <div className={styles.details}>
-          <Heading level={1}>My HoReCa</Heading>
+          <Heading level={1}>My HoReCa {process.env.NEXT_PUBLIC_TEST}</Heading>
           <p>Контролируйте удаленно свой бизнес</p>
           <Link href={Routes.START} className="button">
             Зарегистрироваться
