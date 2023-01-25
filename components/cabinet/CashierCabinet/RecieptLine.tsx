@@ -6,7 +6,7 @@ import {
 } from '../../../redux/slices/recieptSlice';
 import styles from './RecieptLine.module.scss';
 import cx from 'classnames';
-import { FaCoffee, FaTimes } from 'react-icons/fa';
+import { FaTimes } from 'react-icons/fa';
 import { BiCoffee, BiCoffeeTogo } from 'react-icons/bi';
 import { useAppDispatch } from '../../../hooks/store';
 

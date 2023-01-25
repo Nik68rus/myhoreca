@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface IRecieptItem {
   itemId: number;
+  categoryId: number;
   title: string;
   price: number;
   toGo: boolean;

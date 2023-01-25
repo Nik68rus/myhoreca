@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styles from './Reciept.module.scss';
 import cx from 'classnames';
 import { useAppDispatch, useAppSelector } from '../../../hooks/store';
@@ -6,72 +6,111 @@ import LogoFull from '../../LogoFull';
 import RecieptLine from './RecieptLine';
 import Checkbox from '../../forms/Checkbox';
 import { removeAll } from '../../../redux/slices/recieptSlice';
+import { useCreateSaleMutation } from '../../../redux/api/consumption';
+import { handleRTKQError } from '../../../helpers/error';
+import Spinner from '../../layout/Spinner';
+import { IConsumptionInput } from '../../../types/item';
 
 const Reciept = () => {
   const [byCard, setByCard] = useState(false);
   const [isDiscount, setIsDiscount] = useState(false);
 
+  const [makeSale, { data, error, isLoading, isSuccess }] =
+    useCreateSaleMutation();
+
   const { items, total } = useAppSelector((store) => store.reciept);
   const dispatch = useAppDispatch();
+  const { activeShop } = useAppSelector((store) => store.shop);
 
-  const clearHandler = () => {
+  const clearHandler = useCallback(() => {
     dispatch(removeAll());
+  }, [dispatch]);
+
+  useEffect(() => {
+    handleRTKQError(error);
+  }, [error]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      clearHandler();
+    }
+  }, [isSuccess, clearHandler]);
+
+  const saleHandler = () => {
+    const data: IConsumptionInput = {
+      shopId: activeShop!.id,
+      isSale: true,
+      byCard,
+      isDiscount,
+      items: items.map((item) => ({
+        itemId: item.itemId,
+        price: item.price,
+        toGo: item.toGo,
+      })),
+      total: items.reduce((acc, item) => acc + item.price, 0),
+    };
+
+    makeSale(data);
   };
 
   return (
-    <section className={styles.reciept}>
-      <div className={cx('container', styles.container)}>
-        <LogoFull className="mb-6" />
-        <div className={cx(styles.date, 'mb-5')}>
-          <span>{new Date().toLocaleDateString('ru-Ru', {})}</span>
-          <span>
-            {new Date().toLocaleTimeString('ru-Ru', {
-              hour: '2-digit',
-              minute: '2-digit',
-            })}
-          </span>
+    <>
+      {isLoading && <Spinner />}
+      <section className={styles.reciept}>
+        <div className={cx('container', styles.container)}>
+          <LogoFull className="mb-6" />
+          <div className={cx(styles.date, 'mb-5')}>
+            <span>{new Date().toLocaleDateString('ru-Ru', {})}</span>
+            <span>
+              {new Date().toLocaleTimeString('ru-Ru', {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
+            </span>
+          </div>
+          <ul className={styles.list}>
+            {items.map((item) => (
+              <RecieptLine key={`line-${item.line}`} item={item} />
+            ))}
+          </ul>
         </div>
-        <ul className={styles.list}>
-          {items.map((item) => (
-            <RecieptLine key={`line-${item.line}`} item={item} />
-          ))}
-        </ul>
-      </div>
-      <div className={cx(styles.total, 'mt-6')}>
-        <span>Итого:</span> <b>{total.toLocaleString('ru-RU')} руб</b>
-      </div>
-      <div className={styles.modifiers}>
-        <Checkbox
-          label="Картой"
-          id="byCard"
-          checked={byCard}
-          onChange={(e) => setByCard(e.target.checked)}
-          className={styles.checkbox}
-        />
-        <Checkbox
-          label="Скидка"
-          id="isDiscount"
-          checked={isDiscount}
-          onChange={(e) => setIsDiscount(e.target.checked)}
-          className={styles.checkbox}
-        />
-        <Checkbox label="С собой" id="toGo" className={styles.checkbox} />
-      </div>
-      <div className={styles.actions}>
-        <button
-          className={cx(styles.button, styles.buttonOk)}
-          disabled={!items.length}
-        >
-          OK
-        </button>
-        <button
-          className={cx(styles.button, styles.buttonCancel)}
-          onClick={clearHandler}
-        >
-          Отмена
-        </button>
-      </div>
-    </section>
+        <div className={cx(styles.total, 'mt-6')}>
+          <span>Итого:</span> <b>{total.toLocaleString('ru-RU')} руб</b>
+        </div>
+        <div className={styles.modifiers}>
+          <Checkbox
+            label="Картой"
+            id="byCard"
+            checked={byCard}
+            onChange={(e) => setByCard(e.target.checked)}
+            className={styles.checkbox}
+          />
+          <Checkbox
+            label="Скидка"
+            id="isDiscount"
+            checked={isDiscount}
+            onChange={(e) => setIsDiscount(e.target.checked)}
+            className={styles.checkbox}
+          />
+          <Checkbox label="С собой" id="toGo" className={styles.checkbox} />
+        </div>
+        <div className={styles.actions}>
+          <button
+            className={cx(styles.button, styles.buttonOk)}
+            disabled={!items.length}
+            onClick={saleHandler}
+          >
+            OK
+          </button>
+          <button
+            className={cx(styles.button, styles.buttonCancel)}
+            onClick={clearHandler}
+          >
+            Отмена
+          </button>
+        </div>
+      </section>
+    </>
   );
 };
 

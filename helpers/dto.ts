@@ -18,6 +18,7 @@ export const recieptItemDto = (stockItem: IArrivalWithItem): IRecieptItem => {
 
   return {
     itemId: item.id,
+    categoryId: item.categoryId,
     title: item.title,
     price,
     toGo: false,
