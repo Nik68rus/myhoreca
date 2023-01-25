@@ -20,7 +20,7 @@ export default async function handler(
       const consumption = await ConsumptionService.sale(req.body, user.id);
       res.status(201).json(consumption);
     } catch (error) {
-      handleServerError(error);
+      handleServerError(res, error);
     }
   }
 
