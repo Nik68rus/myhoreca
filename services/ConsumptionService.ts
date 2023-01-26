@@ -72,45 +72,38 @@ class ConsumptionService {
         total: total!,
       });
 
-      await Promise.allSettled(
-        items.map(async (item) => {
-          await db.consumptionItems.create({
-            consumptionId: sale.id,
-            itemId: item.itemId,
-            price: item.price,
-            toGo: item.toGo!,
-          });
+      items.forEach(async (item) => {
+        await db.consumptionItems.create({
+          consumptionId: sale.id,
+          itemId: item.itemId,
+          price: item.price,
+          toGo: item.toGo!,
+        });
+      });
 
-          const stockItem = await db.shopItems.findOne({
-            where: { itemId: item.itemId },
-          });
-          if (stockItem && stockItem.quantity) {
-            stockItem.quantity--;
-            stockItem.quantity > 0
-              ? await stockItem.save()
-              : await stockItem.destroy();
-          }
-        })
-      );
+      const mapedItems: { id: number; quantity: number }[] = [];
 
-      // items.forEach(async (item) => {
-      //   await db.consumptionItems.create({
-      //     consumptionId: sale.id,
-      //     itemId: item.itemId,
-      //     price: item.price,
-      //     toGo: item.toGo!,
-      //   });
+      items.forEach((item) => {
+        const index = mapedItems.findIndex((mi) => mi.id === item.itemId);
+        if (index >= 0) {
+          mapedItems[index].quantity++;
+        } else {
+          mapedItems.push({ id: item.itemId, quantity: 1 });
+        }
+      });
+      console.log(mapedItems);
 
-      //   const stockItem = await db.shopItems.findOne({
-      //     where: { itemId: item.itemId },
-      //   });
-      //   if (stockItem && stockItem.quantity) {
-      //     stockItem.quantity--;
-      //     stockItem.quantity > 0
-      //       ? await stockItem.save()
-      //       : await stockItem.destroy();
-      //   }
-      // });
+      mapedItems.forEach(async (item) => {
+        const stockItem = await db.shopItems.findOne({
+          where: { itemId: item.id },
+        });
+        if (stockItem && stockItem.quantity) {
+          stockItem.quantity -= item.quantity;
+          stockItem.quantity > 0
+            ? await stockItem.save()
+            : await stockItem.destroy();
+        }
+      });
 
       return sale;
     } catch (error) {
