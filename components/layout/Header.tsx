@@ -31,13 +31,13 @@ const Header = () => {
   };
 
   return (
-    <header>
-      <div
-        className={cx('container', styles.header, {
-          [styles.headerMain]: isMain,
-          [styles.headerNoLogo]: isAccount,
-        })}
-      >
+    <header
+      className={cx(styles.header, {
+        [styles.headerMain]: isMain,
+        // [styles.headerNoLogo]: isAccount,
+      })}
+    >
+      <div className={cx('container', styles.headerContainer)}>
         {!isAccount && <Logo height={isMain ? 70 : 50} />}
         {isAccount && (
           <>

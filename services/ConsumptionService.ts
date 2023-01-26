@@ -91,7 +91,6 @@ class ConsumptionService {
           mapedItems.push({ id: item.itemId, quantity: 1 });
         }
       });
-      console.log(mapedItems);
 
       mapedItems.forEach(async (item) => {
         const stockItem = await db.shopItems.findOne({

@@ -9,11 +9,16 @@ import { removeAll } from '../../../redux/slices/recieptSlice';
 import { useCreateSaleMutation } from '../../../redux/api/consumption';
 import { handleRTKQError } from '../../../helpers/error';
 import Spinner from '../../layout/Spinner';
-import { IConsumptionInput } from '../../../types/item';
+import { IConsumptionInput, IWriteoffLine } from '../../../types/item';
+import { CashierSection } from '../../../types/sections';
+import WriteoffLine from './WriteoffLine';
 
 const Reciept = () => {
   const [byCard, setByCard] = useState(false);
   const [isDiscount, setIsDiscount] = useState(false);
+  const [isToGo, setIsToGo] = useState(false);
+  const { activeSection } = useAppSelector((store) => store.layout);
+  const isWriteoff = activeSection === CashierSection.WRITEOFF;
 
   const [makeSale, { data, error, isLoading, isSuccess }] =
     useCreateSaleMutation();
@@ -33,6 +38,9 @@ const Reciept = () => {
   useEffect(() => {
     if (isSuccess) {
       clearHandler();
+      setByCard(false);
+      setIsDiscount(false);
+      setIsToGo(false);
     }
   }, [isSuccess, clearHandler]);
 
@@ -53,6 +61,33 @@ const Reciept = () => {
     makeSale(data);
   };
 
+  const writeOffHandler = () => {};
+
+  const saleList = items.map((item) => (
+    <RecieptLine key={`line-${item.line}`} item={item} />
+  ));
+
+  const makeWriteoffList = () => {
+    const mapedItems: IWriteoffLine[] = [];
+
+    items.forEach((item) => {
+      const index = mapedItems.findIndex((mi) => mi.itemId === item.itemId);
+      if (index >= 0) {
+        mapedItems[index].quantity++;
+      } else {
+        mapedItems.push({
+          itemId: item.itemId,
+          title: item.title,
+          quantity: 1,
+        });
+      }
+    });
+
+    return mapedItems.map((item) => (
+      <WriteoffLine key={item.itemId} item={item} />
+    ));
+  };
+
   return (
     <>
       {isLoading && <Spinner />}
@@ -69,38 +104,46 @@ const Reciept = () => {
             </span>
           </div>
           <ul className={styles.list}>
-            {items.map((item) => (
-              <RecieptLine key={`line-${item.line}`} item={item} />
-            ))}
+            {isWriteoff ? makeWriteoffList() : saleList}
           </ul>
         </div>
-        <div className={cx(styles.total, 'mt-6')}>
-          <span>Итого:</span> <b>{total.toLocaleString('ru-RU')} руб</b>
-        </div>
-        <div className={styles.modifiers}>
-          <Checkbox
-            label="Картой"
-            id="byCard"
-            checked={byCard}
-            onChange={(e) => setByCard(e.target.checked)}
-            className={styles.checkbox}
-          />
-          <Checkbox
-            label="Скидка"
-            id="isDiscount"
-            checked={isDiscount}
-            onChange={(e) => setIsDiscount(e.target.checked)}
-            className={styles.checkbox}
-          />
-          <Checkbox label="С собой" id="toGo" className={styles.checkbox} />
-        </div>
+        {!isWriteoff && (
+          <>
+            <div className={cx(styles.total, 'mt-6')}>
+              <span>Итого:</span> <b>{total.toLocaleString('ru-RU')} руб</b>
+            </div>
+            <div className={styles.modifiers}>
+              <Checkbox
+                label="Картой"
+                id="byCard"
+                checked={byCard}
+                onChange={(e) => setByCard(e.target.checked)}
+                className={styles.checkbox}
+              />
+              <Checkbox
+                label="Скидка"
+                id="isDiscount"
+                checked={isDiscount}
+                onChange={(e) => setIsDiscount(e.target.checked)}
+                className={styles.checkbox}
+              />
+              <Checkbox
+                label="С собой"
+                id="toGo"
+                className={styles.checkbox}
+                checked={isToGo}
+                onChange={(e) => setIsToGo(e.target.checked)}
+              />
+            </div>
+          </>
+        )}
         <div className={styles.actions}>
           <button
             className={cx(styles.button, styles.buttonOk)}
             disabled={!items.length}
-            onClick={saleHandler}
+            onClick={isWriteoff ? writeOffHandler : saleHandler}
           >
-            OK
+            {isWriteoff ? 'Списать' : 'OK'}
           </button>
           <button
             className={cx(styles.button, styles.buttonCancel)}

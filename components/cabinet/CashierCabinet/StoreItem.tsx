@@ -50,6 +50,10 @@ const StoreItem = ({ item }: Props) => {
           <span>{position.title.slice(0, 3).toUpperCase()}</span>
         )}
       </div>
+
+      <span className={styles.qty}>
+        {item.quantity ? item.quantity - bookedAmount : null}
+      </span>
       <h4 className={cx(styles.title, 'mb-0')}>{position.title}</h4>
     </button>
   );

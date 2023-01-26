@@ -1,18 +1,11 @@
 @use '../../styles/variables.scss';
 
 .header {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  display: flex;
-  // justify-content: flex-end;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 10;
   background-color: variables.$color-default-white;
   color: variables.$color-default-black;
-  // box-shadow: variables.$card-shadow;
   box-shadow: 0 10px 40px rgb(0 0 0 / 10%);
   border-bottom: variables.$border-light;
+  z-index: 10;
 }
 
 .headerMain {
@@ -24,11 +17,22 @@
   border: none;
   color: variables.$color-default-white;
   background-color: transparent;
-  padding-top: 20px;
-  padding-bottom: 20px;
 
   svg {
     color: variables.$color-default-white;
+  }
+}
+
+.headerContainer {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .headerMain & {
+    padding-top: 20px;
+    padding-bottom: 20px;
   }
 }
 

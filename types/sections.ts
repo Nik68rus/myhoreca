@@ -5,3 +5,9 @@ export enum Section {
   STOCK = 'Асортимент',
   SALES = 'Продажи',
 }
+
+export enum CashierSection {
+  SALE = 'Продажа',
+  WRITEOFF = 'Списание',
+  HISTORY = 'История',
+}

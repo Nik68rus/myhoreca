@@ -1,0 +1,19 @@
+@use '../../../styles/variables.scss';
+
+.button {
+  background-color: variables.$color-default-white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  height: 100%;
+  border-right: variables.$border-light;
+  color: variables.$color-text-muted;
+  padding: 16px;
+  font-weight: 600;
+  transition: color variables.$trans-default;
+
+  &Active,
+  &:hover {
+    color: variables.$color-default-black;
+  }
+}

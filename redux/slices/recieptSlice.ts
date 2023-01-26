@@ -35,11 +35,19 @@ const recieptSlice = createSlice({
       state.items = [...state.items, item];
       state.total += action.payload.price;
     },
-    removeItem: (state, action: PayloadAction<IRecieptPosition>) => {
+    removeLine: (state, action: PayloadAction<IRecieptPosition>) => {
       state.items = state.items.filter(
         (item) => item.line !== action.payload.line
       );
       state.total -= action.payload.price;
+    },
+    removeItemFromReciept: (state, action: PayloadAction<number>) => {
+      const index = state.items.findIndex(
+        (item) => item.itemId === action.payload
+      );
+      if (index >= 0) {
+        state.items = state.items.filter((iten, i) => i !== index);
+      }
     },
     changeToGo: (state, action: PayloadAction<IRecieptPosition>) => {
       state.items = state.items.map((item) =>
@@ -56,7 +64,12 @@ const recieptSlice = createSlice({
 export const selectItemCount = (id: number) => (state: RootState) =>
   state.reciept.items.filter((item) => item.itemId === id).length;
 
-export const { addItem, removeItem, changeToGo, removeAll } =
-  recieptSlice.actions;
+export const {
+  addItem,
+  removeLine,
+  removeItemFromReciept,
+  changeToGo,
+  removeAll,
+} = recieptSlice.actions;
 
 export default recieptSlice.reducer;

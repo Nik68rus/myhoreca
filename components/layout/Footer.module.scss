@@ -2,7 +2,7 @@
 
 .footer {
   text-align: center;
-  padding: 20px 0;
+  // padding: 20px 0;
   background-color: variables.$color-default-white;
   border-top: variables.$border-light;
 }
@@ -10,6 +10,7 @@
 .container {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .fixedFooter {

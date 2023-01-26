@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   changeToGo,
   IRecieptPosition,
-  removeItem,
+  removeLine,
 } from '../../../redux/slices/recieptSlice';
 import styles from './RecieptLine.module.scss';
 import cx from 'classnames';
@@ -19,7 +19,7 @@ const RecieptLine = ({ item }: Props) => {
   const dispatch = useAppDispatch();
 
   const removeHandler = () => {
-    dispatch(removeItem(item));
+    dispatch(removeLine(item));
     setEditing(false);
   };
 

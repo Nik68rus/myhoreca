@@ -13,6 +13,10 @@
   justify-content: center;
   cursor: pointer;
   transition: border-color variables.$trans-default;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
 
   &:hover {
     border-color: variables.$color-neon-blue;
@@ -43,8 +47,13 @@
     color: variables.$color-default-white;
     font-weight: 700;
     font-size: 36px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
   }
+}
+
+.qty {
+  z-index: 1;
+  font-size: 14px;
 }
 
 .title {
@@ -52,4 +61,5 @@
   display: block;
   z-index: 1;
   position: relative;
+  align-self: center;
 }

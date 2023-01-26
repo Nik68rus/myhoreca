@@ -46,3 +46,9 @@ export interface IWriteOff {
   quantity: number;
   comment?: string;
 }
+
+export interface IWriteoffLine {
+  itemId: number;
+  title: string;
+  quantity: number;
+}

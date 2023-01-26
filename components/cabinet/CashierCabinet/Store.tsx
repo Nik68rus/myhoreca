@@ -9,12 +9,16 @@ import { handleRTKQError } from '../../../helpers/error';
 import { useGetCategoriesQuery } from '../../../redux/api/category';
 import { IArrivalWithItem } from '../../../types/item';
 import StoreItem from './StoreItem';
+import { CashierSection } from '../../../types/sections';
+import Heading from '../../ui/Heading';
 
 const Store = () => {
   const { activeShop } = useAppSelector((store) => store.shop);
+  const { activeSection } = useAppSelector((store) => store.layout);
   const [activeCategory, setActiveCategory] = useState(0);
   const [filteredItems, setFilteredItems] = useState<IArrivalWithItem[]>([]);
-  const [items, setItems] = useState<IArrivalWithItem[]>([]);
+
+  const isWriteoff = activeSection === CashierSection.WRITEOFF;
 
   const {
     data: arrivals,
@@ -43,23 +47,15 @@ const Store = () => {
 
   useEffect(() => {
     if (arrivals?.length) {
-      setItems(arrivals);
-    }
-  }, [arrivals]);
-
-  useEffect(() => {
-    if (items) {
       setFilteredItems(
-        items.filter((item) => item.item.categoryId === activeCategory)
+        arrivals.filter((arrival) =>
+          isWriteoff
+            ? arrival.item.isCountable
+            : arrival.item.categoryId === activeCategory
+        )
       );
     }
-  }, [activeCategory, items]);
-
-  // useEffect(() => {
-  //   if (items) {
-  //     refetch();
-  //   }
-  // }, [refetch, items]);
+  }, [activeCategory, arrivals, isWriteoff]);
 
   return (
     <>
@@ -68,20 +64,26 @@ const Store = () => {
       ) : (
         <section className={cx('container', styles.store)}>
           <Card>
-            <div className="tabs">
-              {categories &&
-                categories.map((cat) => (
-                  <button
-                    key={cat.id}
-                    onClick={() => setActiveCategory(cat.id)}
-                    className={cx('tabs__control', {
-                      ['tabs__control--active']: cat.id === activeCategory,
-                    })}
-                  >
-                    {cat.title}
-                  </button>
-                ))}
-            </div>
+            {isWriteoff ? (
+              <Heading level={5} className={styles.heading}>
+                Внимание! Вы в режиме списания!
+              </Heading>
+            ) : (
+              <div className="tabs">
+                {categories &&
+                  categories.map((cat) => (
+                    <button
+                      key={cat.id}
+                      onClick={() => setActiveCategory(cat.id)}
+                      className={cx('tabs__control', {
+                        ['tabs__control--active']: cat.id === activeCategory,
+                      })}
+                    >
+                      {cat.title}
+                    </button>
+                  ))}
+              </div>
+            )}
             <ul className={styles.list}>
               {filteredItems &&
                 filteredItems.map((item, i) => (

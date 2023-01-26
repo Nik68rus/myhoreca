@@ -1,11 +1,5 @@
 import { IConsumption } from './../../models/consumption';
-import { IShopItem } from './../../models/shopItem';
-import {
-  IArrivalInput,
-  IArrivalWithItem,
-  IConsumptionInput,
-  IWriteOff,
-} from './../../types/item';
+import { IConsumptionInput, IWriteOff } from './../../types/item';
 import { api } from '../api';
 
 export const consumptionApi = api.injectEndpoints({

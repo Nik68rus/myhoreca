@@ -1,9 +1,9 @@
-import { Section } from './../../types/sections';
+import { Section, CashierSection } from './../../types/sections';
 import { IShopData } from './../../types/shop';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface LayoutState {
-  activeSection: null | Section;
+  activeSection: null | Section | CashierSection;
 }
 
 const initialState: LayoutState = {
@@ -14,7 +14,10 @@ const layoutSlice = createSlice({
   name: 'layout',
   initialState,
   reducers: {
-    setActiveSection: (state, action: PayloadAction<Section>) => {
+    setActiveSection: (
+      state,
+      action: PayloadAction<Section | CashierSection>
+    ) => {
       state.activeSection = action.payload;
     },
   },
