@@ -46,7 +46,7 @@
   border-bottom: variables.$border-light;
   width: 100%;
   text-align: end;
-  padding: 20px;
+  padding: 10px 20px;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -61,7 +61,11 @@
   justify-content: center;
   gap: 30px;
   padding: 10px;
-  padding-top: 20px;
+  padding-top: 6px;
+
+  :global(.form__control) {
+    margin-bottom: 6px;
+  }
 }
 
 .checkbox {
@@ -73,8 +77,8 @@
   }
 
   input {
-    width: 30px;
-    height: 30px;
+    width: 24px;
+    height: 24px;
   }
 }
 
@@ -85,7 +89,7 @@
 .button {
   width: 50%;
   border: none;
-  padding: 20px 10px;
+  padding: 10px;
   color: variables.$color-default-white;
   cursor: pointer;
   transition: background-color variables.$trans-default;

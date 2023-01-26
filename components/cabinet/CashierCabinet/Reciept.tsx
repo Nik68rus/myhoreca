@@ -93,7 +93,7 @@ const Reciept = () => {
       {isLoading && <Spinner />}
       <section className={styles.reciept}>
         <div className={cx('container', styles.container)}>
-          <LogoFull className="mb-6" />
+          {/* <LogoFull className="mb-6" /> */}
           <div className={cx(styles.date, 'mb-5')}>
             <span>{new Date().toLocaleDateString('ru-Ru', {})}</span>
             <span>
