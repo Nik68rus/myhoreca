@@ -9,7 +9,7 @@ module.exports = {
   deploy: {
     production: {
       user: 'root',
-      host: '45.130.43.140',
+      host: '89.111.137.158',
       ref: 'origin/main',
       repo: 'git@github.com:Nik68rus/myhoreca.git',
       path: '/home/root',
