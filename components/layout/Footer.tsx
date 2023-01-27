@@ -6,6 +6,7 @@ import styles from './Footer.module.scss';
 import CashierActions from '../cabinet/CashierCabinet/CashierActions';
 import { useAppSelector } from '../../hooks/store';
 import { UserRole } from '../../types/user';
+import DayMoney from '../DayMoney';
 
 const Footer = () => {
   const router = useRouter();
@@ -24,7 +25,7 @@ const Footer = () => {
         ) : (
           <>
             {authData?.role === UserRole.CASHIER && <CashierActions />}
-            <div>Всего 5950 руб, из них картой 2310 руб</div>
+            <DayMoney />
           </>
         )}
       </div>

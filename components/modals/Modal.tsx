@@ -2,14 +2,16 @@ import { useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { FaTimes } from 'react-icons/fa';
 import Heading from '../ui/Heading';
+import cx from 'classnames';
 
 type Props = {
   children: React.ReactNode;
   onClose: () => void;
   heading: string;
+  className?: string;
 };
 
-const Modal = ({ children, onClose, heading }: Props) => {
+const Modal = ({ children, onClose, heading, className }: Props) => {
   const keyDownHandler = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -35,7 +37,7 @@ const Modal = ({ children, onClose, heading }: Props) => {
 
   if (isBrowser) {
     return createPortal(
-      <section className="modal">
+      <section className={cx('modal', className ? className : '')}>
         <div className="modal__overlay" onClick={onClose} />
         <div className="modal__content">
           <button

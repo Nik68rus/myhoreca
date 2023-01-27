@@ -1,0 +1,27 @@
+.modal {
+  :global(.modal__heading) {
+    margin-bottom: 0;
+  }
+
+  :global(.modal__content) {
+    max-width: 350px;
+    padding: 30px;
+    font-size: 16px;
+  }
+
+  :global(.list) {
+    li {
+      padding: 4px;
+      font-size: 18px;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}
+
+.total {
+  text-align: end;
+  font-weight: 700;
+  margin-bottom: 20px;
+  font-size: 20px;
+}

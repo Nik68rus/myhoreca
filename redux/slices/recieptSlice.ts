@@ -51,9 +51,13 @@ const recieptSlice = createSlice({
       state.total -= action.payload.price;
     },
     removeLine: (state, action: PayloadAction<number>) => {
-      state.items = state.items.filter(
-        (item) => item.itemId !== action.payload
-      );
+      const item = state.items.find((item) => item.itemId === action.payload);
+      if (item) {
+        state.items = state.items.filter(
+          (item) => item.itemId !== action.payload
+        );
+        state.total -= item.price * item.quantity;
+      }
     },
     changeToGo: (state, action: PayloadAction<number>) => {
       state.items = state.items.map((item) =>

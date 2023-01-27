@@ -8,6 +8,7 @@ import Store from './Store';
 
 const CashierCabinet = () => {
   const { activeSection } = useAppSelector((store) => store.layout);
+
   return (
     <div className={styles.cabinet}>
       {(activeSection === CashierSection.SALE ||

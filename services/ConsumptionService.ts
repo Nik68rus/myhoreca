@@ -1,6 +1,7 @@
-import { IConsumptionInput } from './../types/item';
+import { IConsumptionInput, IConsumptionWithItem } from './../types/item';
 import ApiError from '../helpers/error';
 import db from '../models';
+import { Op } from 'sequelize';
 
 class ConsumptionService {
   async consume(saleInfo: IConsumptionInput, userId: number) {
@@ -50,8 +51,68 @@ class ConsumptionService {
     }
   }
 
-  async getHistory(userId: number, date: string) {
-    return [{ id: 1, title: 'rrrr' }];
+  async getHistory({
+    userId,
+    shopId,
+    date,
+  }: {
+    userId: number;
+    shopId: number;
+    date: Date;
+  }) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
+    const dayStart = new Date(date.setHours(0, 0));
+    const dayEnd = new Date(date.setHours(23, 59));
+
+    const items = await db.consumptions.findAll({
+      where: {
+        shopId,
+        createdAt: {
+          [Op.between]: [dayStart, dayEnd],
+        },
+      },
+      order: [['createdAt', 'ASC']],
+    });
+    return items;
+  }
+
+  async getReciept(consumptionId: number) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+    const items = (await db.consumptionItems.findAll({
+      where: { consumptionId },
+      include: db.items,
+    })) as IConsumptionWithItem[];
+    return items;
+  }
+
+  async getStat(shopId: number) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
+    const dayStart = new Date().setHours(0, 0);
+    const dayEnd = new Date().setHours(23, 59);
+
+    const items = await db.consumptions.findAll({
+      where: {
+        shopId,
+        createdAt: {
+          [Op.between]: [dayStart, dayEnd],
+        },
+      },
+      order: [['createdAt', 'ASC']],
+    });
+
+    const total = items
+      .filter((item) => item.isSale)
+      .reduce((acc, i) => acc + i.total, 0);
+    const card = items
+      .filter((item) => item.isSale && item.byCard)
+      .reduce((acc, i) => acc + i.total, 0);
+
+    return { total, card };
   }
 }
 

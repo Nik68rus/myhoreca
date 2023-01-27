@@ -1,3 +1,4 @@
+import { IConsumptionItem } from './../models/consumptionItem';
 import { IShopItem } from './../models/shopItem';
 import { IItem } from './../models/item';
 export interface IItemInput {
@@ -33,4 +34,8 @@ export interface IConsumptionInput {
   comment?: string;
   items: IConsumptionItemInput[];
   total: number;
+}
+
+export interface IConsumptionWithItem extends IConsumptionItem {
+  item: IItem;
 }

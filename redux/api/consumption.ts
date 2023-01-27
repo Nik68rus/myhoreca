@@ -1,5 +1,5 @@
 import { IConsumption } from './../../models/consumption';
-import { IConsumptionInput } from './../../types/item';
+import { IConsumptionInput, IConsumptionWithItem } from './../../types/item';
 import { api } from '../api';
 
 export const consumptionApi = api.injectEndpoints({
@@ -16,12 +16,30 @@ export const consumptionApi = api.injectEndpoints({
     }),
 
     //получение всех продаж магазина
-    getSales: builder.query<IConsumption[], number>({
-      query: (shopId) => `consumption?shopId=${shopId}`,
+    getConsumptions: builder.query<
+      IConsumption[],
+      { shopId: number; date: string }
+    >({
+      query: ({ shopId, date }) => `consumption?shopId=${shopId}&date=${date}`,
+      providesTags: ['Consumption'],
+    }),
+
+    //получение всех позиций чека
+    getRecieptDetails: builder.query<IConsumptionWithItem[], number>({
+      query: (consumptionId) => `consumption/${consumptionId}`,
+      providesTags: ['Consumption'],
+    }),
+
+    getStat: builder.query<{ total: number; card: number }, number>({
+      query: (shopId) => `consumption/stat?shopId=${shopId}`,
       providesTags: ['Consumption'],
     }),
   }),
 });
 
-export const { useCreateConsumptionMutation, useGetSalesQuery } =
-  consumptionApi;
+export const {
+  useCreateConsumptionMutation,
+  useGetConsumptionsQuery,
+  useGetRecieptDetailsQuery,
+  useGetStatQuery,
+} = consumptionApi;

@@ -20,6 +20,7 @@ export interface IConsumption
   isDiscount: CreationOptional<boolean>;
   total: number;
   comment: CreationOptional<string>;
+  createdAt: CreationOptional<Date>;
 }
 
 const consumptionModel = (sequelize: Sequelize) => {
@@ -36,6 +37,7 @@ const consumptionModel = (sequelize: Sequelize) => {
     isDiscount: DataTypes.BOOLEAN,
     total: DataTypes.FLOAT,
     comment: DataTypes.TEXT,
+    createdAt: DataTypes.DATE,
   });
 
   return Consumption;

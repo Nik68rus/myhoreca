@@ -21,6 +21,14 @@ export default async function handler(
   req: ExtendedNextApiRequest,
   res: NextApiResponse
 ) {
+  if (req.method === 'GET') {
+    try {
+      const userId = req.query.userId as string;
+      const user = await getUser(req);
+      const searchingUser = await UserService.getById(+userId);
+      return res.status(200).json(searchingUser);
+    } catch (error) {}
+  }
   if (req.method === 'PATCH') {
     try {
       await db.sequelize.authenticate();

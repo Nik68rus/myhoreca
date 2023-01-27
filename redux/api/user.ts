@@ -122,6 +122,12 @@ export const userApi = api.injectEndpoints({
       }),
       invalidatesTags: ['Employee'],
     }),
+
+    //получить данные пользователя по id
+    getUserData: builder.query<IUser, number>({
+      query: (userId) => `user/${userId}`,
+      providesTags: ['Employee'],
+    }),
   }),
 });
 
@@ -138,4 +144,5 @@ export const {
   useGetByCodeMutation,
   useGetEmployeesQuery,
   useEditEmployeeMutation,
+  useGetUserDataQuery,
 } = userApi;

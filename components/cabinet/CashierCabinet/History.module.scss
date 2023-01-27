@@ -1,4 +1,50 @@
+@use '../../../styles/variables.scss';
+
 .container {
   padding-top: 20px;
   padding-bottom: 20px;
+  padding-bottom: 20px;
+  height: 100%;
+  overflow: auto;
+}
+
+.history {
+  display: flex;
+  flex-direction: column;
+}
+
+.date {
+  align-self: flex-start;
+  margin-bottom: 30px;
+}
+
+.label {
+  font-weight: 600;
+  color: variables.$color-text-muted;
+}
+
+.list {
+  li {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    justify-items: center;
+
+    & *:first-child {
+      justify-self: start;
+    }
+  }
+}
+.income {
+  align-self: flex-end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.total {
+  font-size: 30px;
+  font-weight: 700;
+  justify-self: end;
+  margin-bottom: 20px;
 }

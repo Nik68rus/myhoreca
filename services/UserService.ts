@@ -219,6 +219,7 @@ class UserService {
     return user;
   }
 
+  //обновить данные пользователя
   async update(data: Partial<IUser>) {
     await db.sequelize.authenticate();
     await db.sequelize.sync();
@@ -250,6 +251,15 @@ class UserService {
 
     await user.save();
 
+    return user;
+  }
+
+  //получить данные пользователя по id
+  async getById(userId: number) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
+    const user = await db.users.findByPk(userId);
     return user;
   }
 }

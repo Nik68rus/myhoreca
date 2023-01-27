@@ -1,0 +1,5 @@
+@use '../../../styles/variables.scss';
+
+.colored {
+  color: variables.$color-success;
+}

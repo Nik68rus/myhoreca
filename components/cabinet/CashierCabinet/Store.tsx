@@ -26,6 +26,7 @@ const Store = () => {
     isLoading,
   } = useGetArrivalsQuery(activeShop ? activeShop.id : 0, {
     skip: !activeShop,
+    pollingInterval: 60000,
   });
 
   const {

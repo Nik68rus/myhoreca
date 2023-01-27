@@ -12,6 +12,7 @@ import Spinner from '../../layout/Spinner';
 import { IConsumptionInput } from '../../../types/item';
 import { CashierSection } from '../../../types/sections';
 import FormControl from '../../forms/FormControl';
+import DayMoney from '../../DayMoney';
 
 const Reciept = () => {
   const [byCard, setByCard] = useState(false);
@@ -77,7 +78,7 @@ const Reciept = () => {
         <div className={cx('container', styles.container)}>
           {/* <LogoFull className="mb-6" /> */}
           <div className={cx(styles.date, 'mb-5')}>
-            <span>{new Date().toLocaleDateString('ru-Ru', {})}</span>
+            <span>{new Date().toLocaleDateString('ru-Ru')}</span>
             <span>
               {new Date().toLocaleTimeString('ru-Ru', {
                 hour: '2-digit',
@@ -91,6 +92,7 @@ const Reciept = () => {
             ))}
           </ul>
         </div>
+
         {isWriteoff ? (
           <FormControl
             label="Комментарий"
