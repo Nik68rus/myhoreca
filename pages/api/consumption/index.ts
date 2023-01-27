@@ -7,6 +7,9 @@ import ConsumptionService from '../../../services/ConsumptionService';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
   body: IConsumptionInput;
+  query: {
+    date?: string;
+  };
 }
 
 export default async function handler(
@@ -14,10 +17,9 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'POST') {
-    const { shopId, isSale, byCard, isDiscount, items, total } = req.body;
     try {
       const user = await getUser(req);
-      const consumption = await ConsumptionService.sale(req.body, user.id);
+      const consumption = await ConsumptionService.consume(req.body, user.id);
       res.status(201).json(consumption);
     } catch (error) {
       handleServerError(res, error);
@@ -25,5 +27,17 @@ export default async function handler(
   }
 
   if (req.method === 'GET') {
+    try {
+      const date = req.query.date as string;
+
+      if (!date) {
+        throw ApiError.badRequest('Не указана дата!');
+      }
+
+      const user = await getUser(req);
+      const history = ConsumptionService.getHistory(user.id, date);
+    } catch (error) {
+      handleServerError(res, error);
+    }
   }
 }

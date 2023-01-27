@@ -1,24 +1,14 @@
 import { IConsumption } from './../../models/consumption';
-import { IConsumptionInput, IWriteOff } from './../../types/item';
+import { IConsumptionInput } from './../../types/item';
 import { api } from '../api';
 
 export const consumptionApi = api.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
-    //создание продажи
-    createSale: builder.mutation<IConsumption, IConsumptionInput>({
+    //создание расхода
+    createConsumption: builder.mutation<IConsumption, IConsumptionInput>({
       query: (body) => ({
         url: 'consumption/',
-        method: 'POST',
-        body,
-      }),
-      invalidatesTags: ['Consumption', 'Arrival'],
-    }),
-
-    //создание списания
-    createWriteoff: builder.mutation<IConsumption, IWriteOff>({
-      query: (body) => ({
-        url: 'consumption/writeoff',
         method: 'POST',
         body,
       }),
@@ -33,8 +23,5 @@ export const consumptionApi = api.injectEndpoints({
   }),
 });
 
-export const {
-  useCreateSaleMutation,
-  useCreateWriteoffMutation,
-  useGetSalesQuery,
-} = consumptionApi;
+export const { useCreateConsumptionMutation, useGetSalesQuery } =
+  consumptionApi;

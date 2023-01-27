@@ -7,12 +7,6 @@ export interface IItemInput {
   categoryId: number;
 }
 
-// export interface IItemWithCategory extends IItem {
-//   category: {
-//     title: string;
-//   };
-// }
-
 export interface IArrivalInput {
   shopId: number;
   itemId: number;
@@ -27,28 +21,16 @@ export interface IArrivalWithItem extends IShopItem {
 export interface IConsumptionItemInput {
   itemId: number;
   price: number;
-  toGo?: boolean;
+  quantity: number;
+  toGo: boolean;
 }
 
 export interface IConsumptionInput {
   shopId: number;
-  isSale?: boolean;
-  byCard?: boolean;
-  isDiscount?: boolean;
+  isSale: boolean;
+  byCard: boolean;
+  isDiscount: boolean;
   comment?: string;
   items: IConsumptionItemInput[];
-  total?: number;
-}
-
-export interface IWriteOff {
-  shopId: number;
-  itemId: number;
-  quantity: number;
-  comment?: string;
-}
-
-export interface IWriteoffLine {
-  itemId: number;
-  title: string;
-  quantity: number;
+  total: number;
 }

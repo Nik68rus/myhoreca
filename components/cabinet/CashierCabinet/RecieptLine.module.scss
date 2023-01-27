@@ -2,6 +2,7 @@
 
 .line {
   display: flex;
+  gap: 4px;
   justify-content: space-between;
   align-items: flex-end;
   position: relative;
@@ -22,13 +23,19 @@
   max-width: 80%;
   width: fit-content;
   display: inline;
+  flex-grow: 1;
+}
+
+.quantity,
+.price {
+  flex-shrink: 0;
 }
 
 .actions {
   display: flex;
   gap: 4px;
   position: absolute;
-  right: 0;
+  left: 0;
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;

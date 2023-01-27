@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { handleRTKQError } from '../../helpers/error';
 import { useAppSelector } from '../../hooks/store';
-import { IArrivalInput, IArrivalWithItem } from '../../types/item';
+import {
+  IArrivalInput,
+  IArrivalWithItem,
+  IConsumptionInput,
+} from '../../types/item';
 import Counter from '../Counter';
 import Spinner from '../layout/Spinner';
 import Heading from '../ui/Heading';
@@ -10,7 +14,7 @@ import styles from './IncomeModal.module.scss';
 import { useCreateArrivalMutation } from '../../redux/api/arrival';
 import { IItem } from '../../models/item';
 import FormControl from '../forms/FormControl';
-import { useCreateWriteoffMutation } from '../../redux/api/consumption';
+import { useCreateConsumptionMutation } from '../../redux/api/consumption';
 
 type Props = {
   onClose: () => void;
@@ -23,11 +27,14 @@ const WriteOffModal = ({ onClose, item }: Props) => {
 
   const submitHandler: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    const data = {
+    const data: IConsumptionInput = {
       shopId: item.shopId,
-      itemId: item.item.id,
-      quantity,
-      comment: comment.trim().length ? comment.trim() : undefined,
+      isSale: false,
+      byCard: false,
+      isDiscount: false,
+      comment: comment.trim().length > 0 ? comment.trim() : undefined,
+      items: [{ itemId: item.item.id, quantity, price: 0, toGo: false }],
+      total: 0,
     };
 
     writeOffItem(data);
@@ -36,7 +43,7 @@ const WriteOffModal = ({ onClose, item }: Props) => {
   const { activeShop } = useAppSelector((store) => store.shop);
 
   const [writeOffItem, { error, isLoading, isSuccess }] =
-    useCreateWriteoffMutation();
+    useCreateConsumptionMutation();
 
   useEffect(() => {
     handleRTKQError(error);
@@ -58,7 +65,7 @@ const WriteOffModal = ({ onClose, item }: Props) => {
           </Heading>
           {item.item.isCountable ? (
             <Counter
-              label="Количество"
+              label="Списать"
               initialValue={quantity}
               step={1}
               onChange={(n) => setQuantity(n)}

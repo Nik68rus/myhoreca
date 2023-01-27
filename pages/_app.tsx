@@ -6,6 +6,9 @@ import Layout from '../components/layout/Layout';
 import Head from 'next/head';
 import { ToastContainer } from 'react-toastify';
 import { store } from '../redux/store';
+import flatpickr from 'flatpickr';
+import locale from 'flatpickr/dist/l10n/ru';
+flatpickr.localize(locale.ru!);
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

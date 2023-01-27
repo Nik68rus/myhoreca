@@ -21,6 +21,5 @@ export const recieptItemDto = (stockItem: IArrivalWithItem): IRecieptItem => {
     categoryId: item.categoryId,
     title: item.title,
     price,
-    toGo: false,
   };
 };

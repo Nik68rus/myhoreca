@@ -6,29 +6,23 @@ import LogoFull from '../../LogoFull';
 import RecieptLine from './RecieptLine';
 import Checkbox from '../../forms/Checkbox';
 import { removeAll } from '../../../redux/slices/recieptSlice';
-import {
-  useCreateSaleMutation,
-  useCreateWriteoffMutation,
-} from '../../../redux/api/consumption';
+import { useCreateConsumptionMutation } from '../../../redux/api/consumption';
 import { handleRTKQError } from '../../../helpers/error';
 import Spinner from '../../layout/Spinner';
-import { IConsumptionInput, IWriteoffLine } from '../../../types/item';
+import { IConsumptionInput } from '../../../types/item';
 import { CashierSection } from '../../../types/sections';
-import WriteoffLine from './WriteoffLine';
+import FormControl from '../../forms/FormControl';
 
 const Reciept = () => {
   const [byCard, setByCard] = useState(false);
   const [isDiscount, setIsDiscount] = useState(false);
   const [isToGo, setIsToGo] = useState(false);
+  const [comment, setComment] = useState('');
   const { activeSection } = useAppSelector((store) => store.layout);
   const isWriteoff = activeSection === CashierSection.WRITEOFF;
 
-  const [makeSale, { data, error, isLoading, isSuccess }] =
-    useCreateSaleMutation();
-  const [
-    makeWriteoff,
-    { error: woError, isSuccess: woSuccess, isLoading: woLoading },
-  ] = useCreateWriteoffMutation();
+  const [makeConsumption, { data, error, isLoading, isSuccess }] =
+    useCreateConsumptionMutation();
 
   const { items, total } = useAppSelector((store) => store.reciept);
   const dispatch = useAppDispatch();
@@ -36,79 +30,49 @@ const Reciept = () => {
 
   const clearHandler = useCallback(() => {
     dispatch(removeAll());
+    setByCard(false);
+    setIsDiscount(false);
+    setIsToGo(false);
+    setComment('');
   }, [dispatch]);
 
   useEffect(() => {
     handleRTKQError(error);
-    handleRTKQError(woError);
-  }, [error, woError]);
+  }, [error]);
 
   useEffect(() => {
     if (isSuccess) {
       clearHandler();
-      setByCard(false);
-      setIsDiscount(false);
-      setIsToGo(false);
     }
   }, [isSuccess, clearHandler]);
 
-  useEffect(() => {
-    if (woSuccess) {
-      clearHandler();
-    }
-  }, [clearHandler, woSuccess]);
-
-  const saleList = items.map((item) => (
-    <RecieptLine key={`line-${item.line}`} item={item} />
-  ));
-
-  const collapsedItems: IWriteoffLine[] = useMemo(() => {
-    const mapedItems: IWriteoffLine[] = [];
-
-    items.forEach((item) => {
-      const index = mapedItems.findIndex((mi) => mi.itemId === item.itemId);
-      if (index >= 0) {
-        mapedItems[index].quantity++;
-      } else {
-        mapedItems.push({
-          itemId: item.itemId,
-          title: item.title,
-          quantity: 1,
-        });
-      }
-    });
-
-    return mapedItems;
-  }, [items]);
-
-  const writeoffList = collapsedItems.map((item) => (
-    <WriteoffLine key={item.itemId} item={item} />
-  ));
-
-  const saleHandler = () => {
+  const consumptionHandler = () => {
     const data: IConsumptionInput = {
       shopId: activeShop!.id,
-      isSale: true,
-      byCard,
-      isDiscount,
+      isSale: isWriteoff ? false : true,
+      byCard: isWriteoff ? false : byCard,
+      isDiscount: isWriteoff ? false : isDiscount,
       items: items.map((item) => ({
         itemId: item.itemId,
-        price: item.price,
-        toGo: item.toGo,
+        quantity: item.quantity,
+        price: isWriteoff ? 0 : item.price,
+        toGo: isWriteoff ? false : item.toGo,
       })),
-      total: items.reduce((acc, item) => acc + item.price, 0),
+      total: isWriteoff
+        ? 0
+        : items.reduce((acc, item) => acc + item.price * item.quantity, 0),
     };
 
-    makeSale(data);
-  };
+    if (comment.trim().length > 0) {
+      data.comment = comment.trim();
+    }
 
-  const writeOffHandler = () => {
-    // makeWriteoff();
+    makeConsumption(data);
   };
 
   return (
     <>
-      {(isLoading || woLoading) && <Spinner />}
+      {isLoading && <Spinner />}
       <section className={styles.reciept}>
         <div className={cx('container', styles.container)}>
           {/* <LogoFull className="mb-6" /> */}
@@ -122,10 +86,21 @@ const Reciept = () => {
             </span>
           </div>
           <ul className={styles.list}>
-            {isWriteoff ? writeoffList : saleList}
+            {items.map((item) => (
+              <RecieptLine key={item.itemId} item={item} />
+            ))}
           </ul>
         </div>
-        {!isWriteoff && (
+        {isWriteoff ? (
+          <FormControl
+            label="Комментарий"
+            type="text"
+            id="comment"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            placeholder="Причина при желании"
+          />
+        ) : (
           <>
             <div className={cx(styles.total, 'mt-6')}>
               <span>Итого:</span> <b>{total.toLocaleString('ru-RU')} руб</b>
@@ -159,7 +134,7 @@ const Reciept = () => {
           <button
             className={cx(styles.button, styles.buttonOk)}
             disabled={!items.length}
-            onClick={isWriteoff ? writeOffHandler : saleHandler}
+            onClick={consumptionHandler}
           >
             {isWriteoff ? 'Списать' : 'OK'}
           </button>

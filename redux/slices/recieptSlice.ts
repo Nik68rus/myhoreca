@@ -6,11 +6,11 @@ export interface IRecieptItem {
   categoryId: number;
   title: string;
   price: number;
-  toGo: boolean;
 }
 
 export interface IRecieptPosition extends IRecieptItem {
-  line: number;
+  quantity: number;
+  toGo: boolean;
 }
 
 export interface RecieptState {
@@ -28,30 +28,36 @@ const recieptSlice = createSlice({
   initialState,
   reducers: {
     addItem: (state, action: PayloadAction<IRecieptItem>) => {
-      const item = {
-        ...action.payload,
-        line: state.items.at(-1) ? state.items.at(-1)!.line + 1 : 1,
-      };
-      state.items = [...state.items, item];
+      const inStateIndex = state.items.findIndex(
+        (si) => si.itemId === action.payload.itemId
+      );
+      if (inStateIndex < 0) {
+        state.items.push({ ...action.payload, quantity: 1, toGo: false });
+      } else {
+        state.items[inStateIndex].quantity++;
+      }
       state.total += action.payload.price;
     },
-    removeLine: (state, action: PayloadAction<IRecieptPosition>) => {
-      state.items = state.items.filter(
-        (item) => item.line !== action.payload.line
+    removeItem: (state, action: PayloadAction<IRecieptPosition>) => {
+      const inStateIndex = state.items.findIndex(
+        (si) => si.itemId === action.payload.itemId
       );
+      state.items[inStateIndex].quantity--;
+      if (state.items[inStateIndex].quantity === 0) {
+        state.items = state.items.filter(
+          (item) => item.itemId !== action.payload.itemId
+        );
+      }
       state.total -= action.payload.price;
     },
-    removeItemFromReciept: (state, action: PayloadAction<number>) => {
-      const index = state.items.findIndex(
-        (item) => item.itemId === action.payload
+    removeLine: (state, action: PayloadAction<number>) => {
+      state.items = state.items.filter(
+        (item) => item.itemId !== action.payload
       );
-      if (index >= 0) {
-        state.items = state.items.filter((iten, i) => i !== index);
-      }
     },
-    changeToGo: (state, action: PayloadAction<IRecieptPosition>) => {
+    changeToGo: (state, action: PayloadAction<number>) => {
       state.items = state.items.map((item) =>
-        item.line === action.payload.line ? { ...item, toGo: !item.toGo } : item
+        item.itemId === action.payload ? { ...item, toGo: !item.toGo } : item
       );
     },
     removeAll: (state) => {
@@ -62,14 +68,9 @@ const recieptSlice = createSlice({
 });
 
 export const selectItemCount = (id: number) => (state: RootState) =>
-  state.reciept.items.filter((item) => item.itemId === id).length;
+  state.reciept.items.find((item) => item.itemId === id)?.quantity || 0;
 
-export const {
-  addItem,
-  removeLine,
-  removeItemFromReciept,
-  changeToGo,
-  removeAll,
-} = recieptSlice.actions;
+export const { addItem, removeLine, removeItem, changeToGo, removeAll } =
+  recieptSlice.actions;
 
 export default recieptSlice.reducer;
