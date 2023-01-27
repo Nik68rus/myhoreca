@@ -48,29 +48,58 @@ const RecieptModal = ({ onClose, reciept }: Props) => {
     minute: '2-digit',
   });
 
+  const getLine = (position: IConsumptionWithItem) => {
+    if (reciept.isSale) {
+      return (
+        <>
+          <span>{position.item.title}</span>
+          <span>
+            * {position.quantity} = {position.price * position.quantity}
+          </span>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <span>{position.item.title}</span>
+          <span>* {position.quantity}</span>
+        </>
+      );
+    }
+  };
+
   return (
     <>
       {isLoading && <Spinner />}
-      <Modal onClose={onClose} heading={`Чек`} className={styles.modal}>
+      <Modal
+        onClose={onClose}
+        heading={reciept.isSale ? 'Чек' : 'Списание'}
+        className={styles.modal}
+      >
         <Heading level={5} className="mb-5">
           от {dateString} {timeString}
         </Heading>
         {creator && <div className="mb-5">Кассир: {creator.name}</div>}
+
         <ul className="list">
           {positions.map((position) => (
-            <li key={position.id}>
-              <span>{position.item.title}</span>
-              <span>
-                * {position.quantity} = {position.price * position.quantity}
-              </span>
-            </li>
+            <li key={position.id}>{getLine(position)}</li>
           ))}
         </ul>
-        <div className={styles.total}>
-          Итого: {reciept.total.toLocaleString('ru-RU')} руб
-        </div>
+        {reciept.isSale && (
+          <div className={styles.total}>
+            Итого: {reciept.total.toLocaleString('ru-RU')} руб
+          </div>
+        )}
         <div className={styles.extra}>
-          <div>Оплата {reciept.byCard ? 'картой' : 'наличными'}</div>
+          {reciept.isSale ? (
+            <div>Оплата {reciept.byCard ? 'картой' : 'наличными'}</div>
+          ) : (
+            <div>
+              Комментарий:  <br />
+              {reciept.comment || 'не указан'}
+            </div>
+          )}
           {reciept.isDiscount ? <div>Скидка сотрудника</div> : null}
         </div>
       </Modal>
