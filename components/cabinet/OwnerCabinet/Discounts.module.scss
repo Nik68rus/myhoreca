@@ -1,0 +1,13 @@
+.discounts {
+  :global(.form) {
+    max-width: none;
+  }
+
+  :global(.form__group) {
+    align-items: center;
+
+    *:first-child {
+      margin-right: auto;
+    }
+  }
+}

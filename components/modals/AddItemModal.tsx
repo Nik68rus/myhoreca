@@ -89,6 +89,7 @@ const AddItemModal = ({ onClose, categories, item }: Props) => {
             className={styles.form}
           >
             <Select
+              className="mb-5"
               items={categories}
               label="Категория: "
               onSelect={selectHandler}

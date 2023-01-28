@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { IArrivalWithItem } from '../../../types/item';
 import styles from './StoreItem.module.scss';
 import cx from 'classnames';
@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { useAppDispatch, useAppSelector } from '../../../hooks/store';
 import { addItem, selectItemCount } from '../../../redux/slices/recieptSlice';
 import { recieptItemDto } from '../../../helpers/dto';
+import { useGetDiscountsQuery } from '../../../redux/api/discount';
 
 interface Props {
   item: IArrivalWithItem;
@@ -19,8 +20,21 @@ const StoreItem = ({ item }: Props) => {
 
   const bookedAmount = useAppSelector(selectItemCount(position.id));
 
+  const { data: discounts } = useGetDiscountsQuery();
+
+  const discount = useMemo(() => {
+    let discount = 1;
+    if (discounts?.length) {
+      const itemDiscount = discounts.find(
+        (dis) => dis.categoryId === position.categoryId
+      );
+      discount = itemDiscount ? discount - itemDiscount.value / 100 : discount;
+    }
+    return discount;
+  }, [discounts, position.categoryId]);
+
   const clickHandler = () => {
-    dispatch(addItem(recieptItemDto(item)));
+    dispatch(addItem({ item: recieptItemDto(item), discount }));
   };
 
   return (

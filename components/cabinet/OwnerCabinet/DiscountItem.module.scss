@@ -1,0 +1,15 @@
+.discount {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 12px;
+}
+
+.title {
+  margin-right: auto;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}

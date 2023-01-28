@@ -9,6 +9,7 @@ interface Props<T> {
   onSelect: (item: T) => void;
   invalid?: boolean;
   selected?: number;
+  className?: string;
 }
 
 const Select = <T extends { id: number; title: string }>({
@@ -17,6 +18,7 @@ const Select = <T extends { id: number; title: string }>({
   onSelect,
   invalid,
   selected,
+  className,
 }: Props<T>) => {
   const [open, setOpen] = useState(false);
   const popupRef = useRef(null);
@@ -51,7 +53,11 @@ const Select = <T extends { id: number; title: string }>({
   }, [open, docClickHandler]);
 
   return (
-    <div className={cx(styles.select, { [styles.invalid]: invalid })}>
+    <div
+      className={cx(styles.select, className ? className : '', {
+        [styles.invalid]: invalid,
+      })}
+    >
       <div className={styles.label}>
         {open ? <FaCaretUp /> : <FaCaretDown />}
         <span className={styles.labelText}>{label}</span>

@@ -4,6 +4,9 @@ export enum Section {
   EMPLOYYES = 'Сотрудники',
   STOCK = 'Асортимент',
   SALES = 'Продажи',
+  DISCOUNT = 'Скидки',
+  GROUPS = 'Группы',
+  CUPS = 'Стаканчики',
 }
 
 export enum CashierSection {

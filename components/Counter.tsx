@@ -12,7 +12,7 @@ interface Props {
 }
 
 const Counter = ({ label, initialValue, step, onChange, className }: Props) => {
-  const [value, setValue] = useState(initialValue || 1);
+  const [value, setValue] = useState(initialValue ?? 1);
   const currentStep = step || 1;
 
   const incHandler = () => {
@@ -21,7 +21,7 @@ const Counter = ({ label, initialValue, step, onChange, className }: Props) => {
 
   const decHandler = () => {
     const newValue = value - currentStep;
-    setValue(newValue < 2 ? 1 : newValue);
+    setValue(newValue < 1 ? 0 : newValue);
   };
 
   useEffect(() => {

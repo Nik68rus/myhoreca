@@ -9,14 +9,20 @@ import {
   FaUsers,
   FaStore,
   FaBoxes,
+  FaPercent,
+  FaLayerGroup,
 } from 'react-icons/fa';
 import { Section } from '../../types/sections';
 import { useAppSelector } from '../../hooks/store';
+import { BiCoffeeTogo } from 'react-icons/bi';
 
 const menuItems = [
-  { id: Section.ITEMS, title: Section.ITEMS, icon: <FaUtensils /> },
   { id: Section.SHOPS, title: Section.SHOPS, icon: <FaStore /> },
   { id: Section.EMPLOYYES, title: Section.EMPLOYYES, icon: <FaUsers /> },
+  { id: Section.ITEMS, title: Section.ITEMS, icon: <FaUtensils /> },
+  { id: Section.CUPS, title: Section.CUPS, icon: <BiCoffeeTogo /> },
+  { id: Section.DISCOUNT, title: Section.DISCOUNT, icon: <FaPercent /> },
+  { id: Section.GROUPS, title: Section.GROUPS, icon: <FaLayerGroup /> },
   { id: Section.STOCK, title: Section.STOCK, icon: <FaBoxes /> },
   { id: Section.SALES, title: Section.SALES, icon: <FaCashRegister /> },
 ];

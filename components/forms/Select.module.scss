@@ -2,8 +2,6 @@
 
 .select {
   position: relative;
-  align-self: flex-start;
-  margin-bottom: 20px;
   flex-shrink: 0;
 
   &.invalid::after {

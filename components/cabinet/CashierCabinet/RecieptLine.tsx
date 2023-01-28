@@ -20,13 +20,13 @@ const RecieptLine = ({ item }: Props) => {
   const [editing, setEditing] = useState(false);
   const dispatch = useAppDispatch();
   const { activeSection } = useAppSelector((store) => store.layout);
+  const { discount } = useAppSelector((store) => store.reciept);
 
   const isWriteoff = activeSection === CashierSection.WRITEOFF;
 
   const minusHandler: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
     dispatch(removeItem(item));
-    // setEditing(false);
   };
 
   const deleteHandler = () => {
@@ -49,6 +49,10 @@ const RecieptLine = ({ item }: Props) => {
     }
   };
 
+  const currentPrice = discount
+    ? item.price * item.quantity * item.discount
+    : item.price * item.quantity;
+
   return (
     <li className={styles.line} onClick={() => setEditing(!editing)}>
       <span className={styles.title}>
@@ -57,9 +61,7 @@ const RecieptLine = ({ item }: Props) => {
       </span>
 
       {getQuantityMarkup()}
-      {!isWriteoff && (
-        <span className={styles.price}>{item.price * item.quantity}</span>
-      )}
+      {!isWriteoff && <span className={styles.price}>{currentPrice}</span>}
       {editing ? (
         <div className={styles.actions}>
           <button

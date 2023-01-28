@@ -9,9 +9,11 @@ import spaceModel from './space';
 import categoryModel from './category';
 import consumptionModel from './consumption';
 import consumptionItemModel from './consumptionItem';
+import discountModel from './discount';
+import cupModel from './cup';
+import itemCupModel from './itemCup';
 
 interface DB {
-  connect: () => void;
   sequelize: Sequelize;
   spaces: ReturnType<typeof spaceModel>;
   users: ReturnType<typeof userModel>;
@@ -22,24 +24,24 @@ interface DB {
   categories: ReturnType<typeof categoryModel>;
   consumptions: ReturnType<typeof consumptionModel>;
   consumptionItems: ReturnType<typeof consumptionItemModel>;
+  discounts: ReturnType<typeof discountModel>;
+  cups: ReturnType<typeof cupModel>;
+  itemCups: ReturnType<typeof itemCupModel>;
 }
 
 console.log(pg.Client.name);
 
-const connect = () => {
-  return new Sequelize(
-    process.env.DB_NAME,
-    process.env.DB_USER,
-    process.env.DB_PASSWORD,
-    {
-      dialect: 'postgres',
-      host: process.env.DB_HOST,
-      port: +process.env.DB_PORT,
-    }
-  );
-};
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
+  {
+    dialect: 'postgres',
+    host: process.env.DB_HOST,
+    port: +process.env.DB_PORT,
+  }
+);
 
-const sequelize = connect();
 sequelize.authenticate();
 sequelize.sync();
 
@@ -52,6 +54,9 @@ const ShopItem = shopItemModel(sequelize);
 const Category = categoryModel(sequelize);
 const Consumption = consumptionModel(sequelize);
 const ConsumptionItem = consumptionItemModel(sequelize);
+const Discount = discountModel(sequelize);
+const Cup = cupModel(sequelize);
+const ItemCup = itemCupModel(sequelize);
 
 Space.hasMany(User);
 User.belongsTo(Space);
@@ -93,14 +98,12 @@ ConsumptionItem.belongsTo(Consumption);
 
 ConsumptionItem.belongsTo(Item);
 
-let connected = false;
+Category.hasOne(Discount);
+Discount.belongsTo(Category);
+
+Cup.belongsToMany(Item, { through: ItemCup });
 
 const db: DB = {
-  async connect() {
-    // this.sequelize = connect();
-    await this.sequelize.authenticate();
-    await this.sequelize.sync();
-  },
   sequelize,
   spaces: Space,
   users: User,
@@ -111,6 +114,9 @@ const db: DB = {
   categories: Category,
   consumptions: Consumption,
   consumptionItems: ConsumptionItem,
+  discounts: Discount,
+  cups: Cup,
+  itemCups: ItemCup,
 };
 
 export default db;

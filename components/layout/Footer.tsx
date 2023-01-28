@@ -11,6 +11,7 @@ import DayMoney from '../DayMoney';
 const Footer = () => {
   const router = useRouter();
   const { authData } = useAppSelector((store) => store.user);
+  const { activeShop } = useAppSelector((store) => store.shop);
   const isMain = router.pathname === Routes.HOME;
 
   return (
@@ -25,7 +26,7 @@ const Footer = () => {
         ) : (
           <>
             {authData?.role === UserRole.CASHIER && <CashierActions />}
-            <DayMoney />
+            {authData && activeShop && <DayMoney />}
           </>
         )}
       </div>

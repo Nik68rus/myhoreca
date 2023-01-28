@@ -16,6 +16,7 @@ import Checkbox from '../../forms/Checkbox';
 const History = () => {
   const [date, setDate] = useState(new Date());
   const [woHidden, setWoHidden] = useState(true);
+  const [discountOnly, setDiscountOnly] = useState(false);
   const [consumptions, setConsumptions] = useState<IConsumption[]>([]);
   const { activeShop } = useAppSelector((store) => store.shop);
 
@@ -36,9 +37,11 @@ const History = () => {
   useEffect(() => {
     if (isSuccess) {
       const items = woHidden ? data!.filter((item) => item.isSale) : data;
-      setConsumptions(items);
+      setConsumptions(
+        discountOnly ? items.filter((item) => item.isDiscount) : items
+      );
     }
-  }, [isSuccess, data, woHidden]);
+  }, [isSuccess, data, woHidden, discountOnly]);
 
   const total = useMemo(
     () => consumptions.reduce((acc, cons) => acc + cons.total, 0),
@@ -71,12 +74,20 @@ const History = () => {
             }}
           />
         </div>
-        <Checkbox
-          id="writeoff"
-          label="Скрыть списания"
-          checked={woHidden}
-          onChange={(e) => setWoHidden(e.target.checked)}
-        />
+        <div className="form__group">
+          <Checkbox
+            id="writeoff"
+            label="Скрыть списания"
+            checked={woHidden}
+            onChange={(e) => setWoHidden(e.target.checked)}
+          />
+          <Checkbox
+            id="discount"
+            label="Только скидка"
+            checked={discountOnly}
+            onChange={(e) => setDiscountOnly(e.target.checked)}
+          />
+        </div>
         {isFetching ? (
           <Spinner block={true} />
         ) : (

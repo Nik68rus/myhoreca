@@ -19,6 +19,10 @@ export interface IArrivalWithItem extends IShopItem {
   item: IItem;
 }
 
+export interface IToRecieptItem extends IArrivalWithItem {
+  discount: number;
+}
+
 export interface IConsumptionItemInput {
   itemId: number;
   price: number;

@@ -15,6 +15,8 @@ import { useGetShopsQuery } from '../../../redux/api/shop';
 import { setActiveShop } from '../../../redux/slices/shopSlice';
 import { handleRTKQError } from '../../../helpers/error';
 import Spinner from '../../layout/Spinner';
+import History from '../CashierCabinet/History';
+import Discounts from './Discounts';
 
 const OwnerCabinet = () => {
   const { activeSection } = useAppSelector((store) => store.layout);
@@ -40,9 +42,9 @@ const OwnerCabinet = () => {
         {activeSection === Section.ITEMS && <Items />}
         {activeSection === Section.SHOPS && <Shops />}
         {activeSection === Section.EMPLOYYES && <Employees />}
-        {activeSection === Section.SALES && <Sales />}
+        {activeSection === Section.SALES && <History />}
         {activeSection === Section.STOCK && <Stock />}
-        {/* {activeTab.component === Items && <Items />} */}
+        {activeSection === Section.DISCOUNT && <Discounts />}
       </section>
     </div>
   );
