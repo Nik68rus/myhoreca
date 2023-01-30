@@ -6,6 +6,7 @@ export interface IItemInput {
   imageUrl: string;
   isCountable: boolean;
   categoryId: number;
+  cupId?: number;
 }
 
 export interface IArrivalInput {
@@ -25,6 +26,7 @@ export interface IToRecieptItem extends IArrivalWithItem {
 
 export interface IConsumptionItemInput {
   itemId: number;
+  cupId: number | null;
   price: number;
   quantity: number;
   toGo: boolean;
@@ -33,7 +35,7 @@ export interface IConsumptionItemInput {
 export interface IConsumptionInput {
   shopId: number;
   isSale: boolean;
-  byCard: boolean;
+  payType: PayType;
   isDiscount: boolean;
   comment?: string;
   items: IConsumptionItemInput[];
@@ -42,4 +44,11 @@ export interface IConsumptionInput {
 
 export interface IConsumptionWithItem extends IConsumptionItem {
   item: IItem;
+}
+
+export enum PayType {
+  CASH = 'наличными',
+  CARD = 'картой',
+  TRANSFER = 'переводом',
+  WRITEOFF = 'списание',
 }

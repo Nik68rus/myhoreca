@@ -12,6 +12,7 @@ export interface IItem
   id: CreationOptional<number>;
   categoryId: CreationOptional<number>;
   spaceId: CreationOptional<number>;
+  cupId: CreationOptional<number>;
   title: string;
   imageUrl: CreationOptional<string>;
   isCountable: boolean;
@@ -27,6 +28,7 @@ const itemModel = (sequelize: Sequelize) => {
     },
     categoryId: DataTypes.INTEGER,
     spaceId: DataTypes.INTEGER,
+    cupId: DataTypes.INTEGER,
     title: {
       type: DataTypes.STRING,
       allowNull: false,

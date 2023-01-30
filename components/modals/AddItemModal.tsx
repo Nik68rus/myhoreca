@@ -12,6 +12,8 @@ import Modal from './Modal';
 import styles from './AddItemModal.module.scss';
 import { handleRTKQError } from '../../helpers/error';
 import { IItem } from '../../models/item';
+import { useGetCupsQuery } from '../../redux/api/cup';
+import { ICup } from '../../models/cup';
 
 type Props = {
   onClose: () => void;
@@ -25,7 +27,10 @@ const AddItemModal = ({ onClose, categories, item }: Props) => {
     title: item ? item.title : '',
     imageUrl: item ? item.imageUrl : '',
     isCountable: item ? item.isCountable : true,
+    cupId: item ? item.cupId : undefined,
   });
+
+  // const [cupId, setCupId] = useState<null | number>(null);
 
   const [
     createItem,
@@ -47,10 +52,13 @@ const AddItemModal = ({ onClose, categories, item }: Props) => {
     editItem({ ...formData, id: item!.id });
   };
 
+  const { data: cups, error: cupsError } = useGetCupsQuery();
+
   useEffect(() => {
     handleRTKQError(createError);
     handleRTKQError(editError);
-  }, [createError, editError]);
+    handleRTKQError(cupsError);
+  }, [createError, editError, cupsError]);
 
   useEffect(() => {
     if (createSuccess) {
@@ -75,8 +83,18 @@ const AddItemModal = ({ onClose, categories, item }: Props) => {
     setFormData({ ...formData, [name]: checked });
   };
 
-  const selectHandler = (cat: ICategory) => {
-    setFormData({ ...formData, categoryId: cat.id });
+  const selectHandler = (cat: ICategory | null) => {
+    if (cat) {
+      setFormData({ ...formData, categoryId: cat.id });
+    }
+  };
+
+  const cupSelectHandler = (cup: null | ICup) => {
+    if (cup) {
+      setFormData({ ...formData, cupId: cup.id });
+    } else {
+      setFormData({ ...formData, cupId: undefined });
+    }
   };
 
   return (
@@ -118,6 +136,15 @@ const AddItemModal = ({ onClose, categories, item }: Props) => {
               onChange={checkboxChangeHandler}
               checked={formData.isCountable}
             />
+            <Select
+              className="mb-5"
+              items={cups ? cups : []}
+              label="Стаканчик: "
+              withNull={true}
+              onSelect={(cup) => cupSelectHandler(cup)}
+              selected={item ? item.cupId : null}
+            />
+
             <div className="form__actions">
               <button type="button" className="button" onClick={onClose}>
                 Отмена

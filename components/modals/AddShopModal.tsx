@@ -47,7 +47,7 @@ const AddShopModal = ({ onClose }: Props) => {
               placeholder="Введите название"
               hint="Не менее 3 символов"
             />
-            <div className="form__actions">
+            <div className="form__actions mt-8">
               <button type="button" className="button" onClick={onClose}>
                 Отмена
               </button>

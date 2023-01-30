@@ -13,7 +13,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'PATCH') {
-    const { id, title, imageUrl, isCountable, categoryId, isVisible } =
+    const { id, title, imageUrl, isCountable, categoryId, isVisible, cupId } =
       req.body;
 
     try {
@@ -27,6 +27,12 @@ export default async function handler(
       if (isCountable !== undefined) item.isCountable = isCountable;
       if (categoryId) item.categoryId = categoryId;
       if (isVisible !== undefined) item.isVisible = isVisible;
+      if (cupId !== undefined) {
+        item.cupId = cupId;
+      } else {
+        //@ts-ignore
+        item.cupId = null;
+      }
       await item.save();
       return res.status(200).json(item);
     } catch (error) {

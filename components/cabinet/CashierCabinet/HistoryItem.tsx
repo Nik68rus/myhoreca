@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FaCheck } from 'react-icons/fa';
 import { IConsumption } from '../../../models/consumption';
+import { PayType } from '../../../types/item';
 import RecieptModal from '../../modals/RecieptModal';
 import styles from './HistoryItem.module.scss';
 
@@ -19,9 +20,7 @@ const HistoryItem = ({ item }: Props) => {
       <li onClick={() => setModalVisible(true)}>
         <span>{time}</span>
         <span>{item.isSale ? 'Продажа' : 'Списание'}</span>
-        <span className={styles.colored}>
-          {item.byCard ? <FaCheck /> : null}
-        </span>
+        <span>{item.payType}</span>
         <span className={styles.colored}>
           {item.isDiscount ? <FaCheck /> : null}
         </span>

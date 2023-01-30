@@ -14,7 +14,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'POST') {
-    const { title, imageUrl, isCountable, categoryId } = req.body;
+    const { title, imageUrl, isCountable, categoryId, cupId } = req.body;
 
     try {
       const user = await getUser(req);
@@ -25,6 +25,7 @@ export default async function handler(
         imageUrl,
         isCountable,
         isVisible: true,
+        cupId,
       });
       return res.status(201).json(item);
     } catch (error) {

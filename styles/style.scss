@@ -4,6 +4,7 @@
 @import 'global/reboot';
 @import 'global/utils';
 @import 'global/container';
-@import 'global/box';
 
 @import 'components';
+
+@import 'global/box'; //утилитарные классы с отступами

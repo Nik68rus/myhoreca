@@ -5,6 +5,7 @@ import {
   IArrivalInput,
   IArrivalWithItem,
   IConsumptionInput,
+  PayType,
 } from '../../types/item';
 import Counter from '../Counter';
 import Spinner from '../layout/Spinner';
@@ -30,10 +31,12 @@ const WriteOffModal = ({ onClose, item }: Props) => {
     const data: IConsumptionInput = {
       shopId: item.shopId,
       isSale: false,
-      byCard: false,
+      payType: PayType.WRITEOFF,
       isDiscount: false,
       comment: comment.trim().length > 0 ? comment.trim() : undefined,
-      items: [{ itemId: item.item.id, quantity, price: 0, toGo: false }],
+      items: [
+        { itemId: item.item.id, cupId: null, quantity, price: 0, toGo: false },
+      ],
       total: 0,
     };
 

@@ -37,9 +37,8 @@ export default async function handler(
         throw ApiError.badRequest('Неверные параметры запроса!');
       }
 
-      const user = await getUser(req);
+      await getUser(req);
       const history = await ConsumptionService.getHistory({
-        userId: user.id,
         shopId: +shopId,
         date: new Date(date),
       });

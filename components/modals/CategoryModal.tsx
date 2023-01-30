@@ -43,7 +43,7 @@ const CategoryModal = ({ onClose }: Props) => {
         <Categories />
         <div className="form">
           <form onSubmit={submitHandler}>
-            <div className="form__group">
+            <div className="form__group mb-9">
               <FormControl
                 label="Название"
                 type="text"

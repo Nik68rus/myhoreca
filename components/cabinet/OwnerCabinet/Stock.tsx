@@ -34,7 +34,7 @@ const Stock = () => {
           {activeShop && stockItems && !stockItems.length ? (
             <p>На витрине пусто</p>
           ) : null}
-          {activeShop && stockItems && stockItems.length && (
+          {activeShop && stockItems && stockItems.length ? (
             <>
               <div className="tabs">
                 <button
@@ -70,7 +70,7 @@ const Stock = () => {
                   ))}
               </ul>
             </>
-          )}
+          ) : null}
         </Card>
       )}
     </>

@@ -49,6 +49,7 @@ export default async function handler(
       const user = await getUser(req);
       const categories = await db.categories.findAll({
         where: { spaceId: user.spaceId },
+        order: [['title', 'asc']],
       });
       return res.status(200).json(categories);
     } catch (err) {

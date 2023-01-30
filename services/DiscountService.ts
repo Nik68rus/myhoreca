@@ -37,6 +37,7 @@ class DiscountService {
     const discounts = await db.discounts.findAll({
       where: { spaceId },
       include: db.categories,
+      order: [[db.categories, 'title', 'asc']],
     });
 
     return discounts;

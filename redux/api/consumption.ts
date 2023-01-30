@@ -1,6 +1,12 @@
+import { IConsumptionItem } from './../../models/consumptionItem';
 import { IConsumption } from './../../models/consumption';
 import { IConsumptionInput, IConsumptionWithItem } from './../../types/item';
 import { api } from '../api';
+
+export interface IRecieptServerInfo {
+  createdAt: Date;
+  items: IConsumptionItem[];
+}
 
 export const consumptionApi = api.injectEndpoints({
   overrideExisting: true,
@@ -30,8 +36,18 @@ export const consumptionApi = api.injectEndpoints({
       providesTags: ['Consumption'],
     }),
 
-    getStat: builder.query<{ total: number; card: number }, number>({
+    //получение статистики продаж за день
+    getStat: builder.query<
+      { total: number; card: number; transfer: number },
+      number
+    >({
       query: (shopId) => `consumption/stat?shopId=${shopId}`,
+      providesTags: ['Consumption'],
+    }),
+
+    //получение последнего сегодня чека
+    getLast: builder.query<IRecieptServerInfo | null, number>({
+      query: (shopId) => `consumption/last?shopId=${shopId}`,
       providesTags: ['Consumption'],
     }),
   }),
@@ -42,4 +58,5 @@ export const {
   useGetConsumptionsQuery,
   useGetRecieptDetailsQuery,
   useGetStatQuery,
+  useGetLastQuery,
 } = consumptionApi;

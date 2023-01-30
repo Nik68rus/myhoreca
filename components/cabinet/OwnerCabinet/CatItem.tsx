@@ -27,7 +27,8 @@ const CatItem = ({ category }: Props) => {
     setEditing(true);
   };
 
-  const editFinishHandler = () => {
+  const editFinishHandler: React.FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
     editCategory({ id: category.id, title: newValue });
     setEditing(false);
   };
@@ -50,30 +51,33 @@ const CatItem = ({ category }: Props) => {
           </button>
         </>
       ) : (
-        <>
-          <FormControl
-            type="text"
-            id="title"
-            value={newValue}
-            onChange={(e) => setNewValue(e.target.value)}
-          />
-          <div className={styles.actions}>
-            <button
-              className="button button--icon"
-              aria-label="Подтвердить"
-              onClick={editFinishHandler}
-            >
-              <FaCheck />
-            </button>
-            <button
-              className="button button--icon"
-              aria-label="Отмена"
-              onClick={() => setEditing(false)}
-            >
-              <FaTimes />
-            </button>
+        <form className="form" onSubmit={editFinishHandler}>
+          <div className="form__group">
+            <FormControl
+              type="text"
+              id="title"
+              value={newValue}
+              onChange={(e) => setNewValue(e.target.value)}
+            />
+            <div className={styles.actions}>
+              <button
+                type="submit"
+                className="button button--icon"
+                aria-label="Подтвердить"
+              >
+                <FaCheck />
+              </button>
+              <button
+                type="reset"
+                className="button button--icon"
+                aria-label="Отмена"
+                onClick={() => setEditing(false)}
+              >
+                <FaTimes />
+              </button>
+            </div>
           </div>
-        </>
+        </form>
       )}
     </li>
   );

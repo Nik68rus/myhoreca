@@ -1,4 +1,8 @@
-import { IConsumptionInput, IConsumptionWithItem } from './../types/item';
+import {
+  IConsumptionInput,
+  IConsumptionWithItem,
+  PayType,
+} from './../types/item';
 import ApiError from '../helpers/error';
 import db from '../models';
 import { Op } from 'sequelize';
@@ -8,10 +12,10 @@ class ConsumptionService {
     await db.sequelize.authenticate();
     await db.sequelize.sync();
     // await db.consumptionItems.sync({ force: true });
-    const { shopId, isSale, byCard, isDiscount, items, total, comment } =
+    const { shopId, isSale, payType, isDiscount, items, total, comment } =
       saleInfo;
     if (
-      [isSale, byCard, isDiscount, total].some((param) => param === undefined)
+      [isSale, payType, isDiscount, total].some((param) => param === undefined)
     ) {
       throw ApiError.badRequest('Не полные данные!');
     }
@@ -20,7 +24,7 @@ class ConsumptionService {
         userId,
         shopId,
         isSale,
-        byCard,
+        payType,
         isDiscount,
         total,
         comment,
@@ -33,6 +37,7 @@ class ConsumptionService {
           quantity: item.quantity,
           price: item.price,
           toGo: item.toGo!,
+          cupId: item.cupId ? item.cupId : undefined,
         });
 
         const stockItem = await db.shopItems.findOne({
@@ -47,19 +52,13 @@ class ConsumptionService {
       });
       return sale;
     } catch (error) {
+      console.log(error);
+
       throw ApiError.internal('Ошибка при работе с БД');
     }
   }
 
-  async getHistory({
-    userId,
-    shopId,
-    date,
-  }: {
-    userId: number;
-    shopId: number;
-    date: Date;
-  }) {
+  async getHistory({ shopId, date }: { shopId: number; date: Date }) {
     await db.sequelize.authenticate();
     await db.sequelize.sync();
 
@@ -109,10 +108,46 @@ class ConsumptionService {
       .filter((item) => item.isSale)
       .reduce((acc, i) => acc + i.total, 0);
     const card = items
-      .filter((item) => item.isSale && item.byCard)
+      .filter((item) => item.isSale && item.payType === PayType.CARD)
+      .reduce((acc, i) => acc + i.total, 0);
+    const transfer = items
+      .filter((item) => item.isSale && item.payType === PayType.TRANSFER)
       .reduce((acc, i) => acc + i.total, 0);
 
-    return { total, card };
+    return { total, card, transfer };
+  }
+
+  async getLast(shopId: number) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
+    const dayStart = new Date().setHours(0, 0);
+    const dayEnd = new Date().setHours(23, 59);
+
+    const items = await db.consumptions.findAll({
+      where: {
+        shopId,
+        createdAt: {
+          [Op.between]: [dayStart, dayEnd],
+        },
+      },
+      order: [['createdAt', 'ASC']],
+    });
+
+    const lastItem = items.slice().pop();
+    if (!lastItem) {
+      return null;
+    }
+
+    const recieptItems = await db.consumptionItems.findAll({
+      where: { consumptionId: lastItem.id },
+      include: db.items,
+    });
+
+    return {
+      createdAt: lastItem.createdAt,
+      items: recieptItems,
+    };
   }
 }
 

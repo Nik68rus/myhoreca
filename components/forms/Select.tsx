@@ -6,10 +6,11 @@ import cx from 'classnames';
 interface Props<T> {
   items: T[];
   label: string;
-  onSelect: (item: T) => void;
+  onSelect: (item: T | null) => void;
   invalid?: boolean;
-  selected?: number;
+  selected?: number | null;
   className?: string;
+  withNull?: boolean;
 }
 
 const Select = <T extends { id: number; title: string }>({
@@ -19,14 +20,15 @@ const Select = <T extends { id: number; title: string }>({
   invalid,
   selected,
   className,
+  withNull,
 }: Props<T>) => {
   const [open, setOpen] = useState(false);
   const popupRef = useRef(null);
-  const [active, setActive] = useState(items[0].id);
+  const [active, setActive] = useState<null | number>(null);
 
   const itemClickHandler = useCallback(
-    (item: T) => {
-      setActive(item.id);
+    (item: T | null) => {
+      setActive(item ? item.id : null);
       onSelect(item);
     },
     [onSelect]
@@ -39,7 +41,7 @@ const Select = <T extends { id: number; title: string }>({
   }, []);
 
   useEffect(() => {
-    setActive(selected ? selected : items[0].id);
+    setActive(selected || selected === null ? selected : null);
   }, [selected, items]);
 
   useEffect(() => {
@@ -62,12 +64,22 @@ const Select = <T extends { id: number; title: string }>({
         {open ? <FaCaretUp /> : <FaCaretDown />}
         <span className={styles.labelText}>{label}</span>
         <span onClick={() => setOpen(!open)} className={styles.choice}>
-          {items.find((item) => item.id === active)?.title || 'Выберите'}
+          {withNull && active === null
+            ? 'нет'
+            : items.find((item) => item.id === active)?.title || 'Выберите'}
         </span>
       </div>
       {open && (
         <div className={styles.popup} ref={popupRef}>
           <ul>
+            {withNull && (
+              <li
+                className={active === null ? styles.active : ''}
+                onClick={itemClickHandler.bind(this, null)}
+              >
+                нет
+              </li>
+            )}
             {items.map((item) => (
               <li
                 key={item.id}

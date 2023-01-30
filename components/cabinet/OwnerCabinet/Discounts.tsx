@@ -52,8 +52,10 @@ const Discounts = () => {
     }
   }, [categories]);
 
-  const selectHandler = (cat: ICategory) => {
-    setSelectedCatId(cat.id);
+  const selectHandler = (cat: ICategory | null) => {
+    if (cat) {
+      setSelectedCatId(cat.id);
+    }
   };
 
   const submitHandler: React.FormEventHandler<HTMLFormElement> = (e) => {

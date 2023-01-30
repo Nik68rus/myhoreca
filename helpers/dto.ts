@@ -1,4 +1,5 @@
-import { IRecieptItem } from '../redux/slices/recieptSlice';
+import { IRecieptServerInfo } from './../redux/api/consumption';
+import { ILastReciept, IRecieptItem } from '../redux/slices/recieptSlice';
 import { IArrivalWithItem } from './../types/item';
 import { IShopData } from './../types/shop';
 import { TokenPayload } from './../types/user';
@@ -21,5 +22,13 @@ export const recieptItemDto = (stockItem: IArrivalWithItem): IRecieptItem => {
     categoryId: item.categoryId,
     title: item.title,
     price,
+    cupId: item.cupId,
   };
 };
+
+// export lastRecieptDto = (reciept: IRecieptServerInfo|null ): ILastReciept => {
+//   return {
+//     createdAt
+//   }
+
+// }

@@ -3,9 +3,4 @@
 .form {
   border-top: variables.$border-light;
   padding-top: 30px;
-
-  :global(.form__group) {
-    justify-content: space-between;
-    margin-bottom: 25px;
-  }
 }

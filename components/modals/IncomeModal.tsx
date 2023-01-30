@@ -55,13 +55,14 @@ const IncomeModal = ({ onClose, item }: Props) => {
           <Heading level={5} className="mb-5">
             {item.title} в {activeShop?.title}
           </Heading>
-          <div className="form__group">
+          <div className="form__group mb-5">
             {item.isCountable ? (
               <Counter
                 label="Количество"
                 initialValue={3}
                 step={1}
                 onChange={(n) => setQuantity(n)}
+                className="mr-5"
               />
             ) : null}
             <Counter

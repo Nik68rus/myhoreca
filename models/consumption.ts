@@ -1,3 +1,4 @@
+import { PayType } from './../types/item';
 import {
   DataTypes,
   Model,
@@ -16,7 +17,7 @@ export interface IConsumption
   userId: number;
   shopId: number;
   isSale: boolean;
-  byCard: CreationOptional<boolean>;
+  payType: CreationOptional<PayType>;
   isDiscount: CreationOptional<boolean>;
   total: number;
   comment: CreationOptional<string>;
@@ -33,7 +34,7 @@ const consumptionModel = (sequelize: Sequelize) => {
     userId: DataTypes.INTEGER,
     shopId: DataTypes.INTEGER,
     isSale: DataTypes.BOOLEAN,
-    byCard: DataTypes.BOOLEAN,
+    payType: DataTypes.ENUM(...Object.values(PayType)),
     isDiscount: DataTypes.BOOLEAN,
     total: DataTypes.FLOAT,
     comment: DataTypes.TEXT,

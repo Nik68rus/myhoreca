@@ -1,0 +1,29 @@
+@use '../../../styles/variables.scss';
+
+.cup {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  :global(.form__group) {
+    width: 100%;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity variables.$trans-default;
+
+  .cup:hover & {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.editActions {
+  display: flex;
+  gap: 8px;
+}

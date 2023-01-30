@@ -4,7 +4,7 @@ import { IConsumption } from '../../models/consumption';
 import { IUser } from '../../models/user';
 import { useGetRecieptDetailsQuery } from '../../redux/api/consumption';
 import { useGetUserDataQuery } from '../../redux/api/user';
-import { IConsumptionWithItem } from '../../types/item';
+import { IConsumptionWithItem, PayType } from '../../types/item';
 import Spinner from '../layout/Spinner';
 import Heading from '../ui/Heading';
 import Modal from './Modal';
@@ -93,7 +93,7 @@ const RecieptModal = ({ onClose, reciept }: Props) => {
         )}
         <div className={styles.extra}>
           {reciept.isSale ? (
-            <div>Оплата {reciept.byCard ? 'картой' : 'наличными'}</div>
+            <div>Оплата {reciept.payType}</div>
           ) : (
             <div>
               Комментарий:  <br />

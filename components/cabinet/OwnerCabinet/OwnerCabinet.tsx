@@ -17,6 +17,7 @@ import { handleRTKQError } from '../../../helpers/error';
 import Spinner from '../../layout/Spinner';
 import History from '../CashierCabinet/History';
 import Discounts from './Discounts';
+import Cups from './Cups';
 
 const OwnerCabinet = () => {
   const { activeSection } = useAppSelector((store) => store.layout);
@@ -37,7 +38,6 @@ const OwnerCabinet = () => {
   return (
     <div className="container pt-6">
       {isLoading && <Spinner />}
-      <Heading level={3}>Личный кабинет руководителя</Heading>
       <section className={styles.cabinet}>
         {activeSection === Section.ITEMS && <Items />}
         {activeSection === Section.SHOPS && <Shops />}
@@ -45,6 +45,7 @@ const OwnerCabinet = () => {
         {activeSection === Section.SALES && <History />}
         {activeSection === Section.STOCK && <Stock />}
         {activeSection === Section.DISCOUNT && <Discounts />}
+        {activeSection === Section.CUPS && <Cups />}
       </section>
     </div>
   );

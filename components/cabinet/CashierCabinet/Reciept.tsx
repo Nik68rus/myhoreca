@@ -7,22 +7,26 @@ import Checkbox from '../../forms/Checkbox';
 import {
   IRecieptPosition,
   removeAll,
+  setAllToGo,
   setDiscount,
+  setLastReciept,
 } from '../../../redux/slices/recieptSlice';
-import { useCreateConsumptionMutation } from '../../../redux/api/consumption';
+import {
+  useCreateConsumptionMutation,
+  useGetLastQuery,
+} from '../../../redux/api/consumption';
 import { handleRTKQError } from '../../../helpers/error';
 import Spinner from '../../layout/Spinner';
-import { IConsumptionInput } from '../../../types/item';
+import { IConsumptionInput, PayType } from '../../../types/item';
 import { CashierSection } from '../../../types/sections';
 import FormControl from '../../forms/FormControl';
-import { useGetDiscountsQuery } from '../../../redux/api/discount';
 
 const Reciept = () => {
   const [byCard, setByCard] = useState(false);
-  const [isToGo, setIsToGo] = useState(false);
+  const [isTransfer, setIsTransfer] = useState(false);
   const [comment, setComment] = useState('');
   const { activeSection } = useAppSelector((store) => store.layout);
-  const { discount } = useAppSelector((store) => store.reciept);
+  const { discount, isToGo } = useAppSelector((store) => store.reciept);
   const isWriteoff = activeSection === CashierSection.WRITEOFF;
 
   const [makeConsumption, { data, error, isLoading, isSuccess }] =
@@ -32,23 +36,59 @@ const Reciept = () => {
   const dispatch = useAppDispatch();
   const { activeShop } = useAppSelector((store) => store.shop);
 
+  // const { data: lastReciept, error: lastError } = useGetLastQuery(
+  //   activeShop?.id || 0,
+  //   { skip: activeShop === null }
+  // );
+
+  // useEffect(() => {
+  //   if (lastReciept !== undefined) {
+
+  //     // lastReciept ? dispatch(setLastReciept({createdAt: new Date(lastReciept?.createdAt)})) : dispatch(set);
+  //   }
+  // }, [lastReciept, dispatch]);
+
   const getPrice = (item: IRecieptPosition) => {
     let price = item.price;
     if (isWriteoff) {
       return 0;
     }
     if (discount) {
-      price = item.price * item.discount;
+      price = Math.ceil(item.price * item.discount);
     }
     return price;
+  };
+
+  const getPayType = () => {
+    if (isWriteoff) {
+      return PayType.WRITEOFF;
+    } else if (byCard) {
+      return PayType.CARD;
+    } else if (isTransfer) {
+      return PayType.TRANSFER;
+    } else {
+      return PayType.CASH;
+    }
+  };
+
+  const payChangeHandler: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    if (e.target.id === 'byCard') {
+      setByCard(e.target.checked);
+      setIsTransfer(false);
+    }
+    if (e.target.id === 'isTransfer') {
+      setIsTransfer(e.target.checked);
+      setByCard(false);
+    }
   };
 
   const clearHandler = useCallback(() => {
     dispatch(removeAll());
     setByCard(false);
-    setIsToGo(false);
+    setIsTransfer(false);
     setComment('');
     dispatch(setDiscount(false));
+    dispatch(setAllToGo(false));
   }, [dispatch]);
 
   useEffect(() => {
@@ -65,10 +105,11 @@ const Reciept = () => {
     const data: IConsumptionInput = {
       shopId: activeShop!.id,
       isSale: isWriteoff ? false : true,
-      byCard: isWriteoff ? false : byCard,
+      payType: getPayType(),
       isDiscount: isWriteoff ? false : discount,
       items: items.map((item) => ({
         itemId: item.itemId,
+        cupId: item.toGo ? item.cupId : null,
         quantity: item.quantity,
         price: getPrice(item),
         toGo: isWriteoff ? false : item.toGo,
@@ -84,8 +125,6 @@ const Reciept = () => {
 
     makeConsumption(data);
   };
-
-  const {} = useGetDiscountsQuery();
 
   const discountHandler: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     dispatch(setDiscount(e.target.checked));
@@ -131,7 +170,14 @@ const Reciept = () => {
                 label="Картой"
                 id="byCard"
                 checked={byCard}
-                onChange={(e) => setByCard(e.target.checked)}
+                onChange={payChangeHandler}
+                className={styles.checkbox}
+              />
+              <Checkbox
+                label="Перевод"
+                id="isTransfer"
+                checked={isTransfer}
+                onChange={payChangeHandler}
                 className={styles.checkbox}
               />
               <Checkbox
@@ -146,7 +192,7 @@ const Reciept = () => {
                 id="toGo"
                 className={styles.checkbox}
                 checked={isToGo}
-                onChange={(e) => setIsToGo(e.target.checked)}
+                onChange={(e) => dispatch(setAllToGo(e.target.checked))}
               />
             </div>
           </>

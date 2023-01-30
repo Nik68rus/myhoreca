@@ -5,7 +5,7 @@ import { useGetStatQuery } from '../redux/api/consumption';
 import styles from './DayMoney.module.scss';
 
 const DayMoney = () => {
-  const [stat, setStat] = useState({ total: 0, card: 0 });
+  const [stat, setStat] = useState({ total: 0, card: 0, transfer: 0 });
   const { activeShop } = useAppSelector((store) => store.shop);
 
   const { data, error, isSuccess, isLoading } = useGetStatQuery(
@@ -29,8 +29,11 @@ const DayMoney = () => {
         {stat.total.toLocaleString('ru-Ru')} руб
       </div>
       <div className={styles.details}>
-        <span>Картой: {stat.card} </span>
-        <span>Наличными: {stat.total - stat.card}</span>
+        <span>
+          Картой: {stat.card}
+          {stat.transfer > 0 ? ` (+${stat.transfer} перевод)` : null}
+        </span>
+        <span>Наличными: {stat.total - stat.card - stat.transfer}</span>
       </div>
     </div>
   );

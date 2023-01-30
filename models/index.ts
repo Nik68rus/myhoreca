@@ -11,7 +11,6 @@ import consumptionModel from './consumption';
 import consumptionItemModel from './consumptionItem';
 import discountModel from './discount';
 import cupModel from './cup';
-import itemCupModel from './itemCup';
 
 interface DB {
   sequelize: Sequelize;
@@ -26,7 +25,6 @@ interface DB {
   consumptionItems: ReturnType<typeof consumptionItemModel>;
   discounts: ReturnType<typeof discountModel>;
   cups: ReturnType<typeof cupModel>;
-  itemCups: ReturnType<typeof itemCupModel>;
 }
 
 console.log(pg.Client.name);
@@ -56,7 +54,6 @@ const Consumption = consumptionModel(sequelize);
 const ConsumptionItem = consumptionItemModel(sequelize);
 const Discount = discountModel(sequelize);
 const Cup = cupModel(sequelize);
-const ItemCup = itemCupModel(sequelize);
 
 Space.hasMany(User);
 User.belongsTo(Space);
@@ -98,10 +95,10 @@ ConsumptionItem.belongsTo(Consumption);
 
 ConsumptionItem.belongsTo(Item);
 
+ConsumptionItem.hasOne(Cup);
+
 Category.hasOne(Discount);
 Discount.belongsTo(Category);
-
-Cup.belongsToMany(Item, { through: ItemCup });
 
 const db: DB = {
   sequelize,
@@ -116,7 +113,6 @@ const db: DB = {
   consumptionItems: ConsumptionItem,
   discounts: Discount,
   cups: Cup,
-  itemCups: ItemCup,
 };
 
 export default db;

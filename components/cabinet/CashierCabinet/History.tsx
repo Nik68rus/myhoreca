@@ -12,6 +12,7 @@ import Spinner from '../../layout/Spinner';
 import { IConsumption } from '../../../models/consumption';
 import HistoryItem from './HistoryItem';
 import Checkbox from '../../forms/Checkbox';
+import { PayType } from '../../../types/item';
 
 const History = () => {
   const [date, setDate] = useState(new Date());
@@ -51,7 +52,15 @@ const History = () => {
   const card = useMemo(
     () =>
       consumptions
-        .filter((item) => item.byCard)
+        .filter((item) => item.payType === PayType.CARD)
+        .reduce((acc, cons) => acc + cons.total, 0),
+    [consumptions]
+  );
+
+  const transfer = useMemo(
+    () =>
+      consumptions
+        .filter((item) => item.payType === PayType.TRANSFER)
         .reduce((acc, cons) => acc + cons.total, 0),
     [consumptions]
   );
@@ -74,7 +83,7 @@ const History = () => {
             }}
           />
         </div>
-        <div className="form__group">
+        <div className="form__group mb-6">
           <Checkbox
             id="writeoff"
             label="Скрыть списания"
@@ -95,7 +104,7 @@ const History = () => {
             <li>
               <span className={styles.label}>Время</span>
               <span className={styles.label}>Тип</span>
-              <span className={styles.label}>Картой</span>
+              <span className={styles.label}>Оплата</span>
               <span className={styles.label}>Скидка</span>
               <span className={styles.label}>Сумма</span>
             </li>
@@ -113,8 +122,11 @@ const History = () => {
             <span className={styles.total}>
               Итого: {total.toLocaleString('ru-RU')} руб
             </span>
-            <span>Наличными: {(total - card).toLocaleString('ru-RU')}</span>
+            <span>
+              Наличными: {(total - card - transfer).toLocaleString('ru-RU')}
+            </span>
             <span>Картой: {card.toLocaleString('ru-RU')}</span>
+            <span>Переводом: {transfer.toLocaleString('ru-RU')}</span>
           </div>
         ) : null}
       </Card>

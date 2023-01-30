@@ -45,7 +45,8 @@ const DiscountItem = ({ item }: Props) => {
     deleteDiscount(item.id);
   };
 
-  const editHandler = () => {
+  const editHandler: React.FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
     editDiscount({ discountId: item.id, value: newValue });
   };
 
@@ -56,23 +57,35 @@ const DiscountItem = ({ item }: Props) => {
         <span className={styles.title}>
           {item.category.title} - {item.value} %
         </span>
-        {editing && (
-          <Counter
-            initialValue={newValue}
-            step={5}
-            onChange={(n) => setNewValue(n)}
-          />
-        )}
-        <div className={styles.actions}>
-          {editing ? (
-            <button
-              className="button button--icon"
-              aria-label="Утвердить изменения"
-              onClick={editHandler}
-            >
-              <FaCheck />
-            </button>
-          ) : (
+        {editing ? (
+          <form className="form" onSubmit={editHandler}>
+            <div className="form__group">
+              <Counter
+                initialValue={newValue}
+                step={5}
+                onChange={(n) => setNewValue(n)}
+              />
+              <div className={styles.actions}>
+                <button
+                  type="submit"
+                  className="button button--icon"
+                  aria-label="Утвердить изменения"
+                >
+                  <FaCheck />
+                </button>
+                <button
+                  type="reset"
+                  className="button button--icon"
+                  onClick={stopEditing}
+                  aria-label={'Отменить редактирование'}
+                >
+                  <FaTimes />
+                </button>
+              </div>
+            </div>
+          </form>
+        ) : (
+          <div className={styles.actions}>
             <button
               className="button button--icon"
               onClick={() => setEditing(true)}
@@ -80,15 +93,16 @@ const DiscountItem = ({ item }: Props) => {
             >
               <FaEdit />
             </button>
-          )}
-          <button
-            className="button button--icon"
-            onClick={editing ? stopEditing : deleteHandler}
-            aria-label={editing ? 'Отменить редактирование' : 'Удалить скидку'}
-          >
-            <FaTimes />
-          </button>
-        </div>
+
+            <button
+              className="button button--icon"
+              onClick={deleteHandler}
+              aria-label={'Удалить скидку'}
+            >
+              <FaTimes />
+            </button>
+          </div>
+        )}
       </li>
     </>
   );

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  changeToGo,
+  changeItemToGo,
   IRecieptPosition,
   removeItem,
   removeLine,
@@ -35,7 +35,7 @@ const RecieptLine = ({ item }: Props) => {
   };
 
   const togoHandler = () => {
-    dispatch(changeToGo(item.itemId));
+    dispatch(changeItemToGo(item.itemId));
     setEditing(false);
   };
 
@@ -57,11 +57,13 @@ const RecieptLine = ({ item }: Props) => {
     <li className={styles.line} onClick={() => setEditing(!editing)}>
       <span className={styles.title}>
         {item.title}
-        {item.toGo ? '(с)' : ''}
+        {item.toGo && item.cupId ? ' (с)' : ''}
       </span>
 
       {getQuantityMarkup()}
-      {!isWriteoff && <span className={styles.price}>{currentPrice}</span>}
+      {!isWriteoff && (
+        <span className={styles.price}>{Math.ceil(currentPrice)}</span>
+      )}
       {editing ? (
         <div className={styles.actions}>
           <button
@@ -78,7 +80,7 @@ const RecieptLine = ({ item }: Props) => {
           >
             <FaTimes />
           </button>
-          {!isWriteoff && (
+          {!isWriteoff && item.cupId && (
             <button
               className="button button--icon"
               aria-label={item.toGo ? 'Здесь' : 'С собой'}
