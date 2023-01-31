@@ -79,11 +79,6 @@ const recieptSlice = createSlice({
       } else {
         state.items[inStateIndex].quantity++;
       }
-      // state.total += getPrice(
-      //   action.payload.item.price,
-      //   action.payload.discount,
-      //   state.discount
-      // );
     },
     removeItem: (state, action: PayloadAction<IRecieptPosition>) => {
       const inStateIndex = state.items.findIndex(
@@ -95,11 +90,6 @@ const recieptSlice = createSlice({
           .filter((item) => item.line !== action.payload.line)
           .map((item, i) => ({ ...item, line: i + 1 }));
       }
-      // state.total -= getPrice(
-      //   action.payload.price,
-      //   action.payload.discount,
-      //   state.discount
-      // );
     },
     removeLine: (state, action: PayloadAction<number>) => {
       const item = state.items.find((item) => item.line === action.payload);
@@ -107,8 +97,6 @@ const recieptSlice = createSlice({
         state.items = state.items
           .filter((item) => item.line !== action.payload)
           .map((item, i) => ({ ...item, line: i + 1 }));
-        // state.total -=
-        //   getPrice(item.price, item.discount, state.discount) * item.quantity;
       }
     },
     changeItemToGo: (state, action: PayloadAction<number>) => {
@@ -131,12 +119,6 @@ const recieptSlice = createSlice({
     },
     setDiscount: (state, action: PayloadAction<boolean>) => {
       state.discount = action.payload;
-      // state.total = state.items.reduce(
-      //   (acc, item) =>
-      //     acc +
-      //     getPrice(item.price, item.discount, action.payload) * item.quantity,
-      //   0
-      // );
     },
     setAllToGo: (state, action: PayloadAction<boolean>) => {
       state.isToGo = action.payload;
@@ -155,36 +137,6 @@ const recieptSlice = createSlice({
 
       state.items[action.payload - 1].withSyrup =
         !state.items[action.payload - 1].withSyrup;
-      // const syrupPosition = state.items.findIndex(
-      //   (item) => item.itemId === state.syrup?.itemId
-      // );
-
-      // if (state.items[action.payload - 1].withSyrup && syrupPosition >= 0) {
-      //   state.items[syrupPosition].quantity--;
-
-      //   state.items =
-      //     state.items[syrupPosition].quantity === 0
-      //       ? state.items.filter((item, i) => i !== syrupPosition)
-      //       : state.items;
-      // }
-
-      // if (!state.items[action.payload - 1].withSyrup && syrupPosition >= 0) {
-      //   state.items[syrupPosition].quantity++;
-      // }
-
-      // if (!state.items[action.payload - 1].withSyrup && syrupPosition < 0) {
-      //   state.items.push({
-      //     line: state.items.length + 1,
-      //     ...state.syrup,
-      //     discount: 1,
-      //     quantity: state.items[action.payload - 1].quantity,
-      //     toGo: false,
-      //     withSyrup: false,
-      //   });
-      // }
-
-      // state.items[action.payload - 1].withSyrup =
-      //   !state.items[action.payload - 1].withSyrup;
     },
     calculateTotal: (state) => {
       if (state.syrup) {
@@ -195,23 +147,25 @@ const recieptSlice = createSlice({
           (item) => item.itemId === state.syrup?.itemId
         );
 
-        if (syrupCount && syrupPosition >= 0) {
-          state.items[syrupPosition].quantity = syrupCount;
-        }
+        switch (true) {
+          case syrupCount > 0 && syrupPosition >= 0:
+            state.items[syrupPosition].quantity = syrupCount;
+            break;
 
-        if (!syrupCount && syrupPosition >= 0) {
-          state.items = state.items.filter((item, i) => i !== syrupPosition);
-        }
+          case syrupCount === 0 && syrupPosition >= 0:
+            state.items = state.items.filter((item, i) => i !== syrupPosition);
+            break;
 
-        if (syrupCount && syrupPosition < 0) {
-          state.items.push({
-            line: state.items.length + 1,
-            ...state.syrup,
-            discount: 1,
-            quantity: syrupCount,
-            toGo: false,
-            withSyrup: false,
-          });
+          case syrupCount > 0 && syrupPosition < 0:
+            state.items.push({
+              line: state.items.length + 1,
+              ...state.syrup,
+              discount: 1,
+              quantity: syrupCount,
+              toGo: false,
+              withSyrup: false,
+            });
+            break;
         }
       }
 
