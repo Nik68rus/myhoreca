@@ -13,16 +13,19 @@ export interface IRecieptPosition extends IRecieptItem {
   discount: number;
   quantity: number;
   toGo: boolean;
+  withSyrup: boolean;
+  line: number;
 }
 
 export interface ILastReciept {
-  createdAt: Date;
+  createdAt: string;
   items: {
     id: number;
     title: string;
     quantity: number;
     price: number;
     toGo: boolean;
+    withSyrup: boolean;
   }[];
 }
 
@@ -32,6 +35,7 @@ export interface RecieptState {
   isToGo: boolean;
   total: number;
   last: ILastReciept | null;
+  syrup: IRecieptItem | null;
 }
 
 const initialState: RecieptState = {
@@ -40,6 +44,7 @@ const initialState: RecieptState = {
   total: 0,
   isToGo: false,
   last: null,
+  syrup: null,
 };
 
 const getPrice = (price: number, discount: number, apply: boolean) => {
@@ -59,53 +64,56 @@ const recieptSlice = createSlice({
       action: PayloadAction<{ item: IRecieptItem; discount: number }>
     ) => {
       const inStateIndex = state.items.findIndex(
-        (si) => si.itemId === action.payload.item.itemId
+        (si) =>
+          si.itemId === action.payload.item.itemId && !si.toGo && !si.withSyrup
       );
       if (inStateIndex < 0) {
         state.items.push({
+          line: state.items.length + 1,
           ...action.payload.item,
           discount: action.payload.discount,
           quantity: 1,
           toGo: false,
+          withSyrup: false,
         });
       } else {
         state.items[inStateIndex].quantity++;
       }
-      state.total += getPrice(
-        action.payload.item.price,
-        action.payload.discount,
-        state.discount
-      );
+      // state.total += getPrice(
+      //   action.payload.item.price,
+      //   action.payload.discount,
+      //   state.discount
+      // );
     },
     removeItem: (state, action: PayloadAction<IRecieptPosition>) => {
       const inStateIndex = state.items.findIndex(
-        (si) => si.itemId === action.payload.itemId
+        (si) => si.line === action.payload.line
       );
       state.items[inStateIndex].quantity--;
       if (state.items[inStateIndex].quantity === 0) {
-        state.items = state.items.filter(
-          (item) => item.itemId !== action.payload.itemId
-        );
+        state.items = state.items
+          .filter((item) => item.line !== action.payload.line)
+          .map((item, i) => ({ ...item, line: i + 1 }));
       }
-      state.total -= getPrice(
-        action.payload.price,
-        action.payload.discount,
-        state.discount
-      );
+      // state.total -= getPrice(
+      //   action.payload.price,
+      //   action.payload.discount,
+      //   state.discount
+      // );
     },
     removeLine: (state, action: PayloadAction<number>) => {
-      const item = state.items.find((item) => item.itemId === action.payload);
+      const item = state.items.find((item) => item.line === action.payload);
       if (item) {
-        state.items = state.items.filter(
-          (item) => item.itemId !== action.payload
-        );
-        state.total -=
-          getPrice(item.price, item.discount, state.discount) * item.quantity;
+        state.items = state.items
+          .filter((item) => item.line !== action.payload)
+          .map((item, i) => ({ ...item, line: i + 1 }));
+        // state.total -=
+        //   getPrice(item.price, item.discount, state.discount) * item.quantity;
       }
     },
     changeItemToGo: (state, action: PayloadAction<number>) => {
       state.items = state.items.map((item) =>
-        item.itemId === action.payload ? { ...item, toGo: !item.toGo } : item
+        item.line === action.payload ? { ...item, toGo: !item.toGo } : item
       );
 
       if (
@@ -123,12 +131,12 @@ const recieptSlice = createSlice({
     },
     setDiscount: (state, action: PayloadAction<boolean>) => {
       state.discount = action.payload;
-      state.total = state.items.reduce(
-        (acc, item) =>
-          acc +
-          getPrice(item.price, item.discount, action.payload) * item.quantity,
-        0
-      );
+      // state.total = state.items.reduce(
+      //   (acc, item) =>
+      //     acc +
+      //     getPrice(item.price, item.discount, action.payload) * item.quantity,
+      //   0
+      // );
     },
     setAllToGo: (state, action: PayloadAction<boolean>) => {
       state.isToGo = action.payload;
@@ -138,6 +146,81 @@ const recieptSlice = createSlice({
     },
     setLastReciept: (state, action: PayloadAction<ILastReciept | null>) => {
       state.last = action.payload;
+    },
+    setSyrup: (state, action: PayloadAction<IRecieptItem>) => {
+      state.syrup = action.payload;
+    },
+    toggleSyrup: (state, action: PayloadAction<number>) => {
+      if (!state.syrup) return;
+
+      state.items[action.payload - 1].withSyrup =
+        !state.items[action.payload - 1].withSyrup;
+      // const syrupPosition = state.items.findIndex(
+      //   (item) => item.itemId === state.syrup?.itemId
+      // );
+
+      // if (state.items[action.payload - 1].withSyrup && syrupPosition >= 0) {
+      //   state.items[syrupPosition].quantity--;
+
+      //   state.items =
+      //     state.items[syrupPosition].quantity === 0
+      //       ? state.items.filter((item, i) => i !== syrupPosition)
+      //       : state.items;
+      // }
+
+      // if (!state.items[action.payload - 1].withSyrup && syrupPosition >= 0) {
+      //   state.items[syrupPosition].quantity++;
+      // }
+
+      // if (!state.items[action.payload - 1].withSyrup && syrupPosition < 0) {
+      //   state.items.push({
+      //     line: state.items.length + 1,
+      //     ...state.syrup,
+      //     discount: 1,
+      //     quantity: state.items[action.payload - 1].quantity,
+      //     toGo: false,
+      //     withSyrup: false,
+      //   });
+      // }
+
+      // state.items[action.payload - 1].withSyrup =
+      //   !state.items[action.payload - 1].withSyrup;
+    },
+    calculateTotal: (state) => {
+      if (state.syrup) {
+        const syrupCount = state.items
+          .filter((item) => item.withSyrup)
+          .reduce((acc, item) => acc + item.quantity, 0);
+        const syrupPosition = state.items.findIndex(
+          (item) => item.itemId === state.syrup?.itemId
+        );
+
+        if (syrupCount && syrupPosition >= 0) {
+          state.items[syrupPosition].quantity = syrupCount;
+        }
+
+        if (!syrupCount && syrupPosition >= 0) {
+          state.items = state.items.filter((item, i) => i !== syrupPosition);
+        }
+
+        if (syrupCount && syrupPosition < 0) {
+          state.items.push({
+            line: state.items.length + 1,
+            ...state.syrup,
+            discount: 1,
+            quantity: syrupCount,
+            toGo: false,
+            withSyrup: false,
+          });
+        }
+      }
+
+      state.total = state.items.reduce(
+        (acc, item) =>
+          acc +
+          getPrice(item.price, item.discount, state.discount) * item.quantity,
+        0
+      );
     },
   },
 });
@@ -154,6 +237,9 @@ export const {
   setDiscount,
   setAllToGo,
   setLastReciept,
+  setSyrup,
+  toggleSyrup,
+  calculateTotal,
 } = recieptSlice.actions;
 
 export default recieptSlice.reducer;

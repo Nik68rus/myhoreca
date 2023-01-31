@@ -40,6 +40,7 @@ class ConsumptionService {
           price: item.price,
           toGo: item.toGo!,
           cupId: item.cupId ? item.cupId : undefined,
+          withSyrup: item.withSyrup,
         });
 
         const stockItem = await db.shopItems.findOne({

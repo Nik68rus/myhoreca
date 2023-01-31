@@ -6,7 +6,11 @@ import { getColor } from '../../../helpers/color';
 import { isValidUrl } from '../../../helpers/validation';
 import Image from 'next/image';
 import { useAppDispatch, useAppSelector } from '../../../hooks/store';
-import { addItem, selectItemCount } from '../../../redux/slices/recieptSlice';
+import {
+  addItem,
+  calculateTotal,
+  selectItemCount,
+} from '../../../redux/slices/recieptSlice';
 import { recieptItemDto } from '../../../helpers/dto';
 import { useGetDiscountsQuery } from '../../../redux/api/discount';
 
@@ -35,6 +39,7 @@ const StoreItem = ({ item }: Props) => {
 
   const clickHandler = () => {
     dispatch(addItem({ item: recieptItemDto(item), discount }));
+    dispatch(calculateTotal());
   };
 
   return (

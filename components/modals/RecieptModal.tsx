@@ -52,7 +52,11 @@ const RecieptModal = ({ onClose, reciept }: Props) => {
     if (reciept.isSale) {
       return (
         <>
-          <span>{position.item.title}</span>
+          <span>
+            {position.item.title}
+            {position.toGo && '🥤'}
+            {position.withSyrup && '💧'}
+          </span>
           <span>
             * {position.quantity} = {position.price * position.quantity}
           </span>

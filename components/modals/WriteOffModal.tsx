@@ -35,7 +35,14 @@ const WriteOffModal = ({ onClose, item }: Props) => {
       isDiscount: false,
       comment: comment.trim().length > 0 ? comment.trim() : undefined,
       items: [
-        { itemId: item.item.id, cupId: null, quantity, price: 0, toGo: false },
+        {
+          itemId: item.item.id,
+          cupId: null,
+          quantity,
+          price: 0,
+          toGo: false,
+          withSyrup: false,
+        },
       ],
       total: 0,
     };

@@ -19,11 +19,11 @@ const LastReciept = () => {
   const total = last.items.reduce((acc, i) => acc + i.quantity * i.price, 0);
   return (
     <div className={cx('container', styles.container)}>
-      <LogoFull className="mb-6" />
-      <Heading level={5} className="mb-6">
+      <LogoFull className="mb-3" />
+      <Heading level={5} className="mb-1">
         Последний чек
       </Heading>
-      <div className={cx(styles.date, 'mb-5')}>
+      <div className={cx(styles.date, 'mb-3')}>
         <span>{new Date(last.createdAt).toLocaleDateString('ru-Ru')}</span>
         <span>
           {new Date(last.createdAt).toLocaleTimeString('ru-Ru', {
@@ -36,7 +36,7 @@ const LastReciept = () => {
         {last.items.map((item) => (
           <li key={item.id} className={styles.line}>
             <span>
-              {item.title} {item.toGo ? '🥤' : ''}
+              {item.title} {item.toGo && '🥤'} {item.withSyrup && '💧'}
             </span>
             {item.quantity > 1 ? (
               <span className={styles.quantity}>*{item.quantity}=</span>

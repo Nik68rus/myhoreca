@@ -43,6 +43,21 @@ class ItemService {
     const item = await db.items.findByPk(itemId);
     return item;
   }
+
+  async getSyrup(spaceId: number, shopId: number) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
+    const item = await db.items.findOne({ where: { spaceId, title: 'Сироп' } });
+    if (!item) {
+      return null;
+    }
+    const syrup = await db.shopItems.findOne({
+      where: { itemId: item.id, shopId },
+      include: db.items,
+    });
+    return syrup;
+  }
 }
 
 export default new ItemService();

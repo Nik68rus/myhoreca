@@ -39,6 +39,12 @@ export const arrivalApi = api.injectEndpoints({
       }),
       invalidatesTags: ['Arrival'],
     }),
+
+    //получить сироп для точки
+    getSyrup: builder.query<IArrivalWithItem | null, number>({
+      query: (shopId) => `arrival/syrup?shopId=${shopId}`,
+      providesTags: ['Arrival'],
+    }),
   }),
 });
 
@@ -47,4 +53,5 @@ export const {
   useGetArrivalsQuery,
   useEditPriceMutation,
   useDeletePositionMutation,
+  useGetSyrupQuery,
 } = arrivalApi;

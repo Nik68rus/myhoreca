@@ -5,11 +5,13 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/store';
 import RecieptLine from './RecieptLine';
 import Checkbox from '../../forms/Checkbox';
 import {
+  calculateTotal,
   IRecieptPosition,
   removeAll,
   setAllToGo,
   setDiscount,
   setLastReciept,
+  setSyrup,
 } from '../../../redux/slices/recieptSlice';
 import {
   useCreateConsumptionMutation,
@@ -20,8 +22,9 @@ import Spinner from '../../layout/Spinner';
 import { IConsumptionInput, PayType } from '../../../types/item';
 import { CashierSection } from '../../../types/sections';
 import FormControl from '../../forms/FormControl';
-import { lastRecieptDto } from '../../../helpers/dto';
+import { lastRecieptDto, recieptItemDto } from '../../../helpers/dto';
 import LastReciept from './LastReciept';
+import { useGetSyrupQuery } from '../../../redux/api/arrival';
 
 const Reciept = () => {
   const [byCard, setByCard] = useState(false);
@@ -38,16 +41,25 @@ const Reciept = () => {
   const dispatch = useAppDispatch();
   const { activeShop } = useAppSelector((store) => store.shop);
 
-  const { data: lastReciept, error: lastError } = useGetLastQuery(
-    activeShop?.id || 0,
-    { skip: activeShop === null }
-  );
+  const { data: lastReciept } = useGetLastQuery(activeShop?.id || 0, {
+    skip: activeShop === null,
+  });
+
+  const { data: shopSyrup } = useGetSyrupQuery(activeShop?.id || 0, {
+    skip: !activeShop,
+  });
 
   useEffect(() => {
     if (lastReciept !== undefined) {
       dispatch(setLastReciept(lastRecieptDto(lastReciept)));
     }
   }, [lastReciept, dispatch]);
+
+  useEffect(() => {
+    if (shopSyrup) {
+      dispatch(setSyrup(recieptItemDto(shopSyrup)));
+    }
+  }, [shopSyrup, dispatch]);
 
   const getPrice = (item: IRecieptPosition) => {
     let price = item.price;
@@ -114,6 +126,7 @@ const Reciept = () => {
         quantity: item.quantity,
         price: getPrice(item),
         toGo: isWriteoff ? false : item.toGo,
+        withSyrup: item.withSyrup,
       })),
       total: isWriteoff
         ? 0
@@ -129,6 +142,7 @@ const Reciept = () => {
 
   const discountHandler: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     dispatch(setDiscount(e.target.checked));
+    dispatch(calculateTotal());
   };
 
   return (
@@ -151,7 +165,7 @@ const Reciept = () => {
               </div>
               <ul className={styles.list}>
                 {items.map((item) => (
-                  <RecieptLine key={item.itemId} item={item} />
+                  <RecieptLine key={item.line} item={item} />
                 ))}
               </ul>
             </div>

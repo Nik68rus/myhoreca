@@ -16,6 +16,7 @@ export interface IConsumptionItem
   consumptionId: CreationOptional<number>;
   itemId: CreationOptional<number>;
   cupId: CreationOptional<number>;
+  withSyrup: boolean;
   quantity: number;
   toGo: boolean;
   price: number;
@@ -33,6 +34,7 @@ const consumptionItemModel = (sequelize: Sequelize) => {
       consumptionId: DataTypes.INTEGER,
       itemId: DataTypes.INTEGER,
       cupId: DataTypes.INTEGER,
+      withSyrup: DataTypes.BOOLEAN,
       quantity: DataTypes.INTEGER,
       toGo: DataTypes.BOOLEAN,
       price: DataTypes.FLOAT,

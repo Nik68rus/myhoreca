@@ -5,7 +5,7 @@ import { IConsumptionInput, IConsumptionWithItem } from './../../types/item';
 import { api } from '../api';
 
 export interface IRecieptServerInfo {
-  createdAt: Date;
+  createdAt: string;
   items: (IConsumptionItem & { item: { title: string } })[];
 }
 

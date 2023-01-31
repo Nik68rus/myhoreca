@@ -1,7 +1,7 @@
-import { IItemInput } from './../../types/item';
+import { IShopItem } from './../../models/shopItem';
+import { IItemInput, IArrivalWithItem } from './../../types/item';
 import { IItem } from './../../models/item';
 import { api } from '../api';
-import { requestToBodyStream } from 'next/dist/server/body-streams';
 
 export const itemApi = api.injectEndpoints({
   overrideExisting: true,

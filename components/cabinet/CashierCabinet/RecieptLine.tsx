@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import {
+  calculateTotal,
   changeItemToGo,
   IRecieptPosition,
   removeItem,
   removeLine,
+  toggleSyrup,
 } from '../../../redux/slices/recieptSlice';
 import styles from './RecieptLine.module.scss';
 import cx from 'classnames';
@@ -11,6 +13,8 @@ import { FaMinus, FaTimes } from 'react-icons/fa';
 import { BiCoffee, BiCoffeeTogo } from 'react-icons/bi';
 import { useAppDispatch, useAppSelector } from '../../../hooks/store';
 import { CashierSection } from '../../../types/sections';
+import { TbDroplet, TbDropletOff } from 'react-icons/tb';
+import { TfiSplitV } from 'react-icons/tfi';
 
 interface Props {
   item: IRecieptPosition;
@@ -27,16 +31,23 @@ const RecieptLine = ({ item }: Props) => {
   const minusHandler: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
     dispatch(removeItem(item));
+    dispatch(calculateTotal());
   };
 
   const deleteHandler = () => {
-    dispatch(removeLine(item.itemId));
+    dispatch(removeLine(item.line));
+    dispatch(calculateTotal());
     setEditing(false);
   };
 
   const togoHandler = () => {
-    dispatch(changeItemToGo(item.itemId));
+    dispatch(changeItemToGo(item.line));
     setEditing(false);
+  };
+
+  const syrupHandler = () => {
+    dispatch(toggleSyrup(item.line));
+    dispatch(calculateTotal());
   };
 
   const getQuantityMarkup = () => {
@@ -58,6 +69,7 @@ const RecieptLine = ({ item }: Props) => {
       <span className={styles.title}>
         {item.title}
         {item.toGo && item.cupId ? ' 🥤' : ''}
+        {item.withSyrup && item.cupId ? ' 💧' : ''}
       </span>
 
       {getQuantityMarkup()}
@@ -80,14 +92,28 @@ const RecieptLine = ({ item }: Props) => {
           >
             <FaTimes />
           </button>
-          {!isWriteoff && item.cupId && (
-            <button
-              className="button button--icon"
-              aria-label={item.toGo ? 'Здесь' : 'С собой'}
-              onClick={togoHandler}
-            >
-              {item.toGo ? <BiCoffee /> : <BiCoffeeTogo />}
+          {item.quantity > 1 && (
+            <button className="button button--icon">
+              <TfiSplitV />
             </button>
+          )}
+          {!isWriteoff && item.cupId && (
+            <>
+              <button
+                className="button button--icon"
+                aria-label={item.toGo ? 'Здесь' : 'С собой'}
+                onClick={togoHandler}
+              >
+                {item.toGo ? <BiCoffee /> : <BiCoffeeTogo />}
+              </button>
+              <button
+                className="button button--icon"
+                aria-label={item.withSyrup ? 'Без сиропа>' : 'С сиропом'}
+                onClick={syrupHandler}
+              >
+                {item.withSyrup ? <TbDropletOff /> : <TbDroplet />}
+              </button>
+            </>
           )}
         </div>
       ) : null}

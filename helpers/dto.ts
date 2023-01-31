@@ -31,13 +31,14 @@ export const lastRecieptDto = (
 ): ILastReciept | null => {
   if (reciept === null) return null;
   return {
-    createdAt: new Date(reciept.createdAt),
+    createdAt: reciept.createdAt,
     items: reciept.items.map((position) => ({
       id: position.id,
       title: position.item.title,
       quantity: position.quantity,
       price: position.price,
       toGo: position.toGo,
+      withSyrup: position.withSyrup,
     })),
   };
 };

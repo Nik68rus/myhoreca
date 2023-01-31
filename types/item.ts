@@ -30,6 +30,7 @@ export interface IConsumptionItemInput {
   price: number;
   quantity: number;
   toGo: boolean;
+  withSyrup: boolean;
 }
 
 export interface IConsumptionInput {
