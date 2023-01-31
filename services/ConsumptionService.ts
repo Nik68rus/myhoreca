@@ -1,3 +1,4 @@
+import { IConsumptionItem } from './../models/consumptionItem';
 import {
   IConsumptionInput,
   IConsumptionWithItem,
@@ -6,6 +7,7 @@ import {
 import ApiError from '../helpers/error';
 import db from '../models';
 import { Op } from 'sequelize';
+import { IItem } from '../models/item';
 
 class ConsumptionService {
   async consume(saleInfo: IConsumptionInput, userId: number) {
@@ -141,7 +143,7 @@ class ConsumptionService {
 
     const recieptItems = await db.consumptionItems.findAll({
       where: { consumptionId: lastItem.id },
-      include: db.items,
+      include: { model: db.items, attributes: ['title'] },
     });
 
     return {

@@ -26,9 +26,18 @@ export const recieptItemDto = (stockItem: IArrivalWithItem): IRecieptItem => {
   };
 };
 
-// export lastRecieptDto = (reciept: IRecieptServerInfo|null ): ILastReciept => {
-//   return {
-//     createdAt
-//   }
-
-// }
+export const lastRecieptDto = (
+  reciept: IRecieptServerInfo | null
+): ILastReciept | null => {
+  if (reciept === null) return null;
+  return {
+    createdAt: new Date(reciept.createdAt),
+    items: reciept.items.map((position) => ({
+      id: position.id,
+      title: position.item.title,
+      quantity: position.quantity,
+      price: position.price,
+      toGo: position.toGo,
+    })),
+  };
+};

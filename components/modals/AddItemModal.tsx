@@ -44,6 +44,7 @@ const AddItemModal = ({ onClose, categories, item }: Props) => {
 
   const createHandler: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
+
     createItem(formData);
   };
 

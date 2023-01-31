@@ -20,6 +20,8 @@ import Spinner from '../../layout/Spinner';
 import { IConsumptionInput, PayType } from '../../../types/item';
 import { CashierSection } from '../../../types/sections';
 import FormControl from '../../forms/FormControl';
+import { lastRecieptDto } from '../../../helpers/dto';
+import LastReciept from './LastReciept';
 
 const Reciept = () => {
   const [byCard, setByCard] = useState(false);
@@ -36,17 +38,16 @@ const Reciept = () => {
   const dispatch = useAppDispatch();
   const { activeShop } = useAppSelector((store) => store.shop);
 
-  // const { data: lastReciept, error: lastError } = useGetLastQuery(
-  //   activeShop?.id || 0,
-  //   { skip: activeShop === null }
-  // );
+  const { data: lastReciept, error: lastError } = useGetLastQuery(
+    activeShop?.id || 0,
+    { skip: activeShop === null }
+  );
 
-  // useEffect(() => {
-  //   if (lastReciept !== undefined) {
-
-  //     // lastReciept ? dispatch(setLastReciept({createdAt: new Date(lastReciept?.createdAt)})) : dispatch(set);
-  //   }
-  // }, [lastReciept, dispatch]);
+  useEffect(() => {
+    if (lastReciept !== undefined) {
+      dispatch(setLastReciept(lastRecieptDto(lastReciept)));
+    }
+  }, [lastReciept, dispatch]);
 
   const getPrice = (item: IRecieptPosition) => {
     let price = item.price;
@@ -134,84 +135,89 @@ const Reciept = () => {
     <>
       {isLoading && <Spinner />}
       <section className={styles.reciept}>
-        <div className={cx('container', styles.container)}>
-          <div className={cx(styles.date, 'mb-5')}>
-            <span>{new Date().toLocaleDateString('ru-Ru')}</span>
-            <span>
-              {new Date().toLocaleTimeString('ru-Ru', {
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
-            </span>
-          </div>
-          <ul className={styles.list}>
-            {items.map((item) => (
-              <RecieptLine key={item.itemId} item={item} />
-            ))}
-          </ul>
-        </div>
-
-        {isWriteoff ? (
-          <FormControl
-            label="Комментарий"
-            type="text"
-            id="comment"
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            placeholder="Причина при желании"
-          />
+        {!items.length ? (
+          <LastReciept />
         ) : (
           <>
-            <div className={cx(styles.total, 'mt-6')}>
-              <span>Итого:</span> <b>{total.toLocaleString('ru-RU')} руб</b>
+            <div className={cx('container', styles.container)}>
+              <div className={cx(styles.date, 'mb-3')}>
+                <span>{new Date().toLocaleDateString('ru-Ru')}</span>
+                <span>
+                  {new Date().toLocaleTimeString('ru-Ru', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </span>
+              </div>
+              <ul className={styles.list}>
+                {items.map((item) => (
+                  <RecieptLine key={item.itemId} item={item} />
+                ))}
+              </ul>
             </div>
-            <div className={styles.modifiers}>
-              <Checkbox
-                label="Картой"
-                id="byCard"
-                checked={byCard}
-                onChange={payChangeHandler}
-                className={styles.checkbox}
+            {isWriteoff ? (
+              <FormControl
+                label="Комментарий"
+                type="text"
+                id="comment"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder="Причина при желании"
               />
-              <Checkbox
-                label="Перевод"
-                id="isTransfer"
-                checked={isTransfer}
-                onChange={payChangeHandler}
-                className={styles.checkbox}
-              />
-              <Checkbox
-                label="Скидка"
-                id="isDiscount"
-                checked={discount}
-                onChange={discountHandler}
-                className={styles.checkbox}
-              />
-              <Checkbox
-                label="С собой"
-                id="toGo"
-                className={styles.checkbox}
-                checked={isToGo}
-                onChange={(e) => dispatch(setAllToGo(e.target.checked))}
-              />
+            ) : (
+              <>
+                <div className={cx(styles.total, 'mt-6')}>
+                  <span>Итого:</span> <b>{total.toLocaleString('ru-RU')} руб</b>
+                </div>
+                <div className={styles.modifiers}>
+                  <Checkbox
+                    label="Картой"
+                    id="byCard"
+                    checked={byCard}
+                    onChange={payChangeHandler}
+                    className={styles.checkbox}
+                  />
+                  <Checkbox
+                    label="Перевод"
+                    id="isTransfer"
+                    checked={isTransfer}
+                    onChange={payChangeHandler}
+                    className={styles.checkbox}
+                  />
+                  <Checkbox
+                    label="Скидка"
+                    id="isDiscount"
+                    checked={discount}
+                    onChange={discountHandler}
+                    className={styles.checkbox}
+                  />
+                  <Checkbox
+                    label="С собой"
+                    id="toGo"
+                    className={styles.checkbox}
+                    checked={isToGo}
+                    onChange={(e) => dispatch(setAllToGo(e.target.checked))}
+                  />
+                </div>
+              </>
+            )}
+            <div className={styles.actions}>
+              <button
+                className={cx(styles.button, styles.buttonOk)}
+                disabled={!items.length}
+                onClick={consumptionHandler}
+              >
+                {isWriteoff ? 'Списать' : 'OK'}
+              </button>
+              <button
+                className={cx(styles.button, styles.buttonCancel)}
+                onClick={clearHandler}
+              >
+                Отмена
+              </button>
             </div>
           </>
         )}
-        <div className={styles.actions}>
-          <button
-            className={cx(styles.button, styles.buttonOk)}
-            disabled={!items.length}
-            onClick={consumptionHandler}
-          >
-            {isWriteoff ? 'Списать' : 'OK'}
-          </button>
-          <button
-            className={cx(styles.button, styles.buttonCancel)}
-            onClick={clearHandler}
-          >
-            Отмена
-          </button>
-        </div>
       </section>
     </>
   );

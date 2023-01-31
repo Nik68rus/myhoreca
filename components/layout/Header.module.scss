@@ -24,8 +24,8 @@
 }
 
 .headerContainer {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 6px;
+  padding-bottom: 6px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -39,6 +39,7 @@
 .actions {
   display: flex;
   gap: 16px;
+  align-items: center;
 }
 
 .shopTitle {

@@ -1,3 +1,4 @@
+import { IItem } from './../../models/item';
 import { IConsumptionItem } from './../../models/consumptionItem';
 import { IConsumption } from './../../models/consumption';
 import { IConsumptionInput, IConsumptionWithItem } from './../../types/item';
@@ -5,7 +6,7 @@ import { api } from '../api';
 
 export interface IRecieptServerInfo {
   createdAt: Date;
-  items: IConsumptionItem[];
+  items: (IConsumptionItem & { item: { title: string } })[];
 }
 
 export const consumptionApi = api.injectEndpoints({

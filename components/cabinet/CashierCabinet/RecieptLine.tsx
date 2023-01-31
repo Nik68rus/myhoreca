@@ -57,7 +57,7 @@ const RecieptLine = ({ item }: Props) => {
     <li className={styles.line} onClick={() => setEditing(!editing)}>
       <span className={styles.title}>
         {item.title}
-        {item.toGo && item.cupId ? ' (с)' : ''}
+        {item.toGo && item.cupId ? ' 🥤' : ''}
       </span>
 
       {getQuantityMarkup()}

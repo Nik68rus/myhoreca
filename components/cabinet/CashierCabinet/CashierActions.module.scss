@@ -16,4 +16,8 @@
   &:hover {
     color: variables.$color-default-black;
   }
+
+  &Active {
+    pointer-events: none;
+  }
 }

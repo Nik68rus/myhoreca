@@ -136,7 +136,7 @@ const recieptSlice = createSlice({
         return { ...item, toGo: item.cupId ? action.payload : false };
       });
     },
-    setLastReciept: (state, action: PayloadAction<ILastReciept>) => {
+    setLastReciept: (state, action: PayloadAction<ILastReciept | null>) => {
       state.last = action.payload;
     },
   },

@@ -22,8 +22,8 @@ export default async function handler(
       }
 
       const user = await getUser(req);
-      const stat = await ConsumptionService.getStat(+shopId);
-      return res.status(200).json(stat);
+      const result = await ConsumptionService.getLast(+shopId);
+      return res.status(200).json(result);
     } catch (error) {
       handleServerError(res, error);
     }

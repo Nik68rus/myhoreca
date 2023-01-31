@@ -67,6 +67,12 @@ Item.belongsTo(Space);
 Space.hasMany(Category);
 Category.belongsTo(Space);
 
+Space.hasMany(Discount);
+Discount.belongsTo(Space);
+
+Space.hasMany(Cup);
+Cup.belongsTo(Space);
+
 Item.belongsTo(Category);
 Category.hasMany(Item);
 
@@ -95,7 +101,7 @@ ConsumptionItem.belongsTo(Consumption);
 
 ConsumptionItem.belongsTo(Item);
 
-ConsumptionItem.hasOne(Cup);
+Cup.hasMany(ConsumptionItem);
 
 Category.hasOne(Discount);
 Discount.belongsTo(Category);
