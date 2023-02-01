@@ -130,6 +130,7 @@ class ConsumptionService {
     const items = await db.consumptions.findAll({
       where: {
         shopId,
+        isSale: true,
         createdAt: {
           [Op.between]: [dayStart, dayEnd],
         },

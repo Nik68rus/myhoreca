@@ -14,6 +14,7 @@ export const api = createApi({
     'Discount',
     'Cup',
     'ItemCup',
+    'Group',
   ],
   baseQuery: fetchBaseQuery({ baseUrl: `api/` }),
   endpoints: () => ({}),

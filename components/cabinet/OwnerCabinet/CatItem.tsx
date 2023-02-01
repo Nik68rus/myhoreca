@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaCheck, FaEdit, FaTimes } from 'react-icons/fa';
-import { ICategory } from '../../../models/category';
 import FormControl from '../../forms/FormControl';
 import styles from './CatItem.module.scss';
 import cx from 'classnames';
@@ -9,76 +8,81 @@ import { handleError, handleRTKQError } from '../../../helpers/error';
 import Spinner from '../../layout/Spinner';
 
 interface Props {
-  category: ICategory;
+  title: string;
+  id: number;
 }
 
-const CatItem = ({ category }: Props) => {
+const CatItem = ({ id, title }: Props) => {
   const [editing, setEditing] = useState(false);
   const [newValue, setNewValue] = useState('');
+  const [width, setWidth] = useState(0);
+  const textRef = useRef<HTMLSpanElement>(null);
 
-  const [editCategory, { data, error, isLoading }] = useEditCategoryMutation();
+  const [editCategory, { error, isLoading }] = useEditCategoryMutation();
 
   useEffect(() => {
     handleRTKQError(error);
   }, [error]);
 
+  useEffect(() => {
+    setWidth(textRef.current?.offsetWidth || 0);
+  }, [newValue, editing]);
+
   const editStartHandler = () => {
-    setNewValue(category.title);
+    setNewValue(title);
     setEditing(true);
   };
 
-  const editFinishHandler: React.FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
-    editCategory({ id: category.id, title: newValue });
+  const editFinishHandler = () => {
+    editCategory({ id, title: newValue });
     setEditing(false);
   };
 
-  return (
-    <li
-      key={category.id}
-      className={cx(styles.item, { [styles.itemEditing]: editing })}
+  const editForm = (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        editFinishHandler();
+      }}
     >
-      {isLoading && <Spinner />}
-      {!editing ? (
-        <>
-          {category.title}
-          <button
-            className="button button--icon"
-            aria-label="Редактировать"
-            onClick={editStartHandler}
-          >
-            <FaEdit />
-          </button>
-        </>
-      ) : (
-        <form className="form" onSubmit={editFinishHandler}>
-          <div className="form__group">
-            <FormControl
-              type="text"
-              id="title"
-              value={newValue}
-              onChange={(e) => setNewValue(e.target.value)}
-            />
-            <div className={styles.actions}>
-              <button
-                type="submit"
-                className="button button--icon"
-                aria-label="Подтвердить"
-              >
-                <FaCheck />
-              </button>
-              <button
-                type="reset"
-                className="button button--icon"
-                aria-label="Отмена"
-                onClick={() => setEditing(false)}
-              >
-                <FaTimes />
-              </button>
-            </div>
-          </div>
-        </form>
-      )}
+      <span className={styles.hidden} ref={textRef}>
+        {newValue}
+      </span>
+      <input
+        className={styles.input}
+        type="text"
+        id="title"
+        value={newValue}
+        onChange={(e) => setNewValue(e.target.value)}
+        style={{ width }}
+      />
+    </form>
+  );
+
+  return (
+    <li className={cx(styles.item, { [styles.editing]: editing })}>
+      <button
+        className={styles.button}
+        onClick={() => setEditing(false)}
+        disabled={!editing}
+      >
+        <FaTimes />
+      </button>
+
+      {editing ? editForm : <span>{title}</span>}
+
+      <button
+        className={styles.button}
+        onClick={editing ? editFinishHandler : editStartHandler}
+      >
+        {isLoading ? (
+          <Spinner inline={true} />
+        ) : editing ? (
+          <FaCheck />
+        ) : (
+          <FaEdit />
+        )}
+      </button>
     </li>
   );
 };

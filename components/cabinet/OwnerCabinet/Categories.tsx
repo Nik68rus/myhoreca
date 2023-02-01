@@ -23,8 +23,8 @@ const Categories = () => {
       {isLoading && <Spinner block={true} />}
       {categories && categories.length ? (
         <ul className={styles.list}>
-          {categories?.map((cat) => (
-            <CatItem category={cat} key={cat.id} />
+          {categories.map((cat) => (
+            <CatItem title={cat.title} id={cat.id} key={cat.id} />
           ))}
         </ul>
       ) : (

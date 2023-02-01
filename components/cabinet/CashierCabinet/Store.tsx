@@ -11,12 +11,24 @@ import { IArrivalWithItem } from '../../../types/item';
 import StoreItem from './StoreItem';
 import { CashierSection } from '../../../types/sections';
 import Heading from '../../ui/Heading';
+import { useGetGroupsQuery } from '../../../redux/api/group';
+import sortItems, { IGroupReady } from '../../../helpers/groupSorting';
+import StoreGroup from './StoreGroup';
+
+function isGroup(item: IGroupReady | IArrivalWithItem): item is IGroupReady {
+  return (item as IGroupReady).isGroup !== undefined;
+}
 
 const Store = () => {
   const { activeShop } = useAppSelector((store) => store.shop);
   const { activeSection } = useAppSelector((store) => store.layout);
   const [activeCategory, setActiveCategory] = useState(0);
-  const [filteredItems, setFilteredItems] = useState<IArrivalWithItem[]>([]);
+  const [grouppedItems, setGrouppedItems] = useState<
+    (IArrivalWithItem | IGroupReady)[]
+  >([]);
+  const [filteredItems, setFilteredItems] = useState<
+    (IArrivalWithItem | IGroupReady)[]
+  >([]);
 
   const isWriteoff = activeSection === CashierSection.WRITEOFF;
 
@@ -35,10 +47,13 @@ const Store = () => {
     isLoading: catLoading,
   } = useGetCategoriesQuery();
 
+  const { data: groups, error: groupsError } = useGetGroupsQuery();
+
   useEffect(() => {
     handleRTKQError(error);
     handleRTKQError(catError);
-  }, [error, catError]);
+    handleRTKQError(groupsError);
+  }, [error, catError, groupsError]);
 
   useEffect(() => {
     if (categories?.length) {
@@ -47,16 +62,26 @@ const Store = () => {
   }, [categories]);
 
   useEffect(() => {
-    if (arrivals?.length) {
+    if (groups && arrivals) {
+      setGrouppedItems(sortItems(groups, arrivals));
+    }
+  }, [groups, arrivals]);
+
+  useEffect(() => {
+    if (grouppedItems.length && !isWriteoff) {
       setFilteredItems(
-        arrivals.filter((arrival) =>
-          isWriteoff
-            ? arrival.item.isCountable
-            : arrival.item.categoryId === activeCategory
+        grouppedItems.filter((gi) =>
+          isGroup(gi)
+            ? gi.categoryId === activeCategory
+            : gi.item.categoryId === activeCategory
         )
       );
     }
-  }, [activeCategory, arrivals, isWriteoff]);
+
+    if (isWriteoff && arrivals) {
+      setFilteredItems(arrivals.filter((ar) => ar.item.isCountable));
+    }
+  }, [activeCategory, grouppedItems, isWriteoff, arrivals]);
 
   return (
     <>
@@ -87,11 +112,20 @@ const Store = () => {
             )}
             <ul className={styles.list}>
               {filteredItems &&
-                filteredItems.map((item, i) => (
-                  <li key={item.id}>
-                    <StoreItem item={item} />
-                  </li>
-                ))}
+                filteredItems.map((item) =>
+                  isGroup(item) ? (
+                    <StoreGroup
+                      id={item.id}
+                      key={item.title}
+                      title={item.title}
+                      items={item.items}
+                    />
+                  ) : (
+                    <li key={item.id}>
+                      <StoreItem item={item} />
+                    </li>
+                  )
+                )}
             </ul>
           </Card>
         </section>

@@ -1,6 +1,6 @@
 @use '../../../styles/variables.scss';
 
-.item {
+.group {
   background-color: variables.$color-input-bg;
   border-radius: 20px;
   display: flex;
@@ -20,15 +20,10 @@
   align-items: center;
   justify-content: center;
 
-  .item:hover &:not(:disabled),
+  .group:hover &,
   .editing & {
     opacity: 1;
     visibility: visible;
-  }
-
-  &:disabled {
-    visibility: hidden;
-    opacity: 0;
   }
 }
 

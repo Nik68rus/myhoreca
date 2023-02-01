@@ -16,9 +16,10 @@ import { useGetDiscountsQuery } from '../../../redux/api/discount';
 
 interface Props {
   item: IArrivalWithItem;
+  inner?: boolean;
 }
 
-const StoreItem = ({ item }: Props) => {
+const StoreItem = ({ item, inner }: Props) => {
   const position = item.item;
   const dispatch = useAppDispatch();
 
@@ -66,7 +67,9 @@ const StoreItem = ({ item }: Props) => {
             alt={position.title}
           />
         ) : (
-          <span>{position.title.slice(0, 3).toUpperCase()}</span>
+          <span>
+            {inner ? item.price : position.title.slice(0, 3).toUpperCase()}
+          </span>
         )}
       </div>
 

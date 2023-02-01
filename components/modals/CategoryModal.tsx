@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FaPlus } from 'react-icons/fa';
 import { handleRTKQError } from '../../helpers/error';
 import { useCreateCategoryMutation } from '../../redux/api/category';
 import Categories from '../cabinet/OwnerCabinet/Categories';
@@ -55,10 +56,11 @@ const CategoryModal = ({ onClose }: Props) => {
               />
               <button
                 type="submit"
-                className="button button--success"
+                className="button button--icon"
+                aria-label="Добавить"
                 disabled={!isValid}
               >
-                Добавить
+                <FaPlus />
               </button>
             </div>
           </form>

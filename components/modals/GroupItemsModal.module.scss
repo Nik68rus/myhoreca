@@ -1,0 +1,31 @@
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+}
+
+.modal {
+  :global(.modal__content) {
+    padding: 10px;
+  }
+
+  :global(.modal__heading) {
+    font-size: 24px;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  :global(.modal__content) {
+    width: auto;
+  }
+
+  :global(.modal__overlay) {
+    opacity: 0.8;
+  }
+
+  :global(.modal__close-btn) {
+    display: none;
+  }
+}

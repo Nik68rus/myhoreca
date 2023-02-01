@@ -1,4 +1,3 @@
-import { IDiscountInput, IDiscountWithCategory } from './../types/discount';
 import ApiError from '../helpers/error';
 import db from '../models';
 

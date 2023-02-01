@@ -18,6 +18,7 @@ import Spinner from '../../layout/Spinner';
 import History from '../CashierCabinet/History';
 import Discounts from './Discounts';
 import Cups from './Cups';
+import Groups from './Groups';
 
 const OwnerCabinet = () => {
   const { activeSection } = useAppSelector((store) => store.layout);
@@ -46,6 +47,7 @@ const OwnerCabinet = () => {
         {activeSection === Section.STOCK && <Stock />}
         {activeSection === Section.DISCOUNT && <Discounts />}
         {activeSection === Section.CUPS && <Cups />}
+        {activeSection === Section.GROUPS && <Groups />}
       </section>
     </div>
   );
