@@ -33,7 +33,7 @@ const Item = ({ item }: Props) => {
   }, [error]);
 
   const visibilityToggleHandler = () => {
-    editItem({ id: item.id, isVisible: !item.isVisible });
+    editItem({ id: item.id, isVisible: !item.isVisible, cupId: item.cupId });
   };
 
   return (
