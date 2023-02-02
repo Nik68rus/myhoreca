@@ -92,11 +92,11 @@ const RecieptLine = ({ item }: Props) => {
           >
             <FaTimes />
           </button>
-          {item.quantity > 1 && (
+          {/* {item.quantity > 1 && (
             <button className="button button--icon">
               <TfiSplitV />
             </button>
-          )}
+          )} */}
           {!isWriteoff && item.cupId && (
             <>
               <button
