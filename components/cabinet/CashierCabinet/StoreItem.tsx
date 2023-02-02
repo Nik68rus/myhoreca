@@ -54,7 +54,7 @@ const StoreItem = ({ item, inner }: Props) => {
         style={{
           backgroundColor: `${getColor(
             position.id,
-            position.id > 16 ? position.id : 16
+            position.id > 40 ? position.id : 30
           )}`,
         }}
       >

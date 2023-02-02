@@ -19,7 +19,7 @@ const StoreGroup = ({ id, title, items }: Props) => {
         <div
           className={styles.background}
           style={{
-            backgroundColor: `${getColor(id, id > 16 ? id : 16)}`,
+            backgroundColor: `${getColor(id, id > 15 ? id : 15)}`,
           }}
         >
           <span>{title.slice(0, 3).toUpperCase()}</span>
