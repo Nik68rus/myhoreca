@@ -15,11 +15,13 @@ const GroupItemsModal = ({ onClose, items, title }: Props) => {
     <>
       <Modal onClose={onClose} heading={title} className={styles.modal}>
         <ul className={styles.list}>
-          {items.map((item) => (
-            <li key={item.id} onClick={() => onClose()}>
-              <StoreItem item={item} inner={true} />
-            </li>
-          ))}
+          {items
+            .sort((a, b) => a.price - b.price)
+            .map((item) => (
+              <li key={item.id} onClick={() => onClose()}>
+                <StoreItem item={item} inner={true} />
+              </li>
+            ))}
         </ul>
       </Modal>
     </>
