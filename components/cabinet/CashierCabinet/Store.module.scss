@@ -1,19 +1,26 @@
 @use '../../../styles/variables.scss';
+@use '../../../styles/mixins.scss';
 
 .store {
   flex-grow: 1;
   padding-top: 20px;
   padding-bottom: 20px;
+
+  @include mixins.vp-767 {
+    width: 100vw;
+  }
 }
 
 .list {
   list-style: none;
   margin: 0;
   padding: 10px 0;
-  // padding-top: 10px;
   display: grid;
-  // gap: 4px;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+
+  @include mixins.vp-767 {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
 }
 
 .heading {

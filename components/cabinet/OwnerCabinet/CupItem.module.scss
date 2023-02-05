@@ -1,4 +1,5 @@
 @use '../../../styles/variables.scss';
+@use '../../../styles/mixins.scss';
 
 .cup {
   display: flex;
@@ -20,6 +21,11 @@
   .cup:hover & {
     opacity: 1;
     visibility: visible;
+  }
+
+  @include mixins.vp-767 {
+    margin-top: -6px;
+    margin-bottom: -6px;
   }
 }
 

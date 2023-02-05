@@ -69,13 +69,12 @@ const WriteOffModal = ({ onClose, item }: Props) => {
     <>
       {isLoading && <Spinner />}
       <Modal onClose={onClose} heading="Списание">
-        <form onSubmit={submitHandler} className={'form ' + styles.form}>
+        <form onSubmit={submitHandler} className={'form pt-8 ' + styles.form}>
           <Heading level={5} className="mb-5">
             {item.item.title} из {activeShop?.title}
           </Heading>
           {item.item.isCountable ? (
             <Counter
-              label="Списать"
               initialValue={quantity}
               step={1}
               onChange={(n) => setQuantity(n)}

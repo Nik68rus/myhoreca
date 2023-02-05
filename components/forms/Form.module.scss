@@ -1,10 +1,14 @@
+@use '../../styles/mixins.scss';
+
 .formContainer {
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  :global(.form) {
-    width: 500px;
+  :global(.form),
+  form {
+    width: 100%;
+    max-width: 500px;
   }
 }

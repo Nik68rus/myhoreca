@@ -57,10 +57,10 @@ const Stock = () => {
 
               <ul className="list">
                 <li className={styles.stockItem}>
-                  <span>Наименование</span>
-                  <span>Кол</span>
-                  <span>Цена</span>
-                  <span>Действия</span>
+                  <span className="label">Наименование</span>
+                  <span className="label">Кол</span>
+                  <span className="label">Цена</span>
+                  <span className="label">Действия</span>
                 </li>
                 {stockItems
                   .slice()

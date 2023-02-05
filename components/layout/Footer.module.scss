@@ -1,10 +1,16 @@
 @use '../../styles/variables.scss';
+@use '../../styles/mixins.scss';
 
 .footer {
   text-align: center;
   // padding: 20px 0;
   background-color: variables.$color-default-white;
   border-top: variables.$border-light;
+
+  @include mixins.vp-767 {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
 }
 
 .container {
@@ -24,5 +30,26 @@
 
   .container {
     justify-content: center;
+  }
+}
+
+.cashierFooter {
+  @include mixins.vp-767 {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    height: auto;
+    transform: translateY(-100%);
+    transition: transform variables.$trans-default;
+    z-index: 9;
+
+    &.cfOpened {
+      transform: translateY(0);
+    }
+
+    .container {
+      flex-direction: column;
+    }
   }
 }

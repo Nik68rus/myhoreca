@@ -13,18 +13,51 @@ import {
   FaLayerGroup,
 } from 'react-icons/fa';
 import { Section } from '../../types/sections';
-import { useAppSelector } from '../../hooks/store';
+import { useAppDispatch, useAppSelector } from '../../hooks/store';
 import { BiCoffeeTogo } from 'react-icons/bi';
+import Link from 'next/link';
+import { Routes } from '../../types/routes';
+import { toggleMenu } from '../../redux/slices/layoutSlice';
 
 const menuItems = [
-  { id: Section.SHOPS, title: Section.SHOPS, icon: <FaStore /> },
-  { id: Section.EMPLOYYES, title: Section.EMPLOYYES, icon: <FaUsers /> },
-  { id: Section.ITEMS, title: Section.ITEMS, icon: <FaUtensils /> },
-  { id: Section.CUPS, title: Section.CUPS, icon: <BiCoffeeTogo /> },
-  { id: Section.DISCOUNT, title: Section.DISCOUNT, icon: <FaPercent /> },
-  { id: Section.GROUPS, title: Section.GROUPS, icon: <FaLayerGroup /> },
-  { id: Section.STOCK, title: Section.STOCK, icon: <FaBoxes /> },
-  { id: Section.SALES, title: Section.SALES, icon: <FaCashRegister /> },
+  {
+    id: Section.SALES,
+    title: Section.SALES,
+    icon: <FaCashRegister />,
+    path: 'sales',
+  },
+  {
+    id: Section.ITEMS,
+    title: Section.ITEMS,
+    icon: <FaUtensils />,
+    path: 'items',
+  },
+  { id: Section.STOCK, title: Section.STOCK, icon: <FaBoxes />, path: 'stock' },
+  {
+    id: Section.DISCOUNT,
+    title: Section.DISCOUNT,
+    icon: <FaPercent />,
+    path: 'discounts',
+  },
+  {
+    id: Section.GROUPS,
+    title: Section.GROUPS,
+    icon: <FaLayerGroup />,
+    path: 'groups',
+  },
+  {
+    id: Section.CUPS,
+    title: Section.CUPS,
+    icon: <BiCoffeeTogo />,
+    path: 'cups',
+  },
+  {
+    id: Section.EMPLOYYES,
+    title: Section.EMPLOYYES,
+    icon: <FaUsers />,
+    path: 'employees',
+  },
+  { id: Section.SHOPS, title: Section.SHOPS, icon: <FaStore />, path: 'shops' },
 ];
 
 interface Props {
@@ -32,7 +65,13 @@ interface Props {
 }
 
 const OwnerMenu = ({ onSelect }: Props) => {
-  const { activeSection } = useAppSelector((store) => store.layout);
+  const { activeSection, menuOpen } = useAppSelector((store) => store.layout);
+  const dispatch = useAppDispatch();
+
+  const menuClickHandler = (section: Section) => {
+    onSelect(section);
+    dispatch(toggleMenu(false));
+  };
 
   return (
     <ul className={styles.list}>
@@ -42,7 +81,7 @@ const OwnerMenu = ({ onSelect }: Props) => {
             className={cx(styles.button, {
               [styles.buttonActive]: item.id === activeSection,
             })}
-            onClick={() => onSelect(item.id)}
+            onClick={menuClickHandler.bind(this, item.id)}
           >
             {item.icon}
             <span className={styles.title}>{item.title}</span>

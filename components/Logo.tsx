@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import { Routes } from '../types/routes';
 import styles from './Logo.module.scss';
 import cx from 'classnames';

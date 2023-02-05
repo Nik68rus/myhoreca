@@ -1,13 +1,32 @@
 @use '../../styles/variables.scss';
+@use '../../styles/mixins.scss';
 
 .menu {
   background-color: variables.$bg-dark;
   color: variables.$color-default-white;
   box-shadow: variables.$card-shadow;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
 
-  a {
+  .logo {
     color: variables.$color-default-white;
+  }
+
+  @include mixins.vp-767 {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    overflow: auto;
+    transition: transform variables.$trans-default;
+    transform: translateX(-100%);
+  }
+
+  &.open {
+    transform: none;
   }
 }
 
@@ -55,6 +74,26 @@
     background-color: variables.$color-default-white;
     color: variables.$bg-dark;
   }
+
+  @include mixins.vp-767 {
+    display: none;
+  }
+}
+
+.mobileBtn {
+  display: none;
+  background-color: transparent;
+  width: 40px;
+  height: 40px;
+  border: 2px solid variables.$color-default-white;
+  color: variables.$color-default-white;
+  border-radius: 50%;
+
+  @include mixins.vp-767 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .list {
@@ -89,4 +128,8 @@
     background-color: variables.$color-default-white;
     color: variables.$bg-dark;
   }
+}
+
+.menuFooter {
+  margin-top: auto;
 }

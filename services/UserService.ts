@@ -16,7 +16,7 @@ class UserService {
     const accessToken = await generateToken(
       userDataDto(user),
       process.env.JWT_ACCESS_SECRET,
-      60 * 60 * 12 //Токен валиден 12 часов
+      60 * 60 * 14 //Токен валиден 14 часов
     );
 
     const refreshToken = await generateToken(

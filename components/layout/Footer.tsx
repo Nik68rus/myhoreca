@@ -12,12 +12,16 @@ const Footer = () => {
   const router = useRouter();
   const { authData } = useAppSelector((store) => store.user);
   const { activeShop } = useAppSelector((store) => store.shop);
+  const { menuOpen } = useAppSelector((store) => store.layout);
   const isMain = router.pathname === Routes.HOME;
 
   return (
     <footer
       className={cx(styles.footer, {
         [styles.fixedFooter]: isMain,
+        [styles.cashierFooter]: authData && authData.role === UserRole.CASHIER,
+        [styles.cfOpened]:
+          authData && authData.role === UserRole.CASHIER && menuOpen,
       })}
     >
       <div className={styles.container}>

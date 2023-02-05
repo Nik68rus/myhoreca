@@ -1,6 +1,8 @@
+@use '../../../styles/mixins.scss';
+
 .item {
   display: grid;
-  gap: 10px;
+  gap: 8px;
   grid-template-columns: 3fr 1fr 1fr 1fr;
   align-items: center;
 
@@ -15,6 +17,10 @@
   & *:nth-child(4) {
     justify-self: end;
   }
+
+  @include mixins.vp-767 {
+    row-gap: 4px;
+  }
 }
 
 .actions {
@@ -24,4 +30,5 @@
 
 .time {
   font-size: 14px;
+  grid-column: 1/-1;
 }

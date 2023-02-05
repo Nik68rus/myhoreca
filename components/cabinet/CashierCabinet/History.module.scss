@@ -1,4 +1,5 @@
 @use '../../../styles/variables.scss';
+@use '../../../styles/mixins.scss';
 
 .container {
   padding-top: 20px;
@@ -15,12 +16,6 @@
 
 .date {
   align-self: flex-start;
-  margin-bottom: 30px;
-}
-
-.label {
-  font-weight: 600;
-  color: variables.$color-text-muted;
 }
 
 .list {
@@ -40,11 +35,22 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 4px;
+
+  @include mixins.vp-767 {
+    gap: 2px;
+  }
 }
 
 .total {
   font-size: 30px;
   font-weight: 700;
   justify-self: end;
-  margin-bottom: 20px;
+
+  @include mixins.vp-1023 {
+    font-size: 26px;
+  }
+
+  @include mixins.vp-767 {
+    font-size: 24px;
+  }
 }

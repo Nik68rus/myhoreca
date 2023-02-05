@@ -1,3 +1,5 @@
+@use '../../../styles/mixins.scss';
+
 .list {
   display: flex;
   flex-wrap: wrap;
@@ -5,8 +7,23 @@
   // margin: 0;
   padding: 0;
   gap: 10px;
+
+  @include mixins.vp-767 {
+    gap: 6px;
+  }
 }
 
 .form {
   align-items: center;
+  flex-wrap: wrap;
+
+  @include mixins.vp-767 {
+    :global(.form__control) {
+      width: 100%;
+    }
+
+    button {
+      margin-left: auto;
+    }
+  }
 }

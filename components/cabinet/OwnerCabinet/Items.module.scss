@@ -1,8 +1,14 @@
 @use '../../../styles/variables.scss';
+@use '../../../styles/mixins.scss';
 
 .actions {
   display: flex;
   gap: 12px;
+
+  @include mixins.vp-767 {
+    flex-direction: column;
+    gap: 8px;
+  }
 }
 
 .empty {

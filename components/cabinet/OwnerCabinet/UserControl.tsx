@@ -40,14 +40,16 @@ const UserControl = ({ user }: Props) => {
           <FaSpinner />
         )}
       </span>
-      <button
-        className="button button--small button--heavy"
-        onClick={() => {
-          blockHandler(user.id, !user.isBlocked);
-        }}
-      >
-        {user.isBlocked ? 'Разблокировать' : 'Заблокировать'}
-      </button>
+      <div className={styles.actions}>
+        <button
+          className="button button--small button--heavy"
+          onClick={() => {
+            blockHandler(user.id, !user.isBlocked);
+          }}
+        >
+          {user.isBlocked ? 'Разблокировать' : 'Заблокировать'}
+        </button>
+      </div>
     </div>
   );
 };

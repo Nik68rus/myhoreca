@@ -4,10 +4,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface LayoutState {
   activeSection: null | Section | CashierSection;
+  menuOpen: boolean;
 }
 
 const initialState: LayoutState = {
   activeSection: Section.ITEMS,
+  menuOpen: false,
 };
 
 const layoutSlice = createSlice({
@@ -20,9 +22,12 @@ const layoutSlice = createSlice({
     ) => {
       state.activeSection = action.payload;
     },
+    toggleMenu: (state, action: PayloadAction<boolean>) => {
+      state.menuOpen = action.payload;
+    },
   },
 });
 
-export const { setActiveSection } = layoutSlice.actions;
+export const { setActiveSection, toggleMenu } = layoutSlice.actions;
 
 export default layoutSlice.reducer;

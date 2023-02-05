@@ -1,5 +1,11 @@
+@use '../../../styles/mixins.scss';
+
 .cabinet {
   display: flex;
   align-items: stretch;
   height: 100%;
+
+  @include mixins.vp-767 {
+    flex-direction: column;
+  }
 }

@@ -1,4 +1,5 @@
 @use '../../../styles/variables.scss';
+@use '../../../styles/mixins.scss';
 
 .userLine {
   width: 100%;
@@ -6,13 +7,23 @@
   display: grid;
   align-items: center;
   grid-template-columns: 1fr 2fr 50px 150px;
-  gap: 24px;
-  padding-top: 12px;
-  padding-bottom: 12px;
+  gap: 8px;
+
+  @include mixins.vp-767 {
+    grid-template-columns: 1fr 2fr 50px;
+
+    .actions {
+      grid-column: 1/-1;
+    }
+  }
 }
 
 .mail {
   font-size: 16px;
+
+  @include mixins.vp-767 {
+    font-size: 12px;
+  }
 }
 
 .status {

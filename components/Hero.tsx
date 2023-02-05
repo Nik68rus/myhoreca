@@ -20,7 +20,7 @@ const Hero = () => {
           <Heading level={1}>Здравствуйте, {authData.name}</Heading>
           <p> Скоро здесь будут основные данные за сегодняшний день</p>
           <Link href={Routes.ACCOUNT} className="button">
-            Кабинет директора
+            Личный кабинет
           </Link>
         </div>
       )}

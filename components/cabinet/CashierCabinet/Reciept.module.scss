@@ -1,4 +1,5 @@
 @use '../../../styles/variables.scss';
+@use '../../../styles/mixins.scss';
 
 .reciept {
   width: 380px;
@@ -13,6 +14,11 @@
   :global(.form__control) {
     margin-left: 10px;
     margin-right: 10px;
+  }
+
+  @include mixins.vp-767 {
+    width: 100%;
+    height: 40vh;
   }
 }
 
@@ -58,6 +64,12 @@
 
   b {
     font-size: 26px;
+  }
+
+  @include mixins.vp-767 {
+    b {
+      font-size: 20px;
+    }
   }
 }
 

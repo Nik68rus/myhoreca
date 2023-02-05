@@ -61,8 +61,10 @@ const Select = <T extends { id: number; title: string }>({
       })}
     >
       <div className={styles.label}>
-        {open ? <FaCaretUp /> : <FaCaretDown />}
-        <span className={styles.labelText}>{label}</span>
+        <div>
+          {open ? <FaCaretUp /> : <FaCaretDown />}
+          <span className={styles.labelText}>{label}</span>
+        </div>
         <span onClick={() => setOpen(!open)} className={styles.choice}>
           {withNull && active === null
             ? 'нет'

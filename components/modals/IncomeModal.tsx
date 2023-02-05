@@ -51,7 +51,7 @@ const IncomeModal = ({ onClose, item }: Props) => {
     <>
       {isLoading && <Spinner />}
       <Modal onClose={onClose} heading="Приход">
-        <form onSubmit={submitHandler} className={'form ' + styles.form}>
+        <form onSubmit={submitHandler} className={'form pt-8 ' + styles.form}>
           <Heading level={5} className="mb-5">
             {item.title} в {activeShop?.title}
           </Heading>

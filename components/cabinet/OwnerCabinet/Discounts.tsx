@@ -15,6 +15,7 @@ import Card from '../../ui/Card';
 import Heading from '../../ui/Heading';
 import DiscountItem from './DiscountItem';
 import styles from './Discounts.module.scss';
+import cx from 'classnames';
 
 const Discounts = () => {
   const [addMode, setAddMode] = useState(false);
@@ -82,7 +83,7 @@ const Discounts = () => {
           <p>Вы еще не добавили ни одной скидки!</p>
         )}
         {addMode && categories && categories.length && (
-          <div className="form">
+          <div className={cx('form', styles.addForm)}>
             <form onSubmit={submitHandler}>
               <div className="form__group">
                 <Select
@@ -92,20 +93,22 @@ const Discounts = () => {
                   onSelect={selectHandler}
                   selected={selectedCatId ? selectedCatId : categories[0].id}
                 />
-                <Counter
-                  initialValue={0}
-                  step={5}
-                  onChange={(n) => setValue(n)}
-                />
-                <button type="submit" className="button button--icon">
-                  <FaCheck />
-                </button>
-                <button
-                  className="button button--icon"
-                  onClick={() => setAddMode(false)}
-                >
-                  <FaTimes />
-                </button>
+                <div className={styles.buttons}>
+                  <Counter
+                    initialValue={0}
+                    step={5}
+                    onChange={(n) => setValue(n)}
+                  />
+                  <button type="submit" className="button button--icon">
+                    <FaCheck />
+                  </button>
+                  <button
+                    className="button button--icon"
+                    onClick={() => setAddMode(false)}
+                  >
+                    <FaTimes />
+                  </button>
+                </div>
               </div>
             </form>
           </div>

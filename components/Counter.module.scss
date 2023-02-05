@@ -1,4 +1,5 @@
 @use '../styles/variables.scss';
+@use '../styles/mixins.scss';
 
 .counter {
   display: flex;
@@ -27,6 +28,17 @@
 
   :global(.button) {
     min-width: auto;
+  }
+
+  @include mixins.vp-767 {
+    input {
+      width: 50px;
+      padding: 4px;
+    }
+
+    :global(.button) {
+      padding: 8px 10px;
+    }
   }
 }
 

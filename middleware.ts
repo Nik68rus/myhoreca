@@ -20,6 +20,8 @@ export async function middleware(request: NextRequest) {
   const accessToken = request.cookies.get('accessToken')?.value;
 
   if (!accessToken) {
+    console.log('!!!!!!!!!!!!!!!!!redirect-----------------');
+
     return NextResponse.redirect(new URL(Routes.LOGIN, request.url));
   }
 
@@ -27,6 +29,8 @@ export async function middleware(request: NextRequest) {
     await validateToken(accessToken, process.env.JWT_ACCESS_SECRET);
     return NextResponse.next();
   } catch (error) {
+    console.log('-------!!!!!!!!!!!!!!!!!redirect-----------------');
+
     return NextResponse.redirect(new URL(Routes.LOGIN, request.url));
   }
 }

@@ -47,7 +47,7 @@ const Modal = ({ children, onClose, heading, className }: Props) => {
           >
             <FaTimes />
           </button>
-          <Heading level={3} className="modal__heading">
+          <Heading level={3} className={cx('modal__heading mb-8')}>
             {heading}
           </Heading>
           <div className="modal__body">{children}</div>

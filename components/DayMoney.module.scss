@@ -1,4 +1,5 @@
-@use '../styles//variables.scss';
+@use '../styles/variables.scss';
+@use '../styles/mixins.scss';
 
 .money {
   display: flex;
@@ -7,6 +8,11 @@
   padding: 0 20px;
   color: variables.$color-neon-blue;
   margin-left: auto;
+
+  @include mixins.vp-767 {
+    width: 100%;
+    justify-content: space-between;
+  }
 }
 
 .total {
@@ -16,6 +22,10 @@
   align-items: center;
   justify-content: flex-end;
   // width: 50%;
+
+  @include mixins.vp-767 {
+    font-size: 24px;
+  }
 }
 
 .details {
@@ -24,4 +34,9 @@
   flex-direction: column;
   align-items: flex-start;
   // width: 50%;
+
+  @include mixins.vp-767 {
+    flex-direction: row;
+    gap: 20px;
+  }
 }

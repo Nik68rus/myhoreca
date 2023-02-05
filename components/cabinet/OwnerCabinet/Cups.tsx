@@ -66,6 +66,10 @@ const Cups = () => {
                 className="button button--icon"
                 aria-label="Отмена"
                 type="button"
+                onClick={() => {
+                  setAdding(false);
+                  setTitle('');
+                }}
               >
                 <FaTimes />
               </button>

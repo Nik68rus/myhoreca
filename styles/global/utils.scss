@@ -19,7 +19,11 @@
     display: flex;
     flex-direction: column;
     overflow: auto;
-    height: calc(100vh - 84px - 64px);
+    height: calc(100vh - 52px - 48px);
+
+    @include vp-767 {
+      height: calc(100vh - 50px - 50px);
+    }
   }
 }
 

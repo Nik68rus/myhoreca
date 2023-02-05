@@ -33,8 +33,6 @@ const Item = ({ item }: Props) => {
   }, [error]);
 
   const visibilityToggleHandler = () => {
-    console.log(item);
-
     editItem({ id: item.id, isVisible: !item.isVisible, cupId: item.cupId });
   };
 
@@ -42,25 +40,26 @@ const Item = ({ item }: Props) => {
     <div className={styles.item}>
       <Position item={item} />
       <div className={styles.actions}>
-        <button
-          className="button button--icon"
-          aria-label="Редактировать"
-          onClick={() => setEditing(true)}
-        >
-          <FaEdit />
-        </button>
-
-        {isLoading ? (
-          <Spinner inline={true} />
-        ) : (
+        <div className={styles.editActions}>
           <button
             className="button button--icon"
-            aria-label={item.isVisible ? 'Скрыть' : 'Вернуть'}
-            onClick={visibilityToggleHandler}
+            aria-label="Редактировать"
+            onClick={() => setEditing(true)}
           >
-            {item.isVisible ? <FaEyeSlash /> : <FaEye />}
+            <FaEdit />
           </button>
-        )}
+          {isLoading ? (
+            <Spinner inline={true} />
+          ) : (
+            <button
+              className="button button--icon"
+              aria-label={item.isVisible ? 'Скрыть' : 'Вернуть'}
+              onClick={visibilityToggleHandler}
+            >
+              {item.isVisible ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          )}
+        </div>
 
         <button
           className="button button--icon"

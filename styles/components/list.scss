@@ -7,11 +7,24 @@
 
   li {
     border-bottom: $border-light-dashed;
-    padding: 12px;
+    padding: 8px;
     transition: background-color $trans-default;
 
     &:hover {
       background-color: $color-input-focus;
+    }
+  }
+
+  .label {
+    font-weight: 600;
+    color: $color-text-muted;
+  }
+
+  @include vp-767 {
+    margin-bottom: 14px;
+
+    li {
+      padding: 4px;
     }
   }
 }

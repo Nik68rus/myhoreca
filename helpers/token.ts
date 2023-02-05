@@ -5,8 +5,15 @@ import { TokenPayload } from '../types/user';
 import ApiError from './error';
 
 export const validateToken = async (token: string, secret: string) => {
-  const { payload } = await jwtVerify(token, new TextEncoder().encode(secret));
-  return payload as unknown as TokenPayload;
+  try {
+    const { payload } = await jwtVerify(
+      token,
+      new TextEncoder().encode(secret)
+    );
+    return payload as unknown as TokenPayload;
+  } catch (err) {
+    throw ApiError.notAuthenticated('Токен не действителен!');
+  }
 };
 
 export const generateToken = async (
@@ -47,6 +54,19 @@ export const getAdmin = async (req: NextApiRequest) => {
 
   if (user.role !== UserRole.OWNER) {
     throw ApiError.notAuthorized('Недостаточно прав!');
+  }
+  return user;
+};
+
+export const getUserFromRefresh = async (token: string) => {
+  if (!token) {
+    throw ApiError.notAuthenticated('Пользователь не авторизован!');
+  }
+  let user;
+  try {
+    user = await validateToken(token, process.env.JWT_REFRESH_SECRET);
+  } catch (err) {
+    throw ApiError.notAuthenticated('Токен не валидный!');
   }
   return user;
 };

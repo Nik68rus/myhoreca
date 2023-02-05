@@ -1,9 +1,14 @@
+@use '../../../styles/mixins.scss';
+
+.container {
+  @include mixins.vp-767 {
+    padding-top: 12px;
+  }
+}
 .cabinet {
-  // background: #000;
   display: flex;
   flex-direction: column;
   padding-bottom: 20px;
-  // height: 100%;
   flex-grow: 1;
 
   :global(.tabs) {

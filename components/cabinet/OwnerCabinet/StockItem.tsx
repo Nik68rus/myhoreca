@@ -110,6 +110,7 @@ const StockItem = ({ item }: Props) => {
       </div>
       {item.item.isCountable && (
         <span className={styles.time}>
+          Поступление:{' '}
           {new Date(item.createdAt).toLocaleDateString('ru-Ru', {
             day: 'numeric',
             month: 'long',

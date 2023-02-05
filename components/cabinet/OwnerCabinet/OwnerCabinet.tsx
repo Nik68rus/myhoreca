@@ -3,13 +3,9 @@ import cx from 'classnames';
 import styles from './OwnerCabinet.module.scss';
 import Shops from './Shops';
 import Employees from './Employees';
-import Sales from './Sales';
-import { IShop } from '../../../models/shop';
 import Items from './Items';
 import Stock from './Stock';
 import { useAppDispatch, useAppSelector } from '../../../hooks/store';
-import Heading from '../../ui/Heading';
-import Card from '../../ui/Card';
 import { Section } from '../../../types/sections';
 import { useGetShopsQuery } from '../../../redux/api/shop';
 import { setActiveShop } from '../../../redux/slices/shopSlice';
@@ -37,7 +33,7 @@ const OwnerCabinet = () => {
   }, [error]);
 
   return (
-    <div className="container pt-6">
+    <div className={cx('container pt-6', styles.container)}>
       {isLoading && <Spinner />}
       <section className={styles.cabinet}>
         {activeSection === Section.ITEMS && <Items />}

@@ -70,9 +70,8 @@ const LoginForm = () => {
     loginUser,
     { isLoading: logining, data: loggedInUser, error: loginError },
   ] = useLoginMutation();
-  const loginSubmitHandler: React.FormEventHandler<HTMLFormElement> = async (
-    e
-  ) => {
+
+  const loginSubmitHandler: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     loginUser({ email: formData.email, password: formData.password });
   };
@@ -84,6 +83,7 @@ const LoginForm = () => {
   useEffect(() => {
     if (loggedInUser) {
       setCookie('accessToken', loggedInUser.accessToken);
+      setCookie('refreshToken', loggedInUser.refreshToken);
       dispatch(setAuth(userDataDto(loggedInUser)));
       loggedInUser.isActivated
         ? router.push(Routes.HOME)

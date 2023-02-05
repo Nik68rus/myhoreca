@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 import db from '../../../models';
 import UserService from '../../../services/UserService';
 import ApiError, { handleServerError } from '../../../helpers/error';
+import TokenService from '../../../services/TokenService';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
   body: IUserLoginData;
@@ -38,12 +39,17 @@ export default async function handler(
 
       const passwordMatch = await bcrypt.compare(password, user.password);
 
-      if (passwordMatch) {
-        const data = await UserService.generateData(user);
-        return res.status(200).json(data);
-      } else {
-        throw ApiError.notAuthorized('Пароли не совпадают!');
+      if (!passwordMatch) {
+        throw ApiError.notAuthorized('Неверное имя пользователя или пароль!');
       }
+
+      const data = await UserService.generateData(user);
+      const token = await TokenService.create(user.id, data.refreshToken);
+
+      if (!token) {
+        throw ApiError.internal('Ошибка при создании токена!');
+      }
+      return res.status(200).json(data);
     } catch (error) {
       handleServerError(res, error);
     }

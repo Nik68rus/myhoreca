@@ -1,6 +1,44 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IUser } from '../models/user';
-import { IUserAuthData } from '../types/user';
+import { IUserAuthData } from './../types/user';
+import { setCookie } from './../helpers/cookies';
+import {
+  BaseQueryFn,
+  createApi,
+  FetchArgs,
+  fetchBaseQuery,
+  FetchBaseQueryError,
+  retry,
+} from '@reduxjs/toolkit/query/react';
+import { deleteCookie } from '../helpers/cookies';
+
+const baseQuery = fetchBaseQuery({ baseUrl: `api/` });
+
+const baseQueryWithReauth: BaseQueryFn<
+  string | FetchArgs,
+  unknown,
+  FetchBaseQueryError
+> = async (args, api, extraOptions) => {
+  let result = await baseQuery(args, api, extraOptions);
+
+  if (result.error && result.error.status === 401) {
+    const refreshResult = await baseQuery('/user/refresh', api, extraOptions);
+    if (refreshResult.data) {
+      deleteCookie('accessToken');
+      deleteCookie('refreshToken');
+
+      const res = refreshResult.data as IUserAuthData;
+
+      setCookie('accessToken', res.accessToken);
+      setCookie('refreshToken', res.refreshToken);
+
+      result = await baseQuery(args, api, extraOptions);
+    } else {
+      deleteCookie('accessToken');
+      deleteCookie('refreshToken');
+    }
+  }
+
+  return result;
+};
 
 export const api = createApi({
   reducerPath: 'api',
@@ -16,6 +54,6 @@ export const api = createApi({
     'ItemCup',
     'Group',
   ],
-  baseQuery: fetchBaseQuery({ baseUrl: `api/` }),
+  baseQuery: baseQueryWithReauth,
   endpoints: () => ({}),
 });

@@ -3,3 +3,11 @@
 .colored {
   color: variables.$color-success;
 }
+
+.line {
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

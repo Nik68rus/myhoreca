@@ -12,6 +12,7 @@ import consumptionItemModel from './consumptionItem';
 import discountModel from './discount';
 import cupModel from './cup';
 import groupModel from './group';
+import tokenModel from './token';
 
 interface DB {
   sequelize: Sequelize;
@@ -27,6 +28,7 @@ interface DB {
   discounts: ReturnType<typeof discountModel>;
   cups: ReturnType<typeof cupModel>;
   groups: ReturnType<typeof groupModel>;
+  tokens: ReturnType<typeof tokenModel>;
 }
 
 console.log(pg.Client.name);
@@ -57,6 +59,7 @@ const ConsumptionItem = consumptionItemModel(sequelize);
 const Discount = discountModel(sequelize);
 const Cup = cupModel(sequelize);
 const Group = groupModel(sequelize);
+const Token = tokenModel(sequelize);
 
 Space.hasMany(User);
 User.belongsTo(Space);
@@ -115,6 +118,9 @@ Cup.hasMany(ConsumptionItem);
 Category.hasOne(Discount);
 Discount.belongsTo(Category);
 
+User.hasMany(Token);
+Token.belongsTo(User);
+
 const db: DB = {
   sequelize,
   spaces: Space,
@@ -129,6 +135,7 @@ const db: DB = {
   discounts: Discount,
   cups: Cup,
   groups: Group,
+  tokens: Token,
 };
 
 export default db;

@@ -19,7 +19,7 @@
   width: 100%;
   height: 100%;
   background-color: $color-default-black;
-  opacity: 0.6;
+  opacity: 0.7;
   position: absolute;
   z-index: -1;
 }
@@ -32,6 +32,14 @@
   border-radius: $border-radius-l;
   position: relative;
   max-height: 100vh;
+
+  @include vp-1023 {
+    padding: 30px;
+  }
+
+  @include vp-767 {
+    padding: 30px 20px;
+  }
 }
 
 .modal__close-btn {
@@ -52,12 +60,14 @@
   &:focus {
     opacity: 0.7;
   }
-}
 
-.modal__heading {
-  margin-bottom: 30px;
-}
+  @include vp-1023 {
+    top: 10px;
+    right: 10px;
+  }
 
-// .modal__body {
-//   // overflow: auto;
-// }
+  @include vp-767 {
+    top: 4px;
+    right: 4px;
+  }
+}

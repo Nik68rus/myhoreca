@@ -71,7 +71,7 @@ const History = () => {
         <Heading level={3} className="mb-4">
           История операций
         </Heading>
-        <div className={cx('form__control', styles.date)}>
+        <div className={cx('form__control mb-7', styles.date)}>
           <label>Выберите дату</label>
           <Flatpickr
             value={date}
@@ -102,11 +102,11 @@ const History = () => {
         ) : (
           <ul className={cx('list', styles.list)}>
             <li>
-              <span className={styles.label}>Время</span>
-              <span className={styles.label}>Тип</span>
-              <span className={styles.label}>Оплата</span>
-              <span className={styles.label}>Скидка</span>
-              <span className={styles.label}>Сумма</span>
+              <span className="label">Время</span>
+              <span className="label">Тип</span>
+              <span className="label">Оплата</span>
+              <span className="label">Скидка</span>
+              <span className="label">Сумма</span>
             </li>
             {consumptions.length ? (
               consumptions.map((item) => (
@@ -119,7 +119,7 @@ const History = () => {
         )}
         {consumptions.length && !isFetching ? (
           <div className={styles.income}>
-            <span className={styles.total}>
+            <span className={cx(styles.total, 'mb-5')}>
               Итого: {total.toLocaleString('ru-RU')} руб
             </span>
             <span>
