@@ -30,7 +30,6 @@ export default async function handler(
         return res.status(200).json(authData);
       }
       throw ApiError.notAuthenticated('Пользователь не авторизован!');
-      // return res.redirect(Routes.HOME);
     } catch (err) {
       handleServerError(res, err);
     }

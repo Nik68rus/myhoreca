@@ -16,15 +16,13 @@ class UserService {
     const accessToken = await generateToken(
       userDataDto(user),
       process.env.JWT_ACCESS_SECRET,
-      // 60 * 60 * 14 //Токен валиден 14 часов
-      20
+      60 * 60 * 14 //Токен валиден 14 часов
     );
 
     const refreshToken = await generateToken(
       userDataDto(user),
       process.env.JWT_REFRESH_SECRET,
-      // 60 * 60 * 24 * 15 //Токен валиден 15 дней
-      60
+      60 * 60 * 24 * 15 //Токен валиден 15 дней
     );
 
     const result: IUserAuthData = {
