@@ -35,12 +35,6 @@ const History = () => {
   }, [error]);
 
   useEffect(() => {
-    if (data) {
-      refetch();
-    }
-  }, [date, data, refetch]);
-
-  useEffect(() => {
     if (isSuccess) {
       const items = woHidden ? data!.filter((item) => item.isSale) : data;
       setConsumptions(
