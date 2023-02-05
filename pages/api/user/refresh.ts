@@ -1,3 +1,4 @@
+import { Routes } from './../../../types/routes';
 import { getUser } from './../../../helpers/token';
 import { NextApiRequest, NextApiResponse } from 'next';
 import ApiError, { handleServerError } from '../../../helpers/error';
@@ -28,8 +29,8 @@ export default async function handler(
         const authData = await TokenService.refresh(refreshToken);
         return res.status(200).json(authData);
       }
-
       throw ApiError.notAuthenticated('Пользователь не авторизован!');
+      // return res.redirect(Routes.HOME);
     } catch (err) {
       handleServerError(res, err);
     }

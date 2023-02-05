@@ -35,8 +35,8 @@
   align-items: flex-start;
   // width: 50%;
 
-  @include mixins.vp-767 {
-    flex-direction: row;
-    gap: 20px;
-  }
+  // @include mixins.vp-767 {
+  //   flex-direction: row;
+  //   gap: 20px;
+  // }
 }

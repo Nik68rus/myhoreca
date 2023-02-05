@@ -89,6 +89,10 @@
   color: variables.$color-default-white;
   border-radius: 50%;
 
+  svg {
+    flex-shrink: 0;
+  }
+
   @include mixins.vp-767 {
     display: inline-flex;
     align-items: center;

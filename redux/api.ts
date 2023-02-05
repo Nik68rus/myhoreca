@@ -9,6 +9,7 @@ import {
   retry,
 } from '@reduxjs/toolkit/query/react';
 import { deleteCookie } from '../helpers/cookies';
+import { resetAuth } from './slices/userSlice';
 
 const baseQuery = fetchBaseQuery({ baseUrl: `api/` });
 
@@ -34,6 +35,7 @@ const baseQueryWithReauth: BaseQueryFn<
     } else {
       deleteCookie('accessToken');
       deleteCookie('refreshToken');
+      api.dispatch(resetAuth());
     }
   }
 
@@ -54,7 +56,7 @@ export const api = createApi({
     'ItemCup',
     'Group',
   ],
-  // baseQuery: baseQueryWithReauth,
-  baseQuery,
+  baseQuery: baseQueryWithReauth,
+  // baseQuery,
   endpoints: () => ({}),
 });
