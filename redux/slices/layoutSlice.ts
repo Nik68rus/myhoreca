@@ -8,7 +8,7 @@ export interface LayoutState {
 }
 
 const initialState: LayoutState = {
-  activeSection: Section.ITEMS,
+  activeSection: Section.SALES,
   menuOpen: false,
 };
 
