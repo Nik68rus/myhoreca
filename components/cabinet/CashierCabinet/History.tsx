@@ -35,8 +35,10 @@ const History = () => {
   }, [error]);
 
   useEffect(() => {
-    refetch();
-  }, [date, refetch]);
+    if (data) {
+      refetch();
+    }
+  }, [date, data, refetch]);
 
   useEffect(() => {
     if (isSuccess) {
