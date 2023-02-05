@@ -22,10 +22,13 @@ const History = () => {
   const { activeShop } = useAppSelector((store) => store.shop);
 
   const { data, error, isSuccess, refetch, isFetching } =
-    useGetConsumptionsQuery({
-      shopId: activeShop!.id,
-      date: date.toISOString(),
-    });
+    useGetConsumptionsQuery(
+      {
+        shopId: activeShop?.id || 0,
+        date: date.toISOString(),
+      },
+      { skip: !activeShop }
+    );
 
   useEffect(() => {
     handleRTKQError(error);
