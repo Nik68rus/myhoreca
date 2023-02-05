@@ -24,23 +24,20 @@ const Menu = () => {
   const dispatch = useAppDispatch();
   const { menuOpen } = useAppSelector((store) => store.layout);
 
-  // const [deleteToken, { isSuccess, reset }] = useDeleteTokenMutation();
+  const [deleteToken, { isSuccess, reset }] = useDeleteTokenMutation();
 
   const logoutHandler = () => {
-    // deleteToken();
-    deleteCookie('accessToken');
-    deleteCookie('refreshToken');
-    dispatch(resetAuth());
+    deleteToken();
   };
 
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     deleteCookie('accessToken');
-  //     deleteCookie('refreshToken');
-  //     dispatch(resetAuth());
-  //     reset();
-  //   }
-  // }, [isSuccess, dispatch, reset]);
+  useEffect(() => {
+    if (isSuccess) {
+      deleteCookie('accessToken');
+      deleteCookie('refreshToken');
+      dispatch(resetAuth());
+      reset();
+    }
+  }, [isSuccess, dispatch, reset]);
 
   const selectHandler = (sectionId: Section) => {
     dispatch(setActiveSection(sectionId));

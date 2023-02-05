@@ -101,14 +101,17 @@ const Header = () => {
             <>
               <User name={authData.name} role={authData.role} />
               <button
-                className={cx('button button--heavy', styles.exitBtn)}
+                className={cx('button button--heavy', styles.headerBtn)}
                 onClick={logoutHandler}
               >
                 Выйти
               </button>
             </>
           ) : (
-            <Link href={Routes.LOGIN} className="button button--heavy">
+            <Link
+              href={Routes.LOGIN}
+              className={cx('button button--heavy', styles.headerBtn)}
+            >
               Войти
             </Link>
           )}
