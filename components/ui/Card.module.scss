@@ -1,7 +1,13 @@
 @use '../../styles/variables.scss';
+@use '../../styles/mixins.scss';
+
 .card {
   padding: 16px 20px;
   border-radius: variables.$border-radius-l;
   background-color: variables.$color-default-white;
   box-shadow: variables.$card-shadow;
+
+  @include mixins.vp-767 {
+    padding: 10px;
+  }
 }

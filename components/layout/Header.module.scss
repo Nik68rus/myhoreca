@@ -94,6 +94,6 @@
 
 .exitBtn {
   @include mixins.vp-767 {
-    display: none;
+    padding: 6px;
   }
 }
