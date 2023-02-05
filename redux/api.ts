@@ -54,6 +54,7 @@ export const api = createApi({
     'ItemCup',
     'Group',
   ],
-  baseQuery: baseQueryWithReauth,
+  // baseQuery: baseQueryWithReauth,
+  baseQuery,
   endpoints: () => ({}),
 });

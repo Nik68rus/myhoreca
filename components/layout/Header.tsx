@@ -26,24 +26,27 @@ const Header = () => {
   const isMain = router.pathname === '/';
   const isAccount = router.pathname === Routes.ACCOUNT;
 
-  const [deleteToken, { isSuccess, reset }] = useDeleteTokenMutation();
+  // const [deleteToken, { isSuccess, reset }] = useDeleteTokenMutation();
 
   const menuToggleHandler = () => {
     dispatch(toggleMenu(!menuOpen));
   };
 
   const logoutHandler = () => {
-    deleteToken();
+    // deleteToken();
+    deleteCookie('accessToken');
+    deleteCookie('refreshToken');
+    dispatch(resetAuth());
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      deleteCookie('accessToken');
-      deleteCookie('refreshToken');
-      dispatch(resetAuth());
-      reset();
-    }
-  }, [isSuccess, dispatch, reset]);
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     deleteCookie('accessToken');
+  //     deleteCookie('refreshToken');
+  //     dispatch(resetAuth());
+  //     reset();
+  //   }
+  // }, [isSuccess, dispatch, reset]);
 
   useEffect(() => {
     const breakpointSm = window.matchMedia('(max-width: 767px)');
