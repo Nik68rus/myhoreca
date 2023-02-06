@@ -7,10 +7,9 @@
   background-color: variables.$color-default-white;
   border-top: variables.$border-light;
 
-  // @include mixins.vp-767 {
-  //   padding-top: 6px;
-  //   padding-bottom: 6px;
-  // }
+  @include mixins.vp-767 {
+    padding-bottom: 10px;
+  }
 }
 
 .container {
