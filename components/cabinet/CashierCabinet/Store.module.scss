@@ -31,8 +31,6 @@
 .tabs {
   max-width: calc(100vw - 490px);
 
-  @include mixins.hidden-scrollbar;
-
   @include mixins.vp-767 {
     max-width: 100%;
   }

@@ -2,14 +2,15 @@
   display: flex;
   gap: 20px;
   position: relative;
-  overflow: auto;
+  overflow-x: auto;
+  @include hidden-scrollbar;
 
   &::after {
     content: '';
     position: absolute;
     left: -30px;
     right: -30px;
-    bottom: -1px;
+    bottom: 1px;
     height: 1px;
     background-color: $color-border-light;
   }
@@ -34,7 +35,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    bottom: -2px;
+    bottom: 1px;
     height: 3px;
     background-color: $color-neon-blue;
     z-index: 2;
