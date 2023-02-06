@@ -96,6 +96,11 @@
   input {
     width: 24px;
     height: 24px;
+
+    @include mixins.vp-767 {
+      width: 18px;
+      height: 18px;
+    }
   }
 }
 
