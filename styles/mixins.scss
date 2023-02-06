@@ -73,3 +73,14 @@
     @content;
   }
 }
+
+@mixin hidden-scrollbar {
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background: transparent; /* make scrollbar transparent */
+  }
+
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}

@@ -35,13 +35,14 @@
 .cashierFooter {
   @include mixins.vp-767 {
     position: fixed;
-    top: 50px;
+    top: 45px;
     left: 0;
     width: 100%;
     height: auto;
     transform: translateY(-100%);
     transition: transform variables.$trans-default;
     z-index: 9;
+    border-bottom: 2px solid variables.$color-input-focus;
 
     &.cfOpened {
       transform: translateY(0);

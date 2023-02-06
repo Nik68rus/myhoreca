@@ -27,3 +27,13 @@
   margin-bottom: 2px;
   color: variables.$color-torch-red;
 }
+
+.tabs {
+  max-width: calc(100vw - 468px);
+
+  @include mixins.hidden-scrollbar;
+
+  @include mixins.vp-767 {
+    max-width: 100%;
+  }
+}

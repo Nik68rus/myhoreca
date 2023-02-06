@@ -38,7 +38,7 @@ const Store = () => {
     isLoading,
   } = useGetArrivalsQuery(activeShop ? activeShop.id : 0, {
     skip: !activeShop,
-    pollingInterval: 60000,
+    pollingInterval: 600000,
   });
 
   const {
@@ -95,7 +95,7 @@ const Store = () => {
                 Внимание! Вы в режиме списания!
               </Heading>
             ) : (
-              <div className="tabs">
+              <div className={cx('tabs', styles.tabs)}>
                 {categories &&
                   categories.map((cat) => (
                     <button
