@@ -126,4 +126,4 @@ const StockItem = ({ item }: Props) => {
   );
 };
 
-export default StockItem;
+export default React.memo(StockItem);

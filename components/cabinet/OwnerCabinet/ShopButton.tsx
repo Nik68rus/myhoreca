@@ -18,6 +18,7 @@ const ShopButton = ({ shop, onAdd }: Props) => {
   const clickHandler = (shop: IShop) => {
     dispatch(setActiveShop(shop));
   };
+
   if (shop) {
     return (
       <button
@@ -48,4 +49,4 @@ const ShopButton = ({ shop, onAdd }: Props) => {
   return null;
 };
 
-export default ShopButton;
+export default React.memo(ShopButton);

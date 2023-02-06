@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { handleRTKQError } from '../../helpers/error';
 import { useGetCategoriesQuery } from '../../redux/api/category';
@@ -43,6 +43,18 @@ const EditGroupModal = ({ onClose, id, title, categoryId }: Props) => {
     editGroup({ id, title: newTitle, categoryId: newCatId });
   };
 
+  const inputChangeHandler: React.ChangeEventHandler<HTMLInputElement> =
+    useCallback((e) => {
+      setNewTitle(e.target.value);
+    }, []);
+
+  const catSelectHandler = useCallback(
+    (cat: { id: number; title: string } | null) => {
+      setNewCatId(cat?.id || categoryId);
+    },
+    [categoryId]
+  );
+
   return (
     <>
       {isLoading && <Spinner />}
@@ -56,7 +68,7 @@ const EditGroupModal = ({ onClose, id, title, categoryId }: Props) => {
                 type="text"
                 id="title"
                 value={newTitle}
-                onChange={(e) => setNewTitle(e.target.value)}
+                onChange={inputChangeHandler}
                 placeholder="Введите название"
                 hint="Не менее 3 символов"
               />
@@ -65,7 +77,7 @@ const EditGroupModal = ({ onClose, id, title, categoryId }: Props) => {
                   className="mb-2"
                   items={categories}
                   label="Категория: "
-                  onSelect={(cat) => setNewCatId(cat?.id || categoryId)}
+                  onSelect={catSelectHandler}
                   selected={categoryId}
                 />
               )}

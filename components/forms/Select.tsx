@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { FaCaretDown, FaCaretUp } from 'react-icons/fa';
 import styles from './Select.module.scss';
 import cx from 'classnames';
@@ -98,4 +98,4 @@ const Select = <T extends { id: number; title: string }>({
   );
 };
 
-export default Select;
+export default React.memo(Select);

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import cx from 'classnames';
 import { Routes } from '../../types/routes';
 import styles from './Header.module.scss';
@@ -18,7 +18,7 @@ const Header = () => {
   const router = useRouter();
   const { authData } = useAppSelector((store) => store.user);
   const { activeShop } = useAppSelector((store) => store.shop);
-  const { menuOpen } = useAppSelector((store) => store.layout);
+  const menuOpen = useAppSelector((store) => store.layout.menuOpen);
   const dispatch = useAppDispatch();
   const [shopModalVisible, setShopModalVisible] = useState(false);
   const [short, setShort] = useState(false);
@@ -34,10 +34,15 @@ const Header = () => {
 
   const logoutHandler = () => {
     deleteToken();
-    // deleteCookie('accessToken');
-    // deleteCookie('refreshToken');
-    // dispatch(resetAuth());
   };
+
+  const modalOpenHandler = useCallback(() => {
+    setShopModalVisible(true);
+  }, []);
+
+  const modalCloseHandler = useCallback(() => {
+    setShopModalVisible(false);
+  }, []);
 
   useEffect(() => {
     if (isSuccess) {
@@ -82,7 +87,7 @@ const Header = () => {
               <span className={styles.label}>Выбрана точка:</span>
               <button
                 className="button button--text"
-                onClick={() => setShopModalVisible(true)}
+                onClick={modalOpenHandler}
               >
                 {activeShop ? activeShop.title : 'Выбрать'}
               </button>
@@ -117,9 +122,7 @@ const Header = () => {
           )}
         </div>
       </div>
-      {shopModalVisible && (
-        <SelectShopModal onClose={() => setShopModalVisible(false)} />
-      )}
+      {shopModalVisible && <SelectShopModal onClose={modalCloseHandler} />}
     </header>
   );
 };

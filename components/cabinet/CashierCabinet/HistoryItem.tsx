@@ -52,4 +52,4 @@ const HistoryItem = ({ item }: Props) => {
   );
 };
 
-export default HistoryItem;
+export default React.memo(HistoryItem);

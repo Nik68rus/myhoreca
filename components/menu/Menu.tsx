@@ -22,7 +22,7 @@ const Menu = () => {
   const [collapsed, setCollapsed] = useState(false);
   const { authData } = useAppSelector((store) => store.user);
   const dispatch = useAppDispatch();
-  const { menuOpen } = useAppSelector((store) => store.layout);
+  const menuOpen = useAppSelector((store) => store.layout.menuOpen);
 
   const [deleteToken, { isSuccess, reset }] = useDeleteTokenMutation();
 

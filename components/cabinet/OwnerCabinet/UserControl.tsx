@@ -54,4 +54,4 @@ const UserControl = ({ user }: Props) => {
   );
 };
 
-export default UserControl;
+export default React.memo(UserControl);

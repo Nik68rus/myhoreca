@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './Group.module.scss';
 import { FaEdit, FaTimes } from 'react-icons/fa';
 import { useDeleteGroupMutation } from '../../../redux/api/group';
@@ -17,21 +17,29 @@ const Group = ({ id, title, category }: Props) => {
   const [deleteGroup, { isLoading: deleting, error: deleteError }] =
     useDeleteGroupMutation();
 
-  const editStartHandler = () => {
+  const editStartHandler = useCallback(() => {
     setEditMode(true);
-  };
+  }, []);
 
-  const deleteHandler = () => {
+  const deleteHandler = useCallback(() => {
     deleteGroup(id);
-  };
+  }, [deleteGroup, id]);
 
   useEffect(() => {
     handleRTKQError(deleteError);
   }, [deleteError]);
 
+  const modalOpenHandler = useCallback(() => {
+    setEditMode(true);
+  }, []);
+
+  const modalCloseHandler = useCallback(() => {
+    setEditMode(false);
+  }, []);
+
   return (
     <li className={styles.group}>
-      <button className={styles.button} onClick={() => setEditMode(true)}>
+      <button className={styles.button} onClick={modalOpenHandler}>
         <FaEdit />
       </button>
       <div className={styles.info}>
@@ -43,7 +51,7 @@ const Group = ({ id, title, category }: Props) => {
       </button>
       {editMode && (
         <EditGroupModal
-          onClose={() => setEditMode(false)}
+          onClose={modalCloseHandler}
           id={id}
           title={title}
           categoryId={category.id}
@@ -53,4 +61,4 @@ const Group = ({ id, title, category }: Props) => {
   );
 };
 
-export default Group;
+export default React.memo(Group);

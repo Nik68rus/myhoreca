@@ -5,13 +5,13 @@
   display: flex;
   gap: 20px;
   // width: 350px;
-  padding: 0 20px;
+  padding: 5px 20px;
   color: variables.$color-neon-blue;
   margin-left: auto;
 
   @include mixins.vp-767 {
     width: 100%;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding: 0 20px;
   }
 }
@@ -37,5 +37,6 @@
 
   @include mixins.vp-767 {
     font-size: 15px;
+    margin-left: auto;
   }
 }

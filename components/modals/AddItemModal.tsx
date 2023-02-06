@@ -84,13 +84,13 @@ const AddItemModal = ({ onClose, categories, item }: Props) => {
     setFormData({ ...formData, [name]: checked });
   };
 
-  const selectHandler = (cat: ICategory | null) => {
+  const selectHandler = (cat: { id: number; title: string } | null) => {
     if (cat) {
       setFormData({ ...formData, categoryId: cat.id });
     }
   };
 
-  const cupSelectHandler = (cup: null | ICup) => {
+  const cupSelectHandler = (cup: null | { id: number; title: string }) => {
     if (cup) {
       setFormData({ ...formData, cupId: cup.id });
     } else {

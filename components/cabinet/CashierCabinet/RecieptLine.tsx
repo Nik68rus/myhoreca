@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   calculateTotal,
   changeItemToGo,
@@ -8,13 +8,11 @@ import {
   toggleSyrup,
 } from '../../../redux/slices/recieptSlice';
 import styles from './RecieptLine.module.scss';
-import cx from 'classnames';
 import { FaMinus, FaTimes } from 'react-icons/fa';
 import { BiCoffee, BiCoffeeTogo } from 'react-icons/bi';
 import { useAppDispatch, useAppSelector } from '../../../hooks/store';
 import { CashierSection } from '../../../types/sections';
 import { TbDroplet, TbDropletOff } from 'react-icons/tb';
-import { TfiSplitV } from 'react-icons/tfi';
 
 interface Props {
   item: IRecieptPosition;
@@ -24,33 +22,40 @@ const RecieptLine = ({ item }: Props) => {
   const [editing, setEditing] = useState(false);
   const dispatch = useAppDispatch();
   const { activeSection } = useAppSelector((store) => store.layout);
-  const { discount } = useAppSelector((store) => store.reciept);
+  const discount = useAppSelector((store) => store.reciept.discount);
 
   const isWriteoff = activeSection === CashierSection.WRITEOFF;
 
-  const minusHandler: React.MouseEventHandler<HTMLButtonElement> = (e) => {
-    e.stopPropagation();
-    dispatch(removeItem(item));
-    dispatch(calculateTotal());
-  };
+  const minusHandler: React.MouseEventHandler<HTMLButtonElement> = useCallback(
+    (e) => {
+      e.stopPropagation();
+      dispatch(removeItem(item));
+      dispatch(calculateTotal());
+    },
+    [dispatch, item]
+  );
 
-  const deleteHandler = () => {
+  const deleteHandler = useCallback(() => {
     dispatch(removeLine(item.line));
     dispatch(calculateTotal());
     setEditing(false);
-  };
+  }, [dispatch, item.line]);
 
-  const togoHandler = () => {
+  const togoHandler = useCallback(() => {
     dispatch(changeItemToGo(item.line));
     setEditing(false);
-  };
+  }, [dispatch, item.line]);
 
-  const syrupHandler = () => {
+  const syrupHandler = useCallback(() => {
     dispatch(toggleSyrup(item.line));
     dispatch(calculateTotal());
-  };
+  }, [dispatch, item.line]);
 
-  const getQuantityMarkup = () => {
+  const itemClickHandler = useCallback(() => {
+    setEditing(!editing);
+  }, [editing]);
+
+  const quantityMarkup = useMemo(() => {
     if (isWriteoff) {
       return <span className={styles.quantity}>{item.quantity}</span>;
     } else if (item.quantity > 1) {
@@ -58,21 +63,21 @@ const RecieptLine = ({ item }: Props) => {
     } else {
       return null;
     }
-  };
+  }, [isWriteoff, item.quantity]);
 
   const currentPrice = discount
     ? item.price * item.quantity * item.discount
     : item.price * item.quantity;
 
   return (
-    <li className={styles.line} onClick={() => setEditing(!editing)}>
+    <li className={styles.line} onClick={itemClickHandler}>
       <span className={styles.title}>
         {item.title}
         {item.toGo && item.cupId ? ' 🥤' : ''}
         {item.withSyrup && item.cupId ? ' 💧' : ''}
       </span>
 
-      {getQuantityMarkup()}
+      {quantityMarkup}
       {!isWriteoff && (
         <span className={styles.price}>{Math.ceil(currentPrice)}</span>
       )}
@@ -92,11 +97,6 @@ const RecieptLine = ({ item }: Props) => {
           >
             <FaTimes />
           </button>
-          {/* {item.quantity > 1 && (
-            <button className="button button--icon">
-              <TfiSplitV />
-            </button>
-          )} */}
           {!isWriteoff && item.cupId && (
             <>
               <button
@@ -121,4 +121,4 @@ const RecieptLine = ({ item }: Props) => {
   );
 };
 
-export default RecieptLine;
+export default React.memo(RecieptLine);

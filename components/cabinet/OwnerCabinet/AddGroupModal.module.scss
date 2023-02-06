@@ -1,0 +1,16 @@
+@use '../../../styles/mixins.scss';
+
+.form {
+  align-items: center;
+  flex-wrap: wrap;
+
+  @include mixins.vp-767 {
+    :global(.form__control) {
+      width: 100%;
+    }
+
+    button {
+      margin-left: auto;
+    }
+  }
+}

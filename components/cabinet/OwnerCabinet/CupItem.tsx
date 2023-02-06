@@ -105,4 +105,4 @@ const CupItem = ({ id, title }: Props) => {
   );
 };
 
-export default CupItem;
+export default React.memo(CupItem);

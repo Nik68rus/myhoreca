@@ -1,0 +1,26 @@
+@use '../../../styles/variables.scss';
+@use '../../../styles/mixins.scss';
+
+.search {
+  position: relative;
+
+  :global(.form__control) {
+    margin-bottom: 0;
+  }
+
+  input {
+    padding-left: 36px;
+  }
+
+  svg {
+    position: absolute;
+    top: 50%;
+    left: 30px;
+    transform: translateY(-50%);
+    color: variables.$color-text-muted;
+
+    @include mixins.vp-767 {
+      left: 20px;
+    }
+  }
+}

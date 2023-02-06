@@ -9,9 +9,8 @@ import Card from '../../ui/Card';
 import Item from './Item';
 import styles from './Items.module.scss';
 import cx from 'classnames';
-import FormControl from '../../forms/FormControl';
 import { IItem } from '../../../models/item';
-import { FaSearch } from 'react-icons/fa';
+import Search from './Search';
 
 const Items = () => {
   const [itemModalVisible, setItemModalVisible] = useState(false);
@@ -107,17 +106,7 @@ const Items = () => {
       {isLoading && <Spinner block={true} />}
       {!isLoading && (
         <>
-          <Card className={cx('mb-3', styles.search)}>
-            <form onSubmit={(e) => e.preventDefault()}>
-              <FormControl
-                id="search"
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <FaSearch />
-            </form>
-          </Card>
+          <Search searchHandler={(term) => setSearchTerm(term)} />
           <Card>
             {searchTerm.trim().length > 2
               ? getFilteredList()

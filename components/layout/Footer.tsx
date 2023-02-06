@@ -12,7 +12,7 @@ const Footer = () => {
   const router = useRouter();
   const { authData } = useAppSelector((store) => store.user);
   const { activeShop } = useAppSelector((store) => store.shop);
-  const { menuOpen } = useAppSelector((store) => store.layout);
+  const menuOpen = useAppSelector((store) => store.layout.menuOpen);
   const isMain = router.pathname === Routes.HOME;
 
   return (

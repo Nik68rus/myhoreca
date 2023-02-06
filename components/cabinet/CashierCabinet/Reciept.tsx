@@ -84,16 +84,17 @@ const Reciept = () => {
     }
   };
 
-  const payChangeHandler: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    if (e.target.id === 'byCard') {
-      setByCard(e.target.checked);
-      setIsTransfer(false);
-    }
-    if (e.target.id === 'isTransfer') {
-      setIsTransfer(e.target.checked);
-      setByCard(false);
-    }
-  };
+  const payChangeHandler: React.ChangeEventHandler<HTMLInputElement> =
+    useCallback((e) => {
+      if (e.target.id === 'byCard') {
+        setByCard(e.target.checked);
+        setIsTransfer(false);
+      }
+      if (e.target.id === 'isTransfer') {
+        setIsTransfer(e.target.checked);
+        setByCard(false);
+      }
+    }, []);
 
   const clearHandler = useCallback(() => {
     dispatch(removeAll());
@@ -140,10 +141,21 @@ const Reciept = () => {
     makeConsumption(data);
   };
 
-  const discountHandler: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    dispatch(setDiscount(e.target.checked));
-    dispatch(calculateTotal());
-  };
+  const discountHandler: React.ChangeEventHandler<HTMLInputElement> =
+    useCallback(
+      (e) => {
+        dispatch(setDiscount(e.target.checked));
+        dispatch(calculateTotal());
+      },
+      [dispatch]
+    );
+
+  const toGoHandler: React.ChangeEventHandler<HTMLInputElement> = useCallback(
+    (e) => {
+      dispatch(setAllToGo(e.target.checked));
+    },
+    [dispatch]
+  );
 
   return (
     <>
@@ -210,7 +222,7 @@ const Reciept = () => {
                     id="toGo"
                     className={styles.checkbox}
                     checked={isToGo}
-                    onChange={(e) => dispatch(setAllToGo(e.target.checked))}
+                    onChange={toGoHandler}
                   />
                 </div>
               </>

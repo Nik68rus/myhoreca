@@ -1,5 +1,3 @@
-@use '../../../styles/mixins.scss';
-
 .discounts {
   :global(.form) {
     max-width: none;
@@ -10,22 +8,6 @@
 
     *:first-child {
       margin-right: auto;
-    }
-  }
-}
-
-.buttons {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  gap: 4px;
-}
-
-.addForm {
-  @include mixins.vp-767 {
-    :global(.form__group) {
-      flex-direction: column;
-      gap: 12px;
     }
   }
 }

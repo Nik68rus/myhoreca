@@ -110,4 +110,4 @@ const DiscountItem = ({ item }: Props) => {
   );
 };
 
-export default DiscountItem;
+export default React.memo(DiscountItem);

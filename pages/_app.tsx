@@ -15,7 +15,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <Provider store={store}>
       <Layout>
         <Head>
-          <title>My HoReCa</title>
+          <title>Круассан</title>
           <meta
             name="viewport"
             content="initial-scale=1.0, width=device-width"

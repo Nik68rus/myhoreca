@@ -15,4 +15,4 @@ const Heading = ({ level, children, className }: HeadingProps) =>
     children
   );
 
-export default Heading;
+export default React.memo(Heading);

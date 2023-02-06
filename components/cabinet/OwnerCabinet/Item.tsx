@@ -6,7 +6,6 @@ import { useGetCategoriesQuery } from '../../../redux/api/category';
 import { useEditItemMutation } from '../../../redux/api/item';
 import Spinner from '../../layout/Spinner';
 import AddItemModal from '../../modals/AddItemModal';
-// import { IItemWithCategory } from '../../../types/item';
 import IncomeModal from '../../modals/IncomeModal';
 import Position from '../../Position';
 import styles from './Item.module.scss';
@@ -83,4 +82,4 @@ const Item = ({ item }: Props) => {
   );
 };
 
-export default Item;
+export default React.memo(Item);
