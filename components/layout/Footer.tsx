@@ -19,7 +19,8 @@ const Footer = () => {
     <footer
       className={cx(styles.footer, {
         [styles.fixedFooter]: isMain,
-        [styles.cashierFooter]: authData && authData.role === UserRole.CASHIER,
+        [styles.cashierFooter]:
+          authData && authData.role === UserRole.CASHIER && !isMain,
         [styles.cfOpened]:
           authData && authData.role === UserRole.CASHIER && menuOpen,
       })}
