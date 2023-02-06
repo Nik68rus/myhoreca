@@ -11,7 +11,7 @@ const Hero = () => {
   return (
     <section className={styles.hero}>
       <div className={styles.bgVideo}>
-        <video autoPlay muted loop className={styles.video}>
+        <video autoPlay muted loop playsInline className={styles.video}>
           <source src="./assets/intro.mp4" type="video/mp4" />
         </video>
       </div>
