@@ -38,7 +38,7 @@ const Store = () => {
     isLoading,
   } = useGetArrivalsQuery(activeShop ? activeShop.id : 0, {
     skip: !activeShop,
-    pollingInterval: 600000,
+    refetchOnFocus: true,
   });
 
   const {

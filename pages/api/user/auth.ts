@@ -22,6 +22,7 @@ export default async function handler(
       return res.status(200).json(userData);
     } catch (err) {
       return res.status(401).json('Пользователь не авторизован');
+      // console.log(err);
     }
   }
   if (req.method === 'POST') {

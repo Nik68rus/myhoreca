@@ -16,7 +16,10 @@ const Stock = () => {
     isLoading,
     error,
     isFetching,
-  } = useGetArrivalsQuery(activeShop?.id || 0, { skip: activeShop === null });
+  } = useGetArrivalsQuery(activeShop?.id || 0, {
+    skip: activeShop === null,
+    refetchOnFocus: true,
+  });
 
   useEffect(() => {
     handleRTKQError(error);

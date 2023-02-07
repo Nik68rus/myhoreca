@@ -43,6 +43,7 @@ const Reciept = () => {
 
   const { data: lastReciept } = useGetLastQuery(activeShop?.id || 0, {
     skip: activeShop === null,
+    refetchOnFocus: true,
   });
 
   const { data: shopSyrup } = useGetSyrupQuery(activeShop?.id || 0, {
