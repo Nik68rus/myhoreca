@@ -11,7 +11,7 @@ const DayMoney = () => {
 
   const { data, error, isSuccess, refetch } = useGetStatQuery(
     activeShop?.id || 0,
-    { skip: !activeShop }
+    { skip: !activeShop, refetchOnFocus: true }
   );
 
   useEffect(() => {
@@ -26,9 +26,9 @@ const DayMoney = () => {
 
   return (
     <div className={styles.money}>
-      <button className="button button--icon" onClick={() => refetch()}>
+      {/* <button className="button button--icon" onClick={() => refetch()}>
         <BiRefresh />
-      </button>
+      </button> */}
       <div className={styles.total}>
         {stat.total.toLocaleString('ru-Ru')} руб
       </div>
