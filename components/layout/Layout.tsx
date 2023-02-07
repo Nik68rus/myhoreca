@@ -21,13 +21,6 @@ const Layout = ({ children }: Props) => {
   const router = useRouter();
   const isAccount = router.pathname === Routes.ACCOUNT;
   useCheckUserAuthQuery();
-  // const {
-  //   data: refreshData,
-  //   isLoading,
-  //   isError,
-  //   isSuccess: refreshSuccess,
-  // } = useRefreshTokensQuery();
-
   const dispatch = useAppDispatch();
   const { authData } = useAppSelector((store) => store.user);
   const { data, isSuccess } = useGetShopsQuery();
@@ -35,22 +28,6 @@ const Layout = ({ children }: Props) => {
   useEffect(() => {
     isSuccess && data.length && dispatch(setActiveShop(shopDto(data[0])));
   }, [isSuccess, data, dispatch]);
-
-  // useEffect(() => {
-  //   if (refreshData) {
-  //     dispatch(setAuth(refreshData));
-  //     deleteCookie('accessToken');
-  //     deleteCookie('refreshToken');
-  //     setCookie('accessToken', refreshData.accessToken);
-  //     setCookie('refreshToken', refreshData.refreshToken);
-  //   }
-  // }, [dispatch, refreshData]);
-
-  // useEffect(() => {
-  //   if (isError) {
-  //     router.push(Routes.LOGIN);
-  //   }
-  // }, [isError, router]);
 
   return (
     <div className="wrapper">
