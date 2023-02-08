@@ -19,52 +19,56 @@ import Link from 'next/link';
 import { AccountRoutes, Routes } from '../../types/routes';
 import { toggleMenu } from '../../redux/slices/layoutSlice';
 import { useRouter } from 'next/router';
+import { BsPieChartFill } from 'react-icons/bs';
+import { GiReceiveMoney } from 'react-icons/gi';
 
 const menuItems = [
   {
-    id: Section.SALES,
     title: Section.SALES,
     icon: <FaCashRegister />,
     path: AccountRoutes.SALES,
   },
   {
-    id: Section.ITEMS,
     title: Section.ITEMS,
     icon: <FaUtensils />,
     path: AccountRoutes.ITEMS,
   },
   {
-    id: Section.STOCK,
     title: Section.STOCK,
     icon: <FaBoxes />,
     path: AccountRoutes.STOCK,
   },
   {
-    id: Section.DISCOUNT,
+    title: Section.STAT,
+    icon: <BsPieChartFill />,
+    path: AccountRoutes.STAT,
+  },
+  {
+    title: Section.SALARY,
+    icon: <GiReceiveMoney />,
+    path: AccountRoutes.SALARY,
+  },
+  {
     title: Section.DISCOUNT,
     icon: <FaPercent />,
     path: AccountRoutes.DISCOUNT,
   },
   {
-    id: Section.GROUPS,
     title: Section.GROUPS,
     icon: <FaLayerGroup />,
     path: AccountRoutes.GROUPS,
   },
   {
-    id: Section.CUPS,
     title: Section.CUPS,
     icon: <BiCoffeeTogo />,
     path: AccountRoutes.CUPS,
   },
   {
-    id: Section.EMPLOYYES,
     title: Section.EMPLOYYES,
     icon: <FaUsers />,
     path: AccountRoutes.EMPLOYEES,
   },
   {
-    id: Section.SHOPS,
     title: Section.SHOPS,
     icon: <FaStore />,
     path: AccountRoutes.SHOPS,
@@ -83,7 +87,7 @@ const OwnerMenu = () => {
   return (
     <ul className={styles.list}>
       {menuItems.map((item) => (
-        <li key={item.id} className={styles.item}>
+        <li key={item.title} className={styles.item}>
           <Link
             className={cx(styles.button, {
               [styles.buttonActive]:

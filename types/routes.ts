@@ -19,6 +19,8 @@ export enum AccountRoutes {
   EMPLOYEES = 'employess',
   SHOPS = 'shops',
   STOCK = 'stock',
+  STAT = 'stat',
+  SALARY = 'salary',
 
   //cashier
   WRITEOFF = 'writeoff',

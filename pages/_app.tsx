@@ -1,6 +1,7 @@
 import { Provider } from 'react-redux';
 import '../styles/style.scss';
 import 'react-toastify/dist/ReactToastify.css';
+import 'flatpickr/dist/themes/material_blue.css';
 import type { AppProps } from 'next/app';
 import Layout from '../components/layout/Layout';
 import Head from 'next/head';

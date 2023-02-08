@@ -1,4 +1,4 @@
-import { IConsumptionItem } from './../models/consumptionItem';
+import { HistoryParams } from './../pages/api/consumption/index';
 import {
   IConsumptionInput,
   IConsumptionWithItem,
@@ -7,7 +7,11 @@ import {
 import ApiError from '../helpers/error';
 import db from '../models';
 import { Op } from 'sequelize';
-import { IItem } from '../models/item';
+import { IConsumption } from '../models/consumption';
+
+export interface DetailedConsumption extends IConsumption {
+  ['consumption-items']: IConsumptionWithItem[];
+}
 
 class ConsumptionService {
   async consume(saleInfo: IConsumptionInput, userId: number) {
@@ -60,7 +64,7 @@ class ConsumptionService {
     }
   }
 
-  async getHistory({ shopId, date }: { shopId: number; date: Date }) {
+  async getHistory({ shopId, date, categoryId }: HistoryParams) {
     await db.sequelize.authenticate();
     await db.sequelize.sync();
 
@@ -77,6 +81,34 @@ class ConsumptionService {
       order: [['createdAt', 'ASC']],
     });
     return items;
+  }
+
+  async getCatHistory({ shopId, date, categoryId }: HistoryParams) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
+    const dayStart = new Date(date.setHours(0, 0));
+    const dayEnd = new Date(date.setHours(23, 59));
+
+    const items = (await db.consumptions.findAll({
+      where: {
+        shopId,
+        isSale: true,
+        createdAt: {
+          [Op.between]: [dayStart, dayEnd],
+        },
+      },
+      include: [
+        {
+          model: db.consumptionItems,
+          required: true,
+          include: [{ model: db.items, where: { categoryId } }],
+        },
+      ],
+    })) as DetailedConsumption[];
+
+    const result = items.flatMap((item) => item['consumption-items']);
+    return result;
   }
 
   async getReciept(consumptionId: number) {

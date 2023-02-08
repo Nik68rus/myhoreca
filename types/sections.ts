@@ -7,6 +7,8 @@ export enum Section {
   DISCOUNT = 'Скидки',
   GROUPS = 'Группы',
   CUPS = 'Стаканчики',
+  STAT = 'Статистика',
+  SALARY = 'Зарплата',
 }
 
 export enum CashierSection {

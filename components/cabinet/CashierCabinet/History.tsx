@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import 'flatpickr/dist/themes/material_blue.css';
 import Flatpickr from 'react-flatpickr';
 import Card from '../../ui/Card';
 import styles from './History.module.scss';

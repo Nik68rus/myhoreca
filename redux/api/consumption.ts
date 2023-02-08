@@ -31,6 +31,16 @@ export const consumptionApi = api.injectEndpoints({
       providesTags: ['Consumption'],
     }),
 
+    //получение продаж магазина по категории
+    getConsumptionsByCat: builder.query<
+      IConsumptionWithItem[],
+      { shopId: number; date: string; categoryId: number }
+    >({
+      query: ({ shopId, date, categoryId }) =>
+        `consumption?shopId=${shopId}&date=${date}&categoryId=${categoryId}`,
+      providesTags: ['Consumption'],
+    }),
+
     //получение всех позиций чека
     getRecieptDetails: builder.query<IConsumptionWithItem[], number>({
       query: (consumptionId) => `consumption/${consumptionId}`,
@@ -57,6 +67,7 @@ export const consumptionApi = api.injectEndpoints({
 export const {
   useCreateConsumptionMutation,
   useGetConsumptionsQuery,
+  useGetConsumptionsByCatQuery,
   useGetRecieptDetailsQuery,
   useGetStatQuery,
   useGetLastQuery,
