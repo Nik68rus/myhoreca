@@ -17,12 +17,17 @@ interface IStatItem {
   quantity: number;
 }
 
+enum SortType {
+  ABC = 'abc',
+  QTY = 'qty',
+}
+
 const StatCat = () => {
   const [catId, setCatId] = useState<number | null>(null);
-  const [date, setDate] = useState(new Date());
   const [from, setFrom] = useState(new Date());
   const [to, setTo] = useState(new Date());
   const [items, setItems] = useState<IStatItem[]>([]);
+  const [sorting, setSorting] = useState(SortType.ABC);
 
   const { activeShop } = useAppSelector((store) => store.shop);
 
@@ -66,9 +71,15 @@ const StatCat = () => {
           adoptedData[index].quantity += sale.quantity;
         }
       });
-      setItems(adoptedData.sort((a, b) => a.title.localeCompare(b.title)));
+      setItems(
+        adoptedData.sort((a, b) =>
+          sorting === SortType.ABC
+            ? a.title.localeCompare(b.title)
+            : b.quantity - a.quantity
+        )
+      );
     }
-  }, [data]);
+  }, [data, sorting]);
 
   useEffect(() => {
     if (categories?.length) {
@@ -81,16 +92,19 @@ const StatCat = () => {
     handleRTKQError(error);
   }, [catError, error]);
 
+  const dateChangeHandler = useCallback(
+    (period: { start: Date; end: Date }) => {
+      setFrom(period.start);
+      setTo(period.end);
+    },
+    []
+  );
+
   return (
     <>
       {catLoading && <Spinner />}
       <div>
-        <DatePicker
-          onChange={(period) => {
-            setFrom(period.start);
-            setTo(period.end);
-          }}
-        />
+        <DatePicker onChange={dateChangeHandler} />
         {categories && (
           <Select
             items={categories}
@@ -101,41 +115,6 @@ const StatCat = () => {
           />
         )}
 
-        {/* <div className={cx('form__group pb-8 mb-8', styles.filter)}>
-          <div className="form__control">
-            <label>Выберите дату</label>
-            <Flatpickr
-              value={date}
-              options={{
-                dateFormat: 'j F Y',
-              }}
-              onChange={(dates) => {
-                setDate(dates[0]);
-              }}
-            />
-          </div>
-          <div className="form__control">
-            <label>Выберите дату</label>
-            <Flatpickr
-              value={date}
-              options={{
-                dateFormat: 'j F Y',
-              }}
-              onChange={(dates) => {
-                setDate(dates[0]);
-              }}
-            />
-          </div>
-          {categories && (
-            <Select
-              className="mb-2"
-              items={categories}
-              label="Категория: "
-              onSelect={catSelectHandler}
-              selected={catId || null}
-            />
-          )}
-        </div> */}
         <Heading level={4} className="mb-5">
           Продано:
         </Heading>
@@ -143,12 +122,32 @@ const StatCat = () => {
           <Spinner block={true} />
         ) : (
           <ul className="list">
-            {items.map((item) => (
-              <li key={item.itemId} className={styles.line}>
-                <span>{item.title}</span>
-                <span className={styles.quantity}>* {item.quantity}</span>
-              </li>
-            ))}
+            {items.length ? (
+              <>
+                <li className={styles.line}>
+                  <span
+                    className={cx('label', styles.columnHead)}
+                    onClick={() => setSorting(SortType.ABC)}
+                  >
+                    Наименование
+                  </span>
+                  <span
+                    className={cx('label', styles.quantity, styles.columnHead)}
+                    onClick={() => setSorting(SortType.QTY)}
+                  >
+                    кол-во
+                  </span>
+                </li>
+                {items.map((item) => (
+                  <li key={item.itemId} className={styles.line}>
+                    <span>{item.title}</span>
+                    <span className={styles.quantity}>* {item.quantity}</span>
+                  </li>
+                ))}
+              </>
+            ) : (
+              <li>Ничего не найдено!</li>
+            )}
           </ul>
         )}
       </div>

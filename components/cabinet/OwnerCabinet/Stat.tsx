@@ -8,6 +8,7 @@ enum StatSection {
   ITEM = 'Товары',
   WRITEOFF = 'Списания',
   DISCOUNT = 'Скидки',
+  MONEY = 'Деньги',
 }
 
 const sections: StatSection[] = Object.values(StatSection);

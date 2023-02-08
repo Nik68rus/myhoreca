@@ -13,3 +13,12 @@
   flex-wrap: wrap;
   border-bottom: variables.$border-light;
 }
+
+.columnHead {
+  cursor: pointer;
+  transition: color variables.$trans-default;
+
+  &:hover {
+    color: variables.$color-default-black;
+  }
+}

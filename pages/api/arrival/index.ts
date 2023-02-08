@@ -23,9 +23,6 @@ export default async function handler(
     // db.shopItems.sync({ force: false });
 
     try {
-      // await db.sequelize.authenticate();
-      // await db.sequelize.sync();
-
       const user = await getAdmin(req);
       const shop = await ShopService.getById(shopId);
       const item = await ItemService.getById(itemId);
@@ -51,6 +48,8 @@ export default async function handler(
       } else {
         result = await db.shopItems.create(req.body);
       }
+
+      // await db.arrivals.create({ userId: user.id, shopId, itemId, quantity });
 
       return res.status(201).json(result);
     } catch (error) {

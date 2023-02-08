@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import Flatpickr from 'react-flatpickr';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import Card from '../../ui/Card';
 import styles from './History.module.scss';
 import cx from 'classnames';
@@ -12,9 +11,12 @@ import { IConsumption } from '../../../models/consumption';
 import HistoryItem from './HistoryItem';
 import Checkbox from '../../forms/Checkbox';
 import { PayType } from '../../../types/item';
+import DatePicker from '../../DatePicker';
 
 const History = () => {
-  const [date, setDate] = useState(new Date());
+  const [from, setFrom] = useState(new Date());
+  const [to, setTo] = useState(new Date());
+
   const [woHidden, setWoHidden] = useState(true);
   const [discountOnly, setDiscountOnly] = useState(false);
   const [consumptions, setConsumptions] = useState<IConsumption[]>([]);
@@ -23,7 +25,8 @@ const History = () => {
   const { data, error, isSuccess, isFetching } = useGetConsumptionsQuery(
     {
       shopId: activeShop?.id || 0,
-      date: date.toISOString(),
+      from: from.toISOString(),
+      to: to.toISOString(),
     },
     { skip: !activeShop, refetchOnFocus: true }
   );
@@ -40,6 +43,14 @@ const History = () => {
       );
     }
   }, [isSuccess, data, woHidden, discountOnly]);
+
+  const dateChangeHandler = useCallback(
+    (period: { start: Date; end: Date }) => {
+      setFrom(period.start);
+      setTo(period.end);
+    },
+    []
+  );
 
   const total = useMemo(
     () => consumptions.reduce((acc, cons) => acc + cons.total, 0),
@@ -68,18 +79,7 @@ const History = () => {
         <Heading level={3} className="mb-4">
           История операций
         </Heading>
-        <div className={cx('form__control mb-7', styles.date)}>
-          <label>Выберите дату</label>
-          <Flatpickr
-            value={date}
-            options={{
-              dateFormat: 'j F Y',
-            }}
-            onChange={(dates) => {
-              setDate(dates[0]);
-            }}
-          />
-        </div>
+        <DatePicker onChange={dateChangeHandler} dayOnly={true} />
         <div className="form__group mb-6">
           <Checkbox
             id="writeoff"

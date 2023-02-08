@@ -11,9 +11,10 @@ enum DateType {
 
 interface Props {
   onChange: (period: { start: Date; end: Date }) => void;
+  dayOnly?: boolean;
 }
 
-const DatePicker = ({ onChange }: Props) => {
+const DatePicker = ({ onChange, dayOnly }: Props) => {
   const [type, setType] = useState(DateType.DAY);
   const [start, setStart] = useState(new Date());
   const [end, setEnd] = useState(new Date());
@@ -34,11 +35,13 @@ const DatePicker = ({ onChange }: Props) => {
 
   return (
     <div className={styles.datePicker}>
-      <Toggle
-        values={Object.values(DateType)}
-        onChange={(value) => setType(value)}
-        className="mb-5"
-      />
+      {!dayOnly && (
+        <Toggle
+          values={Object.values(DateType)}
+          onChange={(value) => setType(value)}
+          className="mb-5"
+        />
+      )}
       <div className={cx('form__group mb-8', styles.days)}>
         <div className="form__control">
           <label>{type === DateType.DAY ? 'Выберите дату' : 'С:'}</label>
