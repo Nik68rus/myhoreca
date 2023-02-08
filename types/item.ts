@@ -52,4 +52,5 @@ export enum PayType {
   CARD = 'картой',
   TRANSFER = 'переводом',
   WRITEOFF = 'списание',
+  DEBT = 'в счет зп',
 }

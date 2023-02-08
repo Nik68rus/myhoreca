@@ -6,13 +6,13 @@ import { useGetStatQuery } from '../redux/api/consumption';
 import styles from './DayMoney.module.scss';
 
 const DayMoney = () => {
-  const [stat, setStat] = useState({ total: 0, card: 0, transfer: 0 });
+  const [stat, setStat] = useState({ total: 0, card: 0, transfer: 0, debt: 0 });
   const { activeShop } = useAppSelector((store) => store.shop);
 
-  const { data, error, isSuccess, refetch } = useGetStatQuery(
-    activeShop?.id || 0,
-    { skip: !activeShop, refetchOnFocus: true }
-  );
+  const { data, error, isSuccess } = useGetStatQuery(activeShop?.id || 0, {
+    skip: !activeShop,
+    refetchOnFocus: true,
+  });
 
   useEffect(() => {
     handleRTKQError(error);
@@ -26,9 +26,6 @@ const DayMoney = () => {
 
   return (
     <div className={styles.money}>
-      {/* <button className="button button--icon" onClick={() => refetch()}>
-        <BiRefresh />
-      </button> */}
       <div className={styles.total}>
         {stat.total.toLocaleString('ru-Ru')} руб
       </div>
@@ -37,7 +34,10 @@ const DayMoney = () => {
           Картой: {stat.card}
           {stat.transfer > 0 ? ` (+${stat.transfer} перевод)` : null}
         </span>
-        <span>Наличными: {stat.total - stat.card - stat.transfer}</span>
+        <span>
+          Наличными: {stat.total - stat.card - stat.transfer - stat.debt}
+          {stat.debt > 0 ? ` (+${stat.debt} в счет з/п)` : null}
+        </span>
       </div>
     </div>
   );

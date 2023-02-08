@@ -50,7 +50,7 @@ export const consumptionApi = api.injectEndpoints({
 
     //получение статистики продаж за день
     getStat: builder.query<
-      { total: number; card: number; transfer: number },
+      { total: number; card: number; transfer: number; debt: number },
       number
     >({
       query: (shopId) => `consumption/stat?shopId=${shopId}`,

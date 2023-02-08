@@ -147,8 +147,11 @@ class ConsumptionService {
     const transfer = items
       .filter((item) => item.isSale && item.payType === PayType.TRANSFER)
       .reduce((acc, i) => acc + i.total, 0);
+    const debt = items
+      .filter((item) => item.isSale && item.payType === PayType.DEBT)
+      .reduce((acc, i) => acc + i.total, 0);
 
-    return { total, card, transfer };
+    return { total, card, transfer, debt };
   }
 
   async getLast(shopId: number) {

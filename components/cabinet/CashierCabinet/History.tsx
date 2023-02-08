@@ -73,6 +73,14 @@ const History = () => {
     [consumptions]
   );
 
+  const debt = useMemo(
+    () =>
+      consumptions
+        .filter((item) => item.payType === PayType.DEBT)
+        .reduce((acc, cons) => acc + cons.total, 0),
+    [consumptions]
+  );
+
   return (
     <div className={cx('container', styles.container)}>
       <Card className={styles.history}>
@@ -120,10 +128,12 @@ const History = () => {
               Итого: {total.toLocaleString('ru-RU')} руб
             </span>
             <span>
-              Наличными: {(total - card - transfer).toLocaleString('ru-RU')}
+              Наличными:{' '}
+              {(total - card - transfer - debt).toLocaleString('ru-RU')}
             </span>
             <span>Картой: {card.toLocaleString('ru-RU')}</span>
             <span>Переводом: {transfer.toLocaleString('ru-RU')}</span>
+            <span>В счет з/п: {debt.toLocaleString('ru-RU')}</span>
           </div>
         ) : null}
       </Card>

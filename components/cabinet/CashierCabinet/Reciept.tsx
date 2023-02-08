@@ -26,6 +26,7 @@ import LastReciept from './LastReciept';
 import { useGetSyrupQuery } from '../../../redux/api/arrival';
 import { useRouter } from 'next/router';
 import { AccountRoutes } from '../../../types/routes';
+import DiscountPayModal from '../../modals/DiscountPayModal';
 
 const Reciept = () => {
   const router = useRouter();
@@ -33,6 +34,8 @@ const Reciept = () => {
   const [byCard, setByCard] = useState(false);
   const [isTransfer, setIsTransfer] = useState(false);
   const [comment, setComment] = useState('');
+  const [discountPayTypeModal, setDiscountPayTypeModal] = useState(false);
+  const [isDebt, setIsDebt] = useState(false);
   const { discount, isToGo } = useAppSelector((store) => store.reciept);
   const isWriteoff = slug && slug[0] === AccountRoutes.WRITEOFF;
 
@@ -78,6 +81,8 @@ const Reciept = () => {
   const getPayType = () => {
     if (isWriteoff) {
       return PayType.WRITEOFF;
+    } else if (isDebt) {
+      return PayType.DEBT;
     } else if (byCard) {
       return PayType.CARD;
     } else if (isTransfer) {
@@ -92,10 +97,12 @@ const Reciept = () => {
       if (e.target.id === 'byCard') {
         setByCard(e.target.checked);
         setIsTransfer(false);
+        setIsDebt(false);
       }
       if (e.target.id === 'isTransfer') {
         setIsTransfer(e.target.checked);
         setByCard(false);
+        setIsDebt(false);
       }
     }, []);
 
@@ -117,6 +124,13 @@ const Reciept = () => {
       clearHandler();
     }
   }, [isSuccess, clearHandler]);
+
+  useEffect(() => {
+    if (isDebt) {
+      setByCard(false);
+      setIsTransfer(false);
+    }
+  }, [isDebt]);
 
   const consumptionHandler = () => {
     const data: IConsumptionInput = {
@@ -149,6 +163,11 @@ const Reciept = () => {
       (e) => {
         dispatch(setDiscount(e.target.checked));
         dispatch(calculateTotal());
+        if (e.target.checked) {
+          setDiscountPayTypeModal(true);
+        } else {
+          setIsDebt(false);
+        }
       },
       [dispatch]
     );
@@ -159,6 +178,10 @@ const Reciept = () => {
     },
     [dispatch]
   );
+
+  const payDetailsHandler = () => {
+    setDiscountPayTypeModal(true);
+  };
 
   return (
     <>
@@ -198,6 +221,11 @@ const Reciept = () => {
                 <div className={cx(styles.total, 'mt-6')}>
                   <span>Итого:</span> <b>{total.toLocaleString('ru-RU')} руб</b>
                 </div>
+                {discount && (
+                  <p className={styles.discountPayType}>
+                    Выбрана оплата {isDebt ? 'в счет з/п' : 'сейчас'}
+                  </p>
+                )}
                 <div className={styles.modifiers}>
                   <Checkbox
                     label="Картой"
@@ -248,6 +276,12 @@ const Reciept = () => {
           </>
         )}
       </section>
+      {discountPayTypeModal && (
+        <DiscountPayModal
+          onClose={() => setDiscountPayTypeModal(false)}
+          choiceHandler={(payInDebt) => setIsDebt(payInDebt)}
+        />
+      )}
     </>
   );
 };
