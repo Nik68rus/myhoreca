@@ -11,20 +11,23 @@ import styles from './RecieptLine.module.scss';
 import { FaMinus, FaTimes } from 'react-icons/fa';
 import { BiCoffee, BiCoffeeTogo } from 'react-icons/bi';
 import { useAppDispatch, useAppSelector } from '../../../hooks/store';
-import { CashierSection } from '../../../types/sections';
 import { TbDroplet, TbDropletOff } from 'react-icons/tb';
+import { useRouter } from 'next/router';
+import { AccountRoutes } from '../../../types/routes';
 
 interface Props {
   item: IRecieptPosition;
 }
 
 const RecieptLine = ({ item }: Props) => {
+  const router = useRouter();
+  const { slug } = router.query;
+
   const [editing, setEditing] = useState(false);
   const dispatch = useAppDispatch();
-  const { activeSection } = useAppSelector((store) => store.layout);
   const discount = useAppSelector((store) => store.reciept.discount);
 
-  const isWriteoff = activeSection === CashierSection.WRITEOFF;
+  const isWriteoff = slug && slug[0] === AccountRoutes.WRITEOFF;
 
   const minusHandler: React.MouseEventHandler<HTMLButtonElement> = useCallback(
     (e) => {

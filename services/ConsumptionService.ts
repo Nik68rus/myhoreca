@@ -56,7 +56,6 @@ class ConsumptionService {
       return sale;
     } catch (error) {
       console.log(error);
-
       throw ApiError.internal('Ошибка при работе с БД');
     }
   }

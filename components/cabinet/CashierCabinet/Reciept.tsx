@@ -20,21 +20,23 @@ import {
 import { handleRTKQError } from '../../../helpers/error';
 import Spinner from '../../layout/Spinner';
 import { IConsumptionInput, PayType } from '../../../types/item';
-import { CashierSection } from '../../../types/sections';
 import FormControl from '../../forms/FormControl';
 import { lastRecieptDto, recieptItemDto } from '../../../helpers/dto';
 import LastReciept from './LastReciept';
 import { useGetSyrupQuery } from '../../../redux/api/arrival';
+import { useRouter } from 'next/router';
+import { AccountRoutes } from '../../../types/routes';
 
 const Reciept = () => {
+  const router = useRouter();
+  const { slug } = router.query;
   const [byCard, setByCard] = useState(false);
   const [isTransfer, setIsTransfer] = useState(false);
   const [comment, setComment] = useState('');
-  const { activeSection } = useAppSelector((store) => store.layout);
   const { discount, isToGo } = useAppSelector((store) => store.reciept);
-  const isWriteoff = activeSection === CashierSection.WRITEOFF;
+  const isWriteoff = slug && slug[0] === AccountRoutes.WRITEOFF;
 
-  const [makeConsumption, { data, error, isLoading, isSuccess }] =
+  const [makeConsumption, { error, isLoading, isSuccess }] =
     useCreateConsumptionMutation();
 
   const { items, total } = useAppSelector((store) => store.reciept);

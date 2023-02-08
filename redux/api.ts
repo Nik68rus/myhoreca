@@ -11,7 +11,7 @@ import {
 import { deleteCookie } from '../helpers/cookies';
 import { resetAuth } from './slices/userSlice';
 
-const baseQuery = fetchBaseQuery({ baseUrl: `api/` });
+const baseQuery = fetchBaseQuery({ baseUrl: `/api/` });
 
 const baseQueryWithReauth: BaseQueryFn<
   string | FetchArgs,

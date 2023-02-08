@@ -33,7 +33,6 @@ export interface IUserAuthData extends TokenPayload {
 }
 
 export interface IUserUpdateData {
-  // id: number;
   email: string;
   name?: string;
   password?: string;

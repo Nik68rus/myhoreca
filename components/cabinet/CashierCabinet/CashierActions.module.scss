@@ -2,6 +2,7 @@
 @use '../../../styles/mixins.scss';
 
 .button {
+  display: inline-block;
   background-color: variables.$color-default-white;
   border: none;
   cursor: pointer;

@@ -5,8 +5,7 @@ import { UserRole } from '../../types/user';
 import OwnerMenu from './OwnerMenu';
 import styles from './Menu.module.scss';
 import Logo from '../Logo';
-import { setActiveSection, toggleMenu } from '../../redux/slices/layoutSlice';
-import { Section } from '../../types/sections';
+import { toggleMenu } from '../../redux/slices/layoutSlice';
 import {
   FaAngleDoubleLeft,
   FaAngleDoubleRight,
@@ -39,14 +38,10 @@ const Menu = () => {
     }
   }, [isSuccess, dispatch, reset]);
 
-  const selectHandler = (sectionId: Section) => {
-    dispatch(setActiveSection(sectionId));
-  };
-
   let content: React.ReactNode = 'MENU';
 
   if (authData?.role === UserRole.OWNER) {
-    content = <OwnerMenu onSelect={selectHandler} />;
+    content = <OwnerMenu />;
   }
 
   return (

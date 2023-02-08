@@ -9,19 +9,21 @@ import { handleRTKQError } from '../../../helpers/error';
 import { useGetCategoriesQuery } from '../../../redux/api/category';
 import { IArrivalWithItem } from '../../../types/item';
 import StoreItem from './StoreItem';
-import { CashierSection } from '../../../types/sections';
 import Heading from '../../ui/Heading';
 import { useGetGroupsQuery } from '../../../redux/api/group';
 import sortItems, { IGroupReady } from '../../../helpers/groupSorting';
 import StoreGroup from './StoreGroup';
+import { useRouter } from 'next/router';
+import { AccountRoutes } from '../../../types/routes';
 
 function isGroup(item: IGroupReady | IArrivalWithItem): item is IGroupReady {
   return (item as IGroupReady).isGroup !== undefined;
 }
 
 const Store = () => {
+  const router = useRouter();
+  const { slug } = router.query;
   const { activeShop } = useAppSelector((store) => store.shop);
-  const { activeSection } = useAppSelector((store) => store.layout);
   const [activeCategory, setActiveCategory] = useState(0);
   const [grouppedItems, setGrouppedItems] = useState<
     (IArrivalWithItem | IGroupReady)[]
@@ -30,7 +32,7 @@ const Store = () => {
     (IArrivalWithItem | IGroupReady)[]
   >([]);
 
-  const isWriteoff = activeSection === CashierSection.WRITEOFF;
+  const isWriteoff = slug && slug[0] === AccountRoutes.WRITEOFF;
 
   const {
     data: arrivals,

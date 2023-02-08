@@ -137,7 +137,6 @@ const SignupForm = () => {
     e
   ) => {
     e.preventDefault();
-    console.log(formData);
     activateEmployee({
       ...formData,
       id: invitedUser!.id,

@@ -5,8 +5,7 @@ import Shops from './Shops';
 import Employees from './Employees';
 import Items from './Items';
 import Stock from './Stock';
-import { useAppDispatch, useAppSelector } from '../../../hooks/store';
-import { Section } from '../../../types/sections';
+import { useAppDispatch } from '../../../hooks/store';
 import { useGetShopsQuery } from '../../../redux/api/shop';
 import { setActiveShop } from '../../../redux/slices/shopSlice';
 import { handleRTKQError } from '../../../helpers/error';
@@ -15,10 +14,13 @@ import History from '../CashierCabinet/History';
 import Discounts from './Discounts';
 import Cups from './Cups';
 import Groups from './Groups';
+import { useRouter } from 'next/router';
+import { AccountRoutes } from '../../../types/routes';
 
 const OwnerCabinet = () => {
-  const { activeSection } = useAppSelector((store) => store.layout);
   const dispatch = useAppDispatch();
+  const router = useRouter();
+  const { slug } = router.query;
 
   const { data: shops, isLoading, error } = useGetShopsQuery();
 
@@ -36,14 +38,14 @@ const OwnerCabinet = () => {
     <div className={cx('container pt-6', styles.container)}>
       {isLoading && <Spinner />}
       <section className={styles.cabinet}>
-        {activeSection === Section.ITEMS && <Items />}
-        {activeSection === Section.SHOPS && <Shops />}
-        {activeSection === Section.EMPLOYYES && <Employees />}
-        {activeSection === Section.SALES && <History />}
-        {activeSection === Section.STOCK && <Stock />}
-        {activeSection === Section.DISCOUNT && <Discounts />}
-        {activeSection === Section.CUPS && <Cups />}
-        {activeSection === Section.GROUPS && <Groups />}
+        {(!slug || (slug && slug[0] === AccountRoutes.SALES)) && <History />}
+        {slug && slug[0] === AccountRoutes.ITEMS && <Items />}
+        {slug && slug[0] === AccountRoutes.SHOPS && <Shops />}
+        {slug && slug[0] === AccountRoutes.EMPLOYEES && <Employees />}
+        {slug && slug[0] === AccountRoutes.STOCK && <Stock />}
+        {slug && slug[0] === AccountRoutes.DISCOUNT && <Discounts />}
+        {slug && slug[0] === AccountRoutes.CUPS && <Cups />}
+        {slug && slug[0] === AccountRoutes.GROUPS && <Groups />}
       </section>
     </div>
   );

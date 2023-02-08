@@ -8,3 +8,19 @@ export enum Routes {
   ACCOUNT = '/account',
   PASSWORD = '/new-password',
 }
+
+export enum AccountRoutes {
+  //owner
+  SALES = 'sales',
+  ITEMS = 'items',
+  DISCOUNT = 'discounts',
+  GROUPS = 'groups',
+  CUPS = 'cups',
+  EMPLOYEES = 'employess',
+  SHOPS = 'shops',
+  STOCK = 'stock',
+
+  //cashier
+  WRITEOFF = 'writeoff',
+  HISTORY = 'history',
+}

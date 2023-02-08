@@ -24,7 +24,7 @@ const Header = () => {
   const [short, setShort] = useState(false);
 
   const isMain = router.pathname === '/';
-  const isAccount = router.pathname === Routes.ACCOUNT;
+  const isAccount = router.pathname.startsWith(Routes.ACCOUNT);
 
   const [deleteToken, { isSuccess, reset }] = useDeleteTokenMutation();
 

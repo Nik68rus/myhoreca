@@ -10,16 +10,13 @@ import { useAppDispatch, useAppSelector } from '../../hooks/store';
 import { useGetShopsQuery } from '../../redux/api/shop';
 import { setActiveShop } from '../../redux/slices/shopSlice';
 import { shopDto } from '../../helpers/dto';
-import { useRefreshTokensQuery } from '../../redux/api/refresh';
-import { setAuth } from '../../redux/slices/userSlice';
-import { deleteCookie, setCookie } from '../../helpers/cookies';
 
 interface Props {
   children: React.ReactNode;
 }
 const Layout = ({ children }: Props) => {
   const router = useRouter();
-  const isAccount = router.pathname === Routes.ACCOUNT;
+  const isAccount = router.pathname.startsWith(Routes.ACCOUNT);
   useCheckUserAuthQuery();
   const dispatch = useAppDispatch();
   const { authData } = useAppSelector((store) => store.user);
