@@ -8,6 +8,8 @@ import { useGetConsumptionsByCatQuery } from '../../../redux/api/consumption';
 import { handleRTKQError } from '../../../helpers/error';
 import Spinner from '../../layout/Spinner';
 import styles from './StatCat.module.scss';
+import Heading from '../../ui/Heading';
+import DatePicker from '../../DatePicker';
 
 interface IStatItem {
   itemId: number;
@@ -18,6 +20,8 @@ interface IStatItem {
 const StatCat = () => {
   const [catId, setCatId] = useState<number | null>(null);
   const [date, setDate] = useState(new Date());
+  const [from, setFrom] = useState(new Date());
+  const [to, setTo] = useState(new Date());
   const [items, setItems] = useState<IStatItem[]>([]);
 
   const { activeShop } = useAppSelector((store) => store.shop);
@@ -31,7 +35,8 @@ const StatCat = () => {
   const { data, error, isSuccess, isFetching } = useGetConsumptionsByCatQuery(
     {
       shopId: activeShop?.id || 0,
-      date: date.toISOString(),
+      from: from.toISOString(),
+      to: to.toISOString(),
       categoryId: catId || 0,
     },
     { skip: !activeShop || catId === null, refetchOnFocus: true }
@@ -80,7 +85,35 @@ const StatCat = () => {
     <>
       {catLoading && <Spinner />}
       <div>
-        <div className="form__group mb-6">
+        <DatePicker
+          onChange={(period) => {
+            setFrom(period.start);
+            setTo(period.end);
+          }}
+        />
+        {categories && (
+          <Select
+            items={categories}
+            label="Категория: "
+            onSelect={catSelectHandler}
+            selected={catId || null}
+            className="mb-8"
+          />
+        )}
+
+        {/* <div className={cx('form__group pb-8 mb-8', styles.filter)}>
+          <div className="form__control">
+            <label>Выберите дату</label>
+            <Flatpickr
+              value={date}
+              options={{
+                dateFormat: 'j F Y',
+              }}
+              onChange={(dates) => {
+                setDate(dates[0]);
+              }}
+            />
+          </div>
           <div className="form__control">
             <label>Выберите дату</label>
             <Flatpickr
@@ -102,7 +135,10 @@ const StatCat = () => {
               selected={catId || null}
             />
           )}
-        </div>
+        </div> */}
+        <Heading level={4} className="mb-5">
+          Продано:
+        </Heading>
         {isFetching ? (
           <Spinner block={true} />
         ) : (

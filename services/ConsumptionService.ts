@@ -64,18 +64,18 @@ class ConsumptionService {
     }
   }
 
-  async getHistory({ shopId, date, categoryId }: HistoryParams) {
+  async getHistory({ shopId, from, to }: HistoryParams) {
     await db.sequelize.authenticate();
     await db.sequelize.sync();
 
-    const dayStart = new Date(date.setHours(0, 0));
-    const dayEnd = new Date(date.setHours(23, 59));
+    const periodStart = new Date(from);
+    const periodEnd = new Date(to);
 
     const items = await db.consumptions.findAll({
       where: {
         shopId,
         createdAt: {
-          [Op.between]: [dayStart, dayEnd],
+          [Op.between]: [periodStart, periodEnd],
         },
       },
       order: [['createdAt', 'ASC']],
@@ -83,19 +83,19 @@ class ConsumptionService {
     return items;
   }
 
-  async getCatHistory({ shopId, date, categoryId }: HistoryParams) {
+  async getCatHistory({ shopId, from, to, categoryId }: HistoryParams) {
     await db.sequelize.authenticate();
     await db.sequelize.sync();
 
-    const dayStart = new Date(date.setHours(0, 0));
-    const dayEnd = new Date(date.setHours(23, 59));
+    const periodStart = new Date(from);
+    const periodEnd = new Date(to);
 
     const items = (await db.consumptions.findAll({
       where: {
         shopId,
         isSale: true,
         createdAt: {
-          [Op.between]: [dayStart, dayEnd],
+          [Op.between]: [periodStart, periodEnd],
         },
       },
       include: [

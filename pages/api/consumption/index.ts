@@ -6,7 +6,8 @@ import ConsumptionService from '../../../services/ConsumptionService';
 import { isIsoDate } from '../../../helpers/validation';
 
 export interface HistoryParams {
-  date: Date;
+  from: Date;
+  to: Date;
   shopId: number;
   categoryId?: number;
 }
@@ -14,7 +15,8 @@ export interface HistoryParams {
 interface ExtendedNextApiRequest extends NextApiRequest {
   body: IConsumptionInput;
   query: {
-    date?: string;
+    from?: string;
+    to?: string;
     shopId?: string;
     categoryId?: string;
   };
@@ -36,17 +38,29 @@ export default async function handler(
 
   if (req.method === 'GET') {
     try {
-      const date = req.query.date as string;
+      const from = req.query.from as string;
+      const to = req.query.to as string;
       const shopId = req.query.shopId as string;
       const categoryId = req.query.categoryId;
 
-      if (!date || !shopId || isNaN(+shopId) || !isIsoDate(date)) {
+      if (
+        !from ||
+        !to ||
+        !shopId ||
+        isNaN(+shopId) ||
+        !isIsoDate(from) ||
+        !isIsoDate(to)
+      ) {
         throw ApiError.badRequest('Неверные параметры запроса!');
       }
 
       await getUser(req);
 
-      const config: HistoryParams = { shopId: +shopId, date: new Date(date) };
+      const config: HistoryParams = {
+        shopId: +shopId,
+        from: new Date(from),
+        to: new Date(to),
+      };
 
       if (categoryId && isNaN(+categoryId)) {
         throw ApiError.badRequest('Неверные параметры запроса!');

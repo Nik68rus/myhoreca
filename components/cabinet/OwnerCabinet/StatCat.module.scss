@@ -1,3 +1,5 @@
+@use '../../../styles/variables.scss';
+
 .line {
   display: flex;
   gap: 8px;
@@ -5,4 +7,9 @@
 
 .quantity {
   margin-left: auto;
+}
+
+.filter {
+  flex-wrap: wrap;
+  border-bottom: variables.$border-light;
 }

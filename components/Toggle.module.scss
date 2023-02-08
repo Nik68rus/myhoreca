@@ -1,0 +1,32 @@
+@use '../styles/variables.scss';
+
+.toggle {
+  display: flex;
+  position: relative;
+  border-radius: 50px;
+  overflow: hidden;
+  border: variables.$border-mid;
+}
+
+.option {
+  display: block;
+  padding: 8px 16px;
+  position: relative;
+  z-index: 1;
+  border: none;
+  background-color: transparent;
+}
+
+.active {
+  color: white;
+  transition: all variables.$trans-default;
+}
+
+.activeBg {
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  background-color: green;
+  border-radius: 50px;
+  transition: all variables.$trans-default;
+}
