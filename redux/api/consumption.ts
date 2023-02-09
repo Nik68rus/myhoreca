@@ -65,13 +65,22 @@ export const consumptionApi = api.injectEndpoints({
       providesTags: ['Consumption'],
     }),
 
-    //получение статистики продаж
+    //получение статистики продаж за период
     getStat: builder.query<
       { total: number; card: number; transfer: number; debt: number },
       { shopId: number; from: string; to: string }
     >({
       query: ({ shopId, from, to }) =>
         `consumption/stat?shopId=${shopId}&from=${from}&to=${to}`,
+      providesTags: ['Consumption'],
+    }),
+
+    //получение статистики продаж за сегодня
+    getTodayStat: builder.query<
+      { total: number; card: number; transfer: number; debt: number },
+      number
+    >({
+      query: (shopId) => `consumption/today?shopId=${shopId}`,
       providesTags: ['Consumption'],
     }),
 
@@ -89,6 +98,7 @@ export const {
   useGetConsumptionsByCatQuery,
   useGetRecieptDetailsQuery,
   useGetStatQuery,
+  useGetTodayStatQuery,
   useGetLastQuery,
   useGetSpecConsumptionQuery,
 } = consumptionApi;

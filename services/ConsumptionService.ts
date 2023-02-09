@@ -194,6 +194,39 @@ class ConsumptionService {
     return { total, card, transfer, debt };
   }
 
+  async getTodayStat(shopId: number) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
+    const dayStart = new Date().setHours(0, 0);
+    const dayEnd = new Date().setHours(23, 59);
+
+    const items = await db.consumptions.findAll({
+      where: {
+        shopId,
+        createdAt: {
+          [Op.between]: [dayStart, dayEnd],
+        },
+      },
+      order: [['createdAt', 'ASC']],
+    });
+
+    const total = items
+      .filter((item) => item.isSale)
+      .reduce((acc, i) => acc + i.total, 0);
+    const card = items
+      .filter((item) => item.isSale && item.payType === PayType.CARD)
+      .reduce((acc, i) => acc + i.total, 0);
+    const transfer = items
+      .filter((item) => item.isSale && item.payType === PayType.TRANSFER)
+      .reduce((acc, i) => acc + i.total, 0);
+    const debt = items
+      .filter((item) => item.isSale && item.payType === PayType.DEBT)
+      .reduce((acc, i) => acc + i.total, 0);
+
+    return { total, card, transfer, debt };
+  }
+
   async getLast(shopId: number) {
     await db.sequelize.authenticate();
     await db.sequelize.sync();

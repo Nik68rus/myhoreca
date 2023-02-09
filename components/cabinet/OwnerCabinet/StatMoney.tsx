@@ -42,10 +42,11 @@ const StatMoney = () => {
       {data && (
         <div>
           <Heading level={4} className="mb-3">
-            Всего: {data.total}
+            Всего: {data.total.toLocaleString('ru-Ru')} руб
           </Heading>
           <p>Картой: {data.card}</p>
           <p>Переводом: {data.transfer}</p>
+          <p>Наличными: {data.total - data.card - data.transfer - data.debt}</p>
           <p>В счет з/п: {data.debt}</p>
         </div>
       )}
