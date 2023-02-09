@@ -39,7 +39,7 @@ const DayMoney = () => {
         </span>
         <span>
           Наличными: {stat.total - stat.card - stat.transfer - stat.debt}
-          {stat.debt > 0 ? ` (+${stat.debt} в счет з/п)` : null}
+          {stat.debt > 0 ? ` (+${stat.debt} за з/п)` : null}
         </span>
       </div>
     </div>
