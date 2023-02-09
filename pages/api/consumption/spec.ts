@@ -1,14 +1,24 @@
-import { isIsoDate } from './../../../helpers/validation';
-import { getUser } from './../../../helpers/token';
+import { IConsumptionInput } from '../../../types/item';
+import { getUser } from '../../../helpers/token';
 import { NextApiRequest, NextApiResponse } from 'next';
 import ApiError, { handleServerError } from '../../../helpers/error';
 import ConsumptionService from '../../../services/ConsumptionService';
+import { isIsoDate } from '../../../helpers/validation';
+
+export interface SpecParams {
+  from: string;
+  to: string;
+  shopId: number;
+  type: 'writeoff' | 'discount';
+}
 
 interface ExtendedNextApiRequest extends NextApiRequest {
+  body: IConsumptionInput;
   query: {
-    shopId: string;
     from: string;
     to: string;
+    shopId: string;
+    type: 'writeoff' | 'discount';
   };
 }
 
@@ -18,7 +28,7 @@ export default async function handler(
 ) {
   if (req.method === 'GET') {
     try {
-      const { shopId, from, to } = req.query;
+      const { from, to, shopId, type } = req.query;
 
       if (
         !from ||
@@ -31,9 +41,15 @@ export default async function handler(
         throw ApiError.badRequest('Неверные параметры запроса!');
       }
 
-      const user = await getUser(req);
-      const stat = await ConsumptionService.getStat(+shopId, from, to);
-      return res.status(200).json(stat);
+      await getUser(req);
+
+      const history = await ConsumptionService.getSpecHistory({
+        shopId: +shopId,
+        type,
+        from,
+        to,
+      });
+      return res.status(200).json(history);
     } catch (error) {
       handleServerError(res, error);
     }

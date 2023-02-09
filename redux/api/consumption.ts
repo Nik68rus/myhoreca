@@ -1,7 +1,10 @@
-import { IItem } from './../../models/item';
 import { IConsumptionItem } from './../../models/consumptionItem';
 import { IConsumption } from './../../models/consumption';
-import { IConsumptionInput, IConsumptionWithItem } from './../../types/item';
+import {
+  IConsumptionInput,
+  IConsumptionWithItem,
+  IConsumptionWithItemAndUser,
+} from './../../types/item';
 import { api } from '../api';
 
 export interface IRecieptServerInfo {
@@ -42,18 +45,33 @@ export const consumptionApi = api.injectEndpoints({
       providesTags: ['Consumption'],
     }),
 
+    //получение истории списаний или скидок
+    getSpecConsumption: builder.query<
+      IConsumptionWithItemAndUser[],
+      {
+        shopId: number;
+        from: string;
+        to: string;
+        type: 'discount' | 'writeoff';
+      }
+    >({
+      query: ({ shopId, from, to, type }) =>
+        `consumption/spec?shopId=${shopId}&type=${type}&from=${from}&to=${to}`,
+    }),
+
     //получение всех позиций чека
     getRecieptDetails: builder.query<IConsumptionWithItem[], number>({
       query: (consumptionId) => `consumption/${consumptionId}`,
       providesTags: ['Consumption'],
     }),
 
-    //получение статистики продаж за день
+    //получение статистики продаж
     getStat: builder.query<
       { total: number; card: number; transfer: number; debt: number },
-      number
+      { shopId: number; from: string; to: string }
     >({
-      query: (shopId) => `consumption/stat?shopId=${shopId}`,
+      query: ({ shopId, from, to }) =>
+        `consumption/stat?shopId=${shopId}&from=${from}&to=${to}`,
       providesTags: ['Consumption'],
     }),
 
@@ -72,4 +90,5 @@ export const {
   useGetRecieptDetailsQuery,
   useGetStatQuery,
   useGetLastQuery,
+  useGetSpecConsumptionQuery,
 } = consumptionApi;

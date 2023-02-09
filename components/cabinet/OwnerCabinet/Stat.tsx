@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import Card from '../../ui/Card';
 import cx from 'classnames';
 import StatCat from './StatCat';
+import StatWriteOff from './StatSpecConsumption';
+import StatSpecConsumption from './StatSpecConsumption';
+import StatMoney from './StatMoney';
 
 enum StatSection {
   CATEGORY = 'Категории',
@@ -33,6 +36,13 @@ const Stat = () => {
       </div>
       <div className="pt-4 pb-4">
         {active === StatSection.CATEGORY && <StatCat />}
+        {active === StatSection.WRITEOFF && (
+          <StatSpecConsumption type="writeoff" />
+        )}
+        {active === StatSection.DISCOUNT && (
+          <StatSpecConsumption type="discount" />
+        )}
+        {active === StatSection.MONEY && <StatMoney />}
       </div>
     </Card>
   );

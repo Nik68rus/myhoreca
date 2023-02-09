@@ -47,6 +47,16 @@ export interface IConsumptionWithItem extends IConsumptionItem {
   item: IItem;
 }
 
+export interface IConsumptionWithItemAndUser extends IConsumptionWithItem {
+  item: IItem;
+  createdAt: string;
+  consumption: {
+    user: {
+      name: string;
+    };
+  };
+}
+
 export enum PayType {
   CASH = 'наличными',
   CARD = 'картой',

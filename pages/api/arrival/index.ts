@@ -48,7 +48,7 @@ export default async function handler(
       } else {
         result = await db.shopItems.create(req.body);
       }
-
+      await db.arrivals.create({ userId: user.id, shopId, itemId, quantity });
       return res.status(201).json(result);
     } catch (error) {
       handleServerError(res, error);

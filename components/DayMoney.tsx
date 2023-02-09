@@ -9,10 +9,20 @@ const DayMoney = () => {
   const [stat, setStat] = useState({ total: 0, card: 0, transfer: 0, debt: 0 });
   const { activeShop } = useAppSelector((store) => store.shop);
 
-  const { data, error, isSuccess } = useGetStatQuery(activeShop?.id || 0, {
-    skip: !activeShop,
-    refetchOnFocus: true,
-  });
+  const dayStart = new Date().setHours(0, 0);
+  const dayEnd = new Date().setHours(23, 59);
+
+  const { data, error, isSuccess } = useGetStatQuery(
+    {
+      shopId: activeShop?.id || 0,
+      from: new Date(dayStart).toISOString(),
+      to: new Date(dayEnd).toISOString(),
+    },
+    {
+      skip: !activeShop,
+      refetchOnFocus: true,
+    }
+  );
 
   useEffect(() => {
     handleRTKQError(error);

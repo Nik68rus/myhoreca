@@ -1,7 +1,9 @@
+import { SpecParams } from './../pages/api/consumption/spec';
 import { HistoryParams } from './../pages/api/consumption/index';
 import {
   IConsumptionInput,
   IConsumptionWithItem,
+  IConsumptionWithItemAndUser,
   PayType,
 } from './../types/item';
 import ApiError from '../helpers/error';
@@ -107,6 +109,44 @@ class ConsumptionService {
       ],
     })) as DetailedConsumption[];
 
+    const result = items.flatMap(
+      (item) => item['consumption-items']
+    ) as IConsumptionWithItemAndUser[];
+    return result;
+  }
+
+  async getSpecHistory({ shopId, from, to, type }: SpecParams) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
+    const periodStart = new Date(from);
+    const periodEnd = new Date(to);
+
+    const items = (await db.consumptions.findAll({
+      where: {
+        shopId,
+        isSale: type === 'writeoff' ? false : true,
+        isDiscount: type === 'discount' ? true : false,
+        createdAt: {
+          [Op.between]: [periodStart, periodEnd],
+        },
+      },
+      include: [
+        {
+          model: db.consumptionItems,
+          required: true,
+          include: [
+            { model: db.items },
+            {
+              model: db.consumptions,
+              attributes: ['userId'],
+              include: [{ model: db.users, attributes: ['name'] }],
+            },
+          ],
+        },
+      ],
+    })) as DetailedConsumption[];
+
     const result = items.flatMap((item) => item['consumption-items']);
     return result;
   }
@@ -121,18 +161,18 @@ class ConsumptionService {
     return items;
   }
 
-  async getStat(shopId: number) {
+  async getStat(shopId: number, from: string, to: string) {
     await db.sequelize.authenticate();
     await db.sequelize.sync();
 
-    const dayStart = new Date().setHours(0, 0);
-    const dayEnd = new Date().setHours(23, 59);
+    const periodStart = new Date(from);
+    const periodEnd = new Date(to);
 
     const items = await db.consumptions.findAll({
       where: {
         shopId,
         createdAt: {
-          [Op.between]: [dayStart, dayEnd],
+          [Op.between]: [periodStart, periodEnd],
         },
       },
       order: [['createdAt', 'ASC']],

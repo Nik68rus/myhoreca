@@ -19,6 +19,7 @@ interface ExtendedNextApiRequest extends NextApiRequest {
     to?: string;
     shopId?: string;
     categoryId?: string;
+    writeOff?: string;
   };
 }
 
