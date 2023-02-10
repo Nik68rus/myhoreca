@@ -1,34 +1,27 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { handleRTKQError } from '../../../helpers/error';
-import { useAppSelector } from '../../../hooks/store';
 import { useGetStatQuery } from '../../../redux/api/consumption';
-import DatePicker from '../../DatePicker';
+import { IShopData } from '../../../types/shop';
 import Spinner from '../../layout/Spinner';
 import Heading from '../../ui/Heading';
 
-const StatMoney = () => {
-  const [from, setFrom] = useState(new Date());
-  const [to, setTo] = useState(new Date());
-  const { activeShop } = useAppSelector((store) => store.shop);
+interface Props {
+  shop: IShopData | null;
+  from: Date;
+  to: Date;
+}
 
+const StatMoney = ({ shop, from, to }: Props) => {
   const { data, error, isLoading } = useGetStatQuery(
     {
-      shopId: activeShop?.id || 0,
+      shopId: shop?.id || 0,
       from: new Date(from).toISOString(),
       to: new Date(to).toISOString(),
     },
     {
-      skip: !activeShop,
+      skip: !shop,
       refetchOnFocus: true,
     }
-  );
-
-  const dateChangeHandler = useCallback(
-    (period: { start: Date; end: Date }) => {
-      setFrom(period.start);
-      setTo(period.end);
-    },
-    []
   );
 
   useEffect(() => {
@@ -38,7 +31,6 @@ const StatMoney = () => {
   return (
     <div>
       {isLoading && <Spinner />}
-      <DatePicker onChange={dateChangeHandler} />
       {data && (
         <div>
           <Heading level={4} className="mb-3">

@@ -23,8 +23,9 @@ const Select = <T extends { id: number; title: string }>({
   withNull,
 }: Props<T>) => {
   const [open, setOpen] = useState(false);
-  const popupRef = useRef(null);
+  const popupRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState<null | number>(null);
+  const [coords, setCoords] = useState(['auto', '0']);
 
   const itemClickHandler = useCallback(
     (item: T | null) => {
@@ -46,6 +47,13 @@ const Select = <T extends { id: number; title: string }>({
 
   useEffect(() => {
     if (open) {
+      const mainCoords = document
+        .querySelector('main')!
+        .getBoundingClientRect();
+      const popupCoords = popupRef.current!.getBoundingClientRect();
+      if (mainCoords.x > popupCoords.x) {
+        setCoords(['0', 'auto']);
+      }
       document.addEventListener('click', docClickHandler, { once: true });
     }
 
@@ -72,7 +80,11 @@ const Select = <T extends { id: number; title: string }>({
         </span>
       </div>
       {open && (
-        <div className={styles.popup} ref={popupRef}>
+        <div
+          className={styles.popup}
+          ref={popupRef}
+          style={{ left: coords[0], right: coords[1] }}
+        >
           <ul>
             {withNull && (
               <li

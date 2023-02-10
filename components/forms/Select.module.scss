@@ -4,6 +4,7 @@
 .select {
   position: relative;
   flex-shrink: 0;
+  width: max-content;
 
   &.invalid::after {
     position: absolute;
@@ -46,8 +47,7 @@
 
 .popup {
   position: absolute;
-  right: 0;
-  z-index: 10;
+  z-index: 20;
   margin-top: 15px;
   background: variables.$color-default-white;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.09);

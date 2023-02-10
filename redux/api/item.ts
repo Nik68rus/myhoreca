@@ -1,3 +1,6 @@
+import { IMovement } from './../../services/ItemService';
+import { IArrival } from './../../models/arrival';
+import { IConsumption } from './../../models/consumption';
 import { IShopItem } from './../../models/shopItem';
 import { IItemInput, IArrivalWithItem } from './../../types/item';
 import { IItem } from './../../models/item';
@@ -31,8 +34,21 @@ export const itemApi = api.injectEndpoints({
       }),
       invalidatesTags: ['Item'],
     }),
+
+    //история движений товара
+    getMovements: builder.query<
+      IMovement[],
+      { itemId: number; shopId: number; from: string; to: string }
+    >({
+      query: ({ itemId, shopId, from, to }) =>
+        `item/stat?shopId=${shopId}&itemId=${itemId}&from=${from}&to=${to}`,
+    }),
   }),
 });
 
-export const { useCreateItemMutation, useGetItemsQuery, useEditItemMutation } =
-  itemApi;
+export const {
+  useCreateItemMutation,
+  useGetItemsQuery,
+  useEditItemMutation,
+  useGetMovementsQuery,
+} = itemApi;

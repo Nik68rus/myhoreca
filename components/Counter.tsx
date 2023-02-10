@@ -9,9 +9,17 @@ interface Props {
   step?: number;
   onChange: (n: number) => void;
   className?: string;
+  max?: number;
 }
 
-const Counter = ({ label, initialValue, step, onChange, className }: Props) => {
+const Counter = ({
+  label,
+  initialValue,
+  step,
+  max,
+  onChange,
+  className,
+}: Props) => {
   const [value, setValue] = useState(initialValue ?? 1);
   const currentStep = step || 1;
 
@@ -25,8 +33,13 @@ const Counter = ({ label, initialValue, step, onChange, className }: Props) => {
   };
 
   useEffect(() => {
-    onChange(value);
-  }, [value, onChange]);
+    if (max && value > max) {
+      setValue(max);
+      onChange(max);
+    } else {
+      onChange(value);
+    }
+  }, [value, max, onChange]);
 
   return (
     <div className={cx(styles.counter, className ? className : '')}>
@@ -36,6 +49,7 @@ const Counter = ({ label, initialValue, step, onChange, className }: Props) => {
           type="button"
           className={cx('button button--heavy', styles.dec)}
           onClick={decHandler}
+          disabled={value === 0}
         >
           <FaMinus />
         </button>
@@ -48,6 +62,7 @@ const Counter = ({ label, initialValue, step, onChange, className }: Props) => {
           type="button"
           className={cx('button', styles.inc)}
           onClick={incHandler}
+          disabled={!!max && value === max}
         >
           <FaPlus />
         </button>

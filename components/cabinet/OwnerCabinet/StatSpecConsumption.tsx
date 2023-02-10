@@ -1,29 +1,27 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { handleRTKQError } from '../../../helpers/error';
-import { useAppSelector } from '../../../hooks/store';
 import { useGetSpecConsumptionQuery } from '../../../redux/api/consumption';
-import DatePicker from '../../DatePicker';
+import { IShopData } from '../../../types/shop';
 import Spinner from '../../layout/Spinner';
 import Heading from '../../ui/Heading';
 import styles from './StatSpecConsumption.module.scss';
 
 interface Props {
   type: 'discount' | 'writeoff';
+  shop: IShopData | null;
+  from: Date;
+  to: Date;
 }
 
-const StatSpecConsumption = ({ type }: Props) => {
-  const [from, setFrom] = useState(new Date());
-  const [to, setTo] = useState(new Date());
-  const { activeShop } = useAppSelector((store) => store.shop);
-
+const StatSpecConsumption = ({ type, shop, from, to }: Props) => {
   const { data, error, isFetching } = useGetSpecConsumptionQuery(
     {
       from: from.toISOString(),
       to: to.toISOString(),
-      shopId: activeShop?.id || 0,
+      shopId: shop?.id || 0,
       type,
     },
-    { skip: !activeShop }
+    { skip: !shop }
   );
 
   useEffect(() => {
@@ -32,18 +30,9 @@ const StatSpecConsumption = ({ type }: Props) => {
 
   useEffect(() => {}, [data]);
 
-  const dateChangeHandler = useCallback(
-    (period: { start: Date; end: Date }) => {
-      setFrom(period.start);
-      setTo(period.end);
-    },
-    []
-  );
-
   return (
     <div>
       {isFetching && <Spinner />}
-      <DatePicker onChange={dateChangeHandler} />
       <Heading level={4} className="mb-4">
         {type === 'discount' ? 'Скидки' : 'Списания:'}
       </Heading>

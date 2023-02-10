@@ -79,6 +79,7 @@ const WriteOffModal = ({ onClose, item }: Props) => {
               step={1}
               onChange={(n) => setQuantity(n)}
               className="mb-6"
+              max={item.quantity}
             />
           ) : (
             <p>Товар учитывается не по количеству!</p>
@@ -96,7 +97,11 @@ const WriteOffModal = ({ onClose, item }: Props) => {
             <button type="button" className="button" onClick={onClose}>
               Отмена
             </button>
-            <button type="submit" className="button button--success">
+            <button
+              type="submit"
+              className="button button--success"
+              disabled={quantity === 0}
+            >
               Списать
             </button>
           </div>

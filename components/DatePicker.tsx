@@ -34,7 +34,7 @@ const DatePicker = ({ onChange, dayOnly }: Props) => {
   }, [start, end, onChange, type]);
 
   return (
-    <div className={styles.datePicker}>
+    <div className={cx(styles.datePicker, 'mb-6')}>
       {!dayOnly && (
         <Toggle
           values={Object.values(DateType)}
@@ -42,7 +42,7 @@ const DatePicker = ({ onChange, dayOnly }: Props) => {
           className="mb-5"
         />
       )}
-      <div className={cx('form__group mb-8', styles.days)}>
+      <div className={cx('form__group', styles.days)}>
         <div className="form__control">
           <label>{type === DateType.DAY ? 'Выберите дату' : 'С:'}</label>
           <Flatpickr
@@ -74,4 +74,4 @@ const DatePicker = ({ onChange, dayOnly }: Props) => {
   );
 };
 
-export default DatePicker;
+export default React.memo(DatePicker);

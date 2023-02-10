@@ -13,7 +13,9 @@ export interface IArrival
   shopId: CreationOptional<number>;
   itemId: CreationOptional<number>;
   userId: CreationOptional<number>;
-  quantity: CreationOptional<number>;
+  quantity: number;
+  price: number;
+  createdAt: CreationOptional<Date>;
 }
 
 const arrivalModel = (sequelize: Sequelize) => {
@@ -26,7 +28,9 @@ const arrivalModel = (sequelize: Sequelize) => {
     shopId: DataTypes.INTEGER,
     itemId: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
+    price: DataTypes.FLOAT,
     quantity: DataTypes.INTEGER,
+    createdAt: DataTypes.DATE,
   });
 
   return Arrival;
