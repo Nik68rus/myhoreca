@@ -55,6 +55,7 @@ export const api = createApi({
     'Cup',
     'ItemCup',
     'Group',
+    'Salary',
   ],
   baseQuery: baseQueryWithReauth,
   // baseQuery,

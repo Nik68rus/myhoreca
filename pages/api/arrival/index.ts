@@ -48,7 +48,7 @@ export default async function handler(
       } else {
         result = await db.shopItems.create(req.body);
       }
-      // await db.arrivals.sync({ force: true });
+      await db.arrivals.sync({ force: true });
       await db.arrivals.create({
         userId: user.id,
         shopId,

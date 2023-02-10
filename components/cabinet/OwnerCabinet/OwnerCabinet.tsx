@@ -17,6 +17,7 @@ import Groups from './Groups';
 import { useRouter } from 'next/router';
 import { AccountRoutes } from '../../../types/routes';
 import Stat from './Stat';
+import Salary from './Salary';
 
 const OwnerCabinet = () => {
   const dispatch = useAppDispatch();
@@ -48,6 +49,7 @@ const OwnerCabinet = () => {
         {slug && slug[0] === AccountRoutes.CUPS && <Cups />}
         {slug && slug[0] === AccountRoutes.GROUPS && <Groups />}
         {slug && slug[0] === AccountRoutes.STAT && <Stat />}
+        {slug && slug[0] === AccountRoutes.SALARY && <Salary />}
       </section>
     </div>
   );

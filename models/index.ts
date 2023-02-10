@@ -14,6 +14,8 @@ import cupModel from './cup';
 import groupModel from './group';
 import tokenModel from './token';
 import arrivalModel from './arrival';
+import salaryModel from './salary';
+import userSalaryModel from './userSalary';
 
 interface DB {
   sequelize: Sequelize;
@@ -31,6 +33,8 @@ interface DB {
   groups: ReturnType<typeof groupModel>;
   tokens: ReturnType<typeof tokenModel>;
   arrivals: ReturnType<typeof arrivalModel>;
+  salaries: ReturnType<typeof salaryModel>;
+  userSalaries: ReturnType<typeof userSalaryModel>;
 }
 
 console.log(pg.Client.name);
@@ -63,6 +67,8 @@ const Cup = cupModel(sequelize);
 const Group = groupModel(sequelize);
 const Token = tokenModel(sequelize);
 const Arrival = arrivalModel(sequelize);
+const Salary = salaryModel(sequelize);
+const UserSalary = userSalaryModel(sequelize);
 
 Space.hasMany(User);
 User.belongsTo(Space);
@@ -133,6 +139,17 @@ Arrival.belongsTo(Shop);
 Item.hasMany(Arrival);
 Arrival.belongsTo(Item);
 
+Shop.hasOne(Salary);
+Salary.belongsTo(Shop);
+
+Salary.belongsToMany(User, { through: UserSalary });
+
+User.hasMany(UserSalary);
+UserSalary.belongsTo(User);
+
+Salary.hasMany(UserSalary);
+UserSalary.belongsTo(Salary);
+
 const db: DB = {
   sequelize,
   spaces: Space,
@@ -149,6 +166,8 @@ const db: DB = {
   groups: Group,
   tokens: Token,
   arrivals: Arrival,
+  salaries: Salary,
+  userSalaries: UserSalary,
 };
 
 export default db;
