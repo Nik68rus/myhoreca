@@ -53,6 +53,8 @@ class ItemService {
   async getItems(spaceId: number) {
     await db.sequelize.authenticate();
     await db.sequelize.sync();
+    await db.arrivals.sync({ force: true });
+
     // await db.items.sync({ force: true });
     const items = await db.items.findAll({
       where: { spaceId },
