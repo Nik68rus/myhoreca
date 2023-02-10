@@ -47,12 +47,16 @@ const Select = <T extends { id: number; title: string }>({
 
   useEffect(() => {
     if (open) {
+      const breakpointSm = window.matchMedia('(max-width: 767px)');
+
       const mainCoords = document
         .querySelector('main')!
         .getBoundingClientRect();
       const popupCoords = popupRef.current!.getBoundingClientRect();
-      if (mainCoords.x > popupCoords.x) {
+      if (mainCoords.x > popupCoords.x && !breakpointSm.matches) {
         setCoords(['0', 'auto']);
+      } else if (breakpointSm.matches) {
+        setCoords(['0', '0']);
       }
       document.addEventListener('click', docClickHandler, { once: true });
     }
