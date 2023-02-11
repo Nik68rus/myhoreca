@@ -1,5 +1,25 @@
+import { DetailedConsumption } from './ConsumptionService';
+import { Op } from 'sequelize';
 import ApiError from '../helpers/error';
 import db from '../models';
+import { IConsumption } from '../models/consumption';
+import { IConsumptionItem } from '../models/consumptionItem';
+
+interface IConsumptionItemWithCup extends IConsumptionItem {
+  cup: {
+    title: string;
+  };
+}
+
+export interface IDetailedConsumptionWithCup extends IConsumption {
+  ['consumption-items']: IConsumptionItemWithCup[];
+}
+
+export interface ICupHistory {
+  cupId: number;
+  title: string;
+  quantity: number;
+}
 
 class CupService {
   async create(titleInput: string, spaceId: number) {
@@ -67,6 +87,64 @@ class CupService {
     }
 
     throw ApiError.notFound('Такой тары не существует!');
+  }
+
+  async getStat(params: { shopId: number; from: string; to: string }) {
+    const { shopId, from, to } = params;
+    const periodStart = new Date(from);
+    const periodEnd = new Date(to);
+
+    const consumptions = (await db.consumptions.findAll({
+      where: {
+        shopId,
+        isSale: true,
+        createdAt: {
+          [Op.between]: [periodStart, periodEnd],
+        },
+      },
+      // attributes: [],
+      include: [
+        {
+          model: db.consumptionItems,
+          // attributes: ['quantity', 'cupId'],
+          required: true,
+          where: {
+            toGo: true,
+            cupId: {
+              [Op.ne]: null,
+            },
+          },
+          include: [
+            {
+              model: db.cups,
+              attributes: ['title'],
+            },
+          ],
+        },
+      ],
+    })) as IDetailedConsumptionWithCup[];
+
+    const mappedConsumptions: ICupHistory[] = consumptions
+      .map((cons) => cons['consumption-items'])
+      .flat()
+      .map((item) => ({
+        cupId: item.cupId,
+        title: item.cup.title,
+        quantity: item.quantity,
+      }));
+
+    const result: ICupHistory[] = [];
+
+    mappedConsumptions.forEach((item) => {
+      const index = result.findIndex((i) => i.cupId === item.cupId);
+      if (index < 0) {
+        result.push(item);
+      } else {
+        result[index].quantity += item.quantity;
+      }
+    });
+
+    return result;
   }
 }
 

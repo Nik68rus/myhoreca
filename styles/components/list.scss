@@ -18,6 +18,15 @@
   .label {
     font-weight: 600;
     color: $color-text-muted;
+
+    &--interactive {
+      cursor: pointer;
+      transition: color $trans-default;
+
+      &:hover {
+        color: $color-default-black;
+      }
+    }
   }
 
   @include vp-767 {

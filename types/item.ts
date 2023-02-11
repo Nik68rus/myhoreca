@@ -64,3 +64,8 @@ export enum PayType {
   WRITEOFF = 'списание',
   DEBT = 'в счет зп',
 }
+
+export enum SortType {
+  ABC = 'abc',
+  QTY = 'qty',
+}

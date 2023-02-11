@@ -1,5 +1,6 @@
 import { ICup } from './../../models/cup';
 import { api } from '../api';
+import { ICupHistory } from '../../services/CupService';
 
 export const cupApi = api.injectEndpoints({
   overrideExisting: true,
@@ -38,6 +39,15 @@ export const cupApi = api.injectEndpoints({
       }),
       invalidatesTags: ['Cup'],
     }),
+
+    //статистика
+    getCupStat: builder.query<
+      ICupHistory[],
+      { shopId: number; from: string; to: string }
+    >({
+      query: ({ shopId, from, to }) =>
+        `cup/stat?shopId=${shopId}&from=${from}&to=${to}`,
+    }),
   }),
 });
 
@@ -46,4 +56,5 @@ export const {
   useGetCupsQuery,
   useEditCupMutation,
   useDeleteCupMutation,
+  useGetCupStatQuery,
 } = cupApi;

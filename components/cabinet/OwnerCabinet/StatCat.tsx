@@ -8,16 +8,12 @@ import Spinner from '../../layout/Spinner';
 import styles from './StatCat.module.scss';
 import Heading from '../../ui/Heading';
 import { IShopData } from '../../../types/shop';
+import { SortType } from '../../../types/item';
 
 interface IStatItem {
   itemId: number;
   title: string;
   quantity: number;
-}
-
-enum SortType {
-  ABC = 'abc',
-  QTY = 'qty',
 }
 
 interface Props {
@@ -37,7 +33,7 @@ const StatCat = ({ shop, from, to }: Props) => {
     error: catError,
   } = useGetCategoriesQuery();
 
-  const { data, error, isSuccess, isFetching } = useGetConsumptionsByCatQuery(
+  const { data, error, isFetching } = useGetConsumptionsByCatQuery(
     {
       shopId: shop?.id || 0,
       from: from.toISOString(),
@@ -117,13 +113,13 @@ const StatCat = ({ shop, from, to }: Props) => {
               <>
                 <li className={styles.line}>
                   <span
-                    className={cx('label', styles.columnHead)}
+                    className="label label--interactive"
                     onClick={() => setSorting(SortType.ABC)}
                   >
                     Наименование
                   </span>
                   <span
-                    className={cx('label', styles.quantity, styles.columnHead)}
+                    className={cx('label label--interactive', styles.quantity)}
                     onClick={() => setSorting(SortType.QTY)}
                   >
                     кол-во

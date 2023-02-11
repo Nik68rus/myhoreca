@@ -7,6 +7,7 @@ import StatMoney from './StatMoney';
 import { useAppSelector } from '../../../hooks/store';
 import DatePicker from '../../DatePicker';
 import StatItem from './StatItem';
+import StatCup from './StatCup';
 
 enum StatSection {
   CATEGORY = 'Категории',
@@ -14,6 +15,7 @@ enum StatSection {
   WRITEOFF = 'Списания',
   DISCOUNT = 'Скидки',
   MONEY = 'Деньги',
+  CUP = 'Стаканчики',
 }
 
 const sections: StatSection[] = Object.values(StatSection);
@@ -73,6 +75,9 @@ const Stat = () => {
         )}
         {active === StatSection.MONEY && (
           <StatMoney shop={activeShop} from={from} to={to} />
+        )}
+        {active === StatSection.CUP && (
+          <StatCup shop={activeShop} from={from} to={to} />
         )}
       </div>
     </Card>

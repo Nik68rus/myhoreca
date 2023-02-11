@@ -123,6 +123,7 @@ ConsumptionItem.belongsTo(Consumption);
 ConsumptionItem.belongsTo(Item);
 
 Cup.hasMany(ConsumptionItem);
+ConsumptionItem.belongsTo(Cup);
 
 Category.hasOne(Discount);
 Discount.belongsTo(Category);

@@ -1,0 +1,9 @@
+.line {
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+  justify-items: center;
+
+  span:first-child {
+    justify-self: start;
+  }
+}
