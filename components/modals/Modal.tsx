@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { FaTimes } from 'react-icons/fa';
 import Heading from '../ui/Heading';
 import cx from 'classnames';
+import useScrollLock from '../../hooks/useScrollLock';
 
 type Props = {
   children: React.ReactNode;
@@ -22,6 +23,7 @@ const Modal = ({ children, onClose, heading, className }: Props) => {
   );
 
   const [isBrowser, setIsBrowser] = useState(false);
+  useScrollLock();
 
   useEffect(() => {
     setIsBrowser(true);

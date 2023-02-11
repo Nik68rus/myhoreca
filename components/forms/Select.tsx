@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { FaCaretDown, FaCaretUp } from 'react-icons/fa';
 import styles from './Select.module.scss';
 import cx from 'classnames';
+import useScrollLock from '../../hooks/useScrollLock';
 
 interface Props<T> {
   items: T[];
@@ -26,6 +27,8 @@ const Select = <T extends { id: number; title: string }>({
   const popupRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState<null | number>(null);
   const [coords, setCoords] = useState(['auto', '0']);
+
+  useScrollLock({ mobileOnly: true, active: open });
 
   const itemClickHandler = useCallback(
     (item: T | null) => {
