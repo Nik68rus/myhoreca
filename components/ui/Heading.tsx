@@ -11,7 +11,9 @@ interface HeadingProps {
 const Heading = ({ level, children, className }: HeadingProps) =>
   React.createElement(
     `h${level ? level : 2}`,
-    { className: cx(styles.heading, styles[`heading--h${level}`], className) },
+    {
+      className: cx(styles.heading, styles[`heading--h${level}`], className),
+    },
     children
   );
 

@@ -1,5 +1,12 @@
+import { IGroup } from './../../models/group';
 import { IShop } from './../../models/shop';
 import { api } from '../api';
+import { IMenuItem } from '../../services/ShopService';
+
+export interface IMenu {
+  items: IMenuItem[];
+  groups: IGroup[];
+}
 
 export const shopApi = api.injectEndpoints({
   overrideExisting: true,
@@ -19,7 +26,13 @@ export const shopApi = api.injectEndpoints({
       query: () => 'shop',
       providesTags: ['Shop'],
     }),
+
+    //получение актуального меню торговой точки
+    getMenu: builder.query<IMenu, number>({
+      query: (shopId) => `shop/${shopId}`,
+    }),
   }),
 });
 
-export const { useCreateShopMutation, useGetShopsQuery } = shopApi;
+export const { useCreateShopMutation, useGetShopsQuery, useGetMenuQuery } =
+  shopApi;

@@ -7,6 +7,7 @@ export enum Routes {
   RECOVER = '/recover',
   ACCOUNT = '/account',
   PASSWORD = '/new-password',
+  SHOPLIST = '/shops',
 }
 
 export enum AccountRoutes {

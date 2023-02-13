@@ -1,5 +1,6 @@
 import ApiError from '../helpers/error';
 import db from '../models';
+import ShopService from './ShopService';
 
 class GroupService {
   async create(data: { title: string; categoryId: number }, spaceId: number) {
@@ -70,6 +71,15 @@ class GroupService {
     }
 
     throw ApiError.notFound('Такой группы не существует!');
+  }
+
+  async getShopGroups(shopId: number) {
+    const shop = await ShopService.getById(shopId);
+    if (!shop) {
+      throw ApiError.notFound('Точка не найдена!');
+    }
+    const groups = await this.getAll(shop.spaceId);
+    return groups;
   }
 }
 

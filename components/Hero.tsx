@@ -37,9 +37,14 @@ const Hero = () => {
         <div className={styles.details}>
           <Heading level={1}>My HoReCa</Heading>
           <p>Контролируйте удаленно свой бизнес</p>
-          <Link href={Routes.START} className="button">
-            Зарегистрироваться
-          </Link>
+          <div className={styles.actions}>
+            <Link href={Routes.START} className="button button--heavy">
+              Зарегистрироваться
+            </Link>
+            <Link href={Routes.SHOPLIST} className="button">
+              Посмотреть меню
+            </Link>
+          </div>
         </div>
       )}
     </section>

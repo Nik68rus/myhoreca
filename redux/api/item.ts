@@ -1,8 +1,5 @@
 import { IMovement } from './../../services/ItemService';
-import { IArrival } from './../../models/arrival';
-import { IConsumption } from './../../models/consumption';
-import { IShopItem } from './../../models/shopItem';
-import { IItemInput, IArrivalWithItem } from './../../types/item';
+import { IItemInput } from './../../types/item';
 import { IItem } from './../../models/item';
 import { api } from '../api';
 

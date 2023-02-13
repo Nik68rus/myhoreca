@@ -1,0 +1,23 @@
+@use '../../styles/variables.scss';
+
+.menuSection {
+  margin-top: 24px;
+}
+
+.tabs {
+  transition: background-color variables.$trans-default;
+}
+
+.tabsSticky {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 67px;
+  padding: 0 44px;
+  background-color: variables.$color-default-white;
+  z-index: 10;
+}
+
+.tabsWrapper {
+  min-height: 32px;
+}

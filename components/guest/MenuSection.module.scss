@@ -1,0 +1,16 @@
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+.edge {
+  position: absolute;
+  background-color: black;
+  top: 100px;
+  left: 0;
+  right: 0;
+}
