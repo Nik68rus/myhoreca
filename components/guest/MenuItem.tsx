@@ -1,6 +1,6 @@
 import React from 'react';
-import cx from 'classnames';
 import { IMenuItem } from '../../services/ShopService';
+import cx from 'classnames';
 import styles from './MenuItem.module.scss';
 import {
   GiCoffeeBeans,
@@ -13,7 +13,7 @@ interface Props {
   item: IMenuItem;
 }
 
-const getIcon = (catTitle: string) => {
+export const getIcon = (catTitle: string) => {
   if (catTitle === 'Напитки') {
     return <GiCoffeeCup />;
   }

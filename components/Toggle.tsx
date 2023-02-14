@@ -10,7 +10,7 @@ interface Props<T> {
   className?: string;
 }
 
-const Toggle = <T extends string>({
+const Toggle = <T extends { title: string }>({
   values,
   onChange,
   active,
@@ -40,12 +40,14 @@ const Toggle = <T extends string>({
     <div className={cx(styles.toggle, className)} ref={parentRef}>
       {values.map((value) => (
         <button
-          key={value}
-          className={cx(styles.option, { [styles.active]: value === selected })}
+          key={value.title}
+          className={cx(styles.option, {
+            [styles.active]: value.title === selected.title,
+          })}
           onClick={selectHandler.bind(this, value)}
-          ref={value === selected ? activeRef : null}
+          ref={value.title === selected.title ? activeRef : null}
         >
-          {value}
+          {value.title}
         </button>
       ))}
       <span

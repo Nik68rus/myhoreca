@@ -1,46 +1,56 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
+import { IGroupReady, IMenuGroupItem } from '../../helpers/groupSorting';
 import { IMenuItem } from '../../services/ShopService';
+import MenuGroup from './MenuGroup';
 import MenuItem from './MenuItem';
 import styles from './MenuSection.module.scss';
-import { useInView } from 'react-intersection-observer';
 
 interface Props {
   id: number;
   title: string;
-  items: IMenuItem[];
+  items: (IMenuItem | IGroupReady<IMenuGroupItem>)[];
   onActive: (id: number) => void;
-  // intersectionNode: HTMLDivElement;
+}
+
+function isGroup(
+  item: IGroupReady<IMenuGroupItem> | IMenuItem
+): item is IGroupReady<IMenuGroupItem> {
+  return (item as IGroupReady<IMenuGroupItem>).isGroup !== undefined;
 }
 
 const MenuSection = ({ id, title, items, onActive }: Props) => {
-  const { ref, inView, entry } = useInView({
-    threshold: 1,
-    rootMargin: '20px',
-  });
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  console.log(items);
 
-  useEffect(() => {
-    if (
-      entry &&
-      entry.boundingClientRect.y > 0 &&
-      entry.boundingClientRect.y < 150
-    ) {
-      onActive(id);
-    }
-    console.log(title);
-
-    console.log(inView);
-    console.log(entry);
-  }, [inView, entry, title, id, onActive]);
+  useLayoutEffect(() => {
+    const scrollHandler = () => {
+      if (
+        headingRef.current!.getBoundingClientRect().top > 0 &&
+        headingRef.current!.getBoundingClientRect().top < 60
+      ) {
+        onActive(id);
+      }
+    };
+    const main = document.querySelector('main')!;
+    main.addEventListener('scroll', scrollHandler);
+    return () => {
+      main.removeEventListener('scroll', scrollHandler);
+    };
+  }, [id, onActive]);
 
   return (
     <div>
-      <h3 className="heading mb-2" ref={ref}>
+      <h3 className="heading mb-2" ref={headingRef}>
         {title}
       </h3>
       <ul className={styles.list}>
         {items.map((item) => (
           <li key={item.id}>
-            <MenuItem item={item} />
+            {isGroup(item) ? (
+              <MenuGroup group={item} category={title} />
+            ) : (
+              <MenuItem item={item} />
+            )}
           </li>
         ))}
       </ul>

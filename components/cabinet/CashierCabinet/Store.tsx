@@ -11,13 +11,15 @@ import { IArrivalWithItem } from '../../../types/item';
 import StoreItem from './StoreItem';
 import Heading from '../../ui/Heading';
 import { useGetGroupsQuery } from '../../../redux/api/group';
-import sortItems, { IGroupReady } from '../../../helpers/groupSorting';
+import { sortItems, IGroupReady } from '../../../helpers/groupSorting';
 import StoreGroup from './StoreGroup';
 import { useRouter } from 'next/router';
 import { AccountRoutes } from '../../../types/routes';
 
-function isGroup(item: IGroupReady | IArrivalWithItem): item is IGroupReady {
-  return (item as IGroupReady).isGroup !== undefined;
+function isGroup(
+  item: IGroupReady<IArrivalWithItem> | IArrivalWithItem
+): item is IGroupReady<IArrivalWithItem> {
+  return (item as IGroupReady<IArrivalWithItem>).isGroup !== undefined;
 }
 
 const Store = () => {
@@ -26,10 +28,10 @@ const Store = () => {
   const { activeShop } = useAppSelector((store) => store.shop);
   const [activeCategory, setActiveCategory] = useState(0);
   const [grouppedItems, setGrouppedItems] = useState<
-    (IArrivalWithItem | IGroupReady)[]
+    (IArrivalWithItem | IGroupReady<IArrivalWithItem>)[]
   >([]);
   const [filteredItems, setFilteredItems] = useState<
-    (IArrivalWithItem | IGroupReady)[]
+    (IArrivalWithItem | IGroupReady<IArrivalWithItem>)[]
   >([]);
 
   const isWriteoff = slug && slug[0] === AccountRoutes.WRITEOFF;

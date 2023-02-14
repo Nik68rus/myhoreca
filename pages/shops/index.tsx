@@ -3,6 +3,7 @@ import React from 'react';
 import ShopList from '../../components/guest/ShopList';
 import { handleServerError } from '../../helpers/error';
 import { IShop } from '../../models/shop';
+import ShopService from '../../services/ShopService';
 
 interface Props {
   shops: IShop[];
@@ -17,18 +18,19 @@ const ShopListPage = ({ shops }: Props) => {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  let data: IShop[];
+  let shops: IShop[];
 
   try {
-    const response = await fetch(`${process.env.APP_URL}/api/shop/list`);
-    data = (await response.json()) as IShop[];
+    const data = await ShopService.getShops();
+    shops = JSON.parse(JSON.stringify(data));
   } catch (error) {
-    data = [];
+    console.log(error);
+    shops = [];
   }
 
   return {
     props: {
-      shops: data,
+      shops,
     },
     revalidate: 60 * 60,
   };

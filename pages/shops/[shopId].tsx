@@ -5,7 +5,8 @@ import ShopMenu from '../../components/guest/ShopMenu';
 import { IGroup } from '../../models/group';
 import { IShop } from '../../models/shop';
 import { IMenu } from '../../redux/api/shop';
-import { IMenuItem } from '../../services/ShopService';
+import GroupService from '../../services/GroupService';
+import ShopService, { IMenuItem } from '../../services/ShopService';
 
 interface Props {
   items: IMenuItem[];
@@ -36,17 +37,15 @@ export const getStaticProps: GetStaticProps<Props, Params> = async (
   let groups: IGroup[];
 
   try {
-    const response = await fetch(`${process.env.APP_URL}/api/shop/${shopId}`);
-    const menu: IMenu = await response.json();
-    items = menu.items;
-    groups = menu.groups;
+    const itemsResponse = await ShopService.getMenu(+shopId);
+    const groupsResponse = await GroupService.getShopGroups(+shopId);
+    items = JSON.parse(JSON.stringify(itemsResponse));
+    groups = JSON.parse(JSON.stringify(groupsResponse));
   } catch (err) {
     items = [];
     groups = [];
   }
 
-  try {
-  } catch (error) {}
   return {
     props: {
       items,
@@ -57,15 +56,15 @@ export const getStaticProps: GetStaticProps<Props, Params> = async (
 };
 
 export const getStaticPaths = async () => {
-  let data: IShop[];
+  let shops: IShop[];
   try {
-    const response = await fetch(`${process.env.APP_URL}/api/shop/list`);
-    data = (await response.json()) as IShop[];
+    const data = await ShopService.getShops();
+    shops = JSON.parse(JSON.stringify(data));
   } catch (error) {
-    data = [];
+    shops = [];
   }
 
-  const paths = data.map((shop) => ({
+  const paths = shops.map((shop) => ({
     params: { shopId: shop.id.toString() },
   }));
 

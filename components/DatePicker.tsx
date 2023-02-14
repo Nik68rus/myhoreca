@@ -37,8 +37,8 @@ const DatePicker = ({ onChange, dayOnly }: Props) => {
     <div className={cx(styles.datePicker, 'mb-6')}>
       {!dayOnly && (
         <Toggle
-          values={Object.values(DateType)}
-          onChange={(value) => setType(value)}
+          values={Object.values(DateType).map((value) => ({ title: value }))}
+          onChange={(value) => setType(value.title)}
           className="mb-5"
         />
       )}

@@ -22,9 +22,9 @@ const Layout = ({ children }: Props) => {
   const { authData } = useAppSelector((store) => store.user);
   const { data, isSuccess } = useGetShopsQuery();
 
-  useEffect(() => {
-    isSuccess && data.length && dispatch(setActiveShop(shopDto(data[0])));
-  }, [isSuccess, data, dispatch]);
+  // useEffect(() => {
+  //   isSuccess && data.length && dispatch(setActiveShop(shopDto(data[0])));
+  // }, [isSuccess, data, dispatch]);
 
   return (
     <div className="wrapper">
