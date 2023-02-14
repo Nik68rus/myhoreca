@@ -156,6 +156,7 @@ const Reciept = () => {
     }
 
     makeConsumption(data);
+    setIsDebt(false);
   };
 
   const discountHandler: React.ChangeEventHandler<HTMLInputElement> =
