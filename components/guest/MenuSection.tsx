@@ -20,7 +20,6 @@ function isGroup(
 
 const MenuSection = ({ id, title, items, onActive }: Props) => {
   const headingRef = useRef<HTMLHeadingElement>(null);
-  console.log(items);
 
   useLayoutEffect(() => {
     const scrollHandler = () => {
