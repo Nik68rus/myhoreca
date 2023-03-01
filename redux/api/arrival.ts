@@ -1,3 +1,4 @@
+import { IArrival } from './../../models/arrival';
 import { IShopItem } from './../../models/shopItem';
 import { IArrivalInput, IArrivalWithItem } from './../../types/item';
 import { api } from '../api';
@@ -45,6 +46,13 @@ export const arrivalApi = api.injectEndpoints({
       query: (shopId) => `arrival/syrup?shopId=${shopId}`,
       providesTags: ['Arrival'],
     }),
+
+    //цена последнего поступления товара
+    getLastPrice: builder.query<number, { shopId: number; itemId: number }>({
+      query: ({ shopId, itemId }) =>
+        `arrival/price?shopId=${shopId}&itemId=${itemId}`,
+      providesTags: ['Arrival'],
+    }),
   }),
 });
 
@@ -54,4 +62,5 @@ export const {
   useEditPriceMutation,
   useDeletePositionMutation,
   useGetSyrupQuery,
+  useGetLastPriceQuery,
 } = arrivalApi;

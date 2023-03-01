@@ -30,8 +30,6 @@ const AddItemModal = ({ onClose, categories, item }: Props) => {
     cupId: item ? item.cupId : undefined,
   });
 
-  // const [cupId, setCupId] = useState<null | number>(null);
-
   const [
     createItem,
     { isLoading: createLoading, error: createError, isSuccess: createSuccess },

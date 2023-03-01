@@ -33,6 +33,12 @@ const Counter = ({
   };
 
   useEffect(() => {
+    if (initialValue) {
+      setValue(initialValue);
+    }
+  }, [initialValue]);
+
+  useEffect(() => {
     if (max && value > max) {
       setValue(max);
       onChange(max);

@@ -5,6 +5,7 @@ import { IItemInput } from './../types/item';
 import ApiError from '../helpers/error';
 import db from '../models';
 import { Op } from 'sequelize';
+import { DEFAULT_ARRIVAL_PRICE } from '../const';
 
 interface IMovementParams {
   itemId: number;
@@ -83,6 +84,17 @@ class ItemService {
       include: db.items,
     });
     return syrup;
+  }
+
+  async getLastPrice(shopId: number, itemId: number) {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync();
+
+    const arrivals = await db.arrivals.findAll({
+      where: { shopId, itemId },
+      order: [['createdAt', 'DESC']],
+    });
+    return arrivals.length ? arrivals[0].price : DEFAULT_ARRIVAL_PRICE;
   }
 
   async getMovements({ itemId, shopId, from, to }: IMovementParams) {

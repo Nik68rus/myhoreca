@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FaEdit, FaEye, FaEyeSlash, FaPlus } from 'react-icons/fa';
 import { handleRTKQError } from '../../../helpers/error';
 import { IItem } from '../../../models/item';
@@ -23,6 +23,8 @@ const Item = ({ item }: Props) => {
     setNewValue(item.title);
     setEditing(true);
   };
+
+  const modalCloseHandler = useCallback(() => setIncomeModalVisible(false), []);
 
   const { data: categories } = useGetCategoriesQuery();
   const [editItem, { isLoading, error }] = useEditItemMutation();
@@ -69,7 +71,7 @@ const Item = ({ item }: Props) => {
         </button>
       </div>
       {incomeModalVisible && (
-        <IncomeModal item={item} onClose={() => setIncomeModalVisible(false)} />
+        <IncomeModal item={item} onClose={modalCloseHandler} />
       )}
       {editing && (
         <AddItemModal

@@ -1,0 +1,1 @@
+export const DEFAULT_ARRIVAL_PRICE = 150;

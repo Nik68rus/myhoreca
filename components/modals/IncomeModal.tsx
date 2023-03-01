@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { handleRTKQError } from '../../helpers/error';
 import { useAppSelector } from '../../hooks/store';
 import { IArrivalInput } from '../../types/item';
@@ -9,6 +9,8 @@ import Modal from './Modal';
 import styles from './IncomeModal.module.scss';
 import { useCreateArrivalMutation } from '../../redux/api/arrival';
 import { IItem } from '../../models/item';
+import { useGetLastPriceQuery } from '../../redux/api/arrival';
+import { DEFAULT_ARRIVAL_PRICE } from '../../const';
 
 type Props = {
   onClose: () => void;
@@ -17,7 +19,19 @@ type Props = {
 
 const IncomeModal = ({ onClose, item }: Props) => {
   const [quantity, setQuantity] = useState(3);
-  const [price, setPrice] = useState(150);
+  const [price, setPrice] = useState(DEFAULT_ARRIVAL_PRICE);
+  const { activeShop } = useAppSelector((store) => store.shop);
+
+  const { data: lastPrice } = useGetLastPriceQuery({
+    shopId: activeShop?.id || 0,
+    itemId: item.id,
+  });
+
+  useEffect(() => {
+    if (lastPrice) {
+      setPrice(lastPrice);
+    }
+  }, [lastPrice]);
 
   const submitHandler: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -32,8 +46,6 @@ const IncomeModal = ({ onClose, item }: Props) => {
     createArrival(data);
   };
 
-  const { activeShop } = useAppSelector((store) => store.shop);
-
   const [createArrival, { isLoading, error, isSuccess }] =
     useCreateArrivalMutation();
 
@@ -46,6 +58,8 @@ const IncomeModal = ({ onClose, item }: Props) => {
       onClose();
     }
   }, [isSuccess, onClose]);
+
+  const priceChangeHandler = useCallback((n: number) => setPrice(n), []);
 
   return (
     <>
@@ -67,9 +81,9 @@ const IncomeModal = ({ onClose, item }: Props) => {
             ) : null}
             <Counter
               label="Цена"
-              initialValue={150}
+              initialValue={price}
               step={10}
-              onChange={(n) => setPrice(n)}
+              onChange={priceChangeHandler}
             />
           </div>
 
