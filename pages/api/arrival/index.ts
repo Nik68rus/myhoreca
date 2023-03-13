@@ -52,7 +52,7 @@ export default async function handler(
         userId: user.id,
         shopId,
         itemId,
-        quantity: quantity || Infinity,
+        quantity: quantity || 0,
         price,
       });
       return res.status(201).json(result);
