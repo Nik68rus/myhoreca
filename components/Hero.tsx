@@ -15,7 +15,7 @@ function getRandom(min: number, max: number) {
 const Hero = () => {
   const { authData } = useAppSelector((store) => store.user);
 
-  const coverNum = getRandom(0, 5);
+  const coverNum = getRandom(0, 4);
 
   return (
     <section className={styles.hero}>
