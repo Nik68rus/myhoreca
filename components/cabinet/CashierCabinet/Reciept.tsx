@@ -27,6 +27,7 @@ import { useGetSyrupQuery } from '../../../redux/api/arrival';
 import { useRouter } from 'next/router';
 import { AccountRoutes } from '../../../types/routes';
 import DiscountPayModal from '../../modals/DiscountPayModal';
+import ChangeCalculationModal from '../../modals/ChangeCalculationModal';
 
 const Reciept = () => {
   const router = useRouter();
@@ -35,6 +36,7 @@ const Reciept = () => {
   const [isTransfer, setIsTransfer] = useState(false);
   const [comment, setComment] = useState('');
   const [discountPayTypeModal, setDiscountPayTypeModal] = useState(false);
+  const [changeCalculationModal, setChangeCalculationModal] = useState(false);
   const [isDebt, setIsDebt] = useState(false);
   const { discount, isToGo } = useAppSelector((store) => store.reciept);
   const isWriteoff = slug && slug[0] === AccountRoutes.WRITEOFF;
@@ -184,6 +186,11 @@ const Reciept = () => {
     setDiscountPayTypeModal(true);
   };
 
+  const calculateChangeHandler: React.ChangeEventHandler<HTMLInputElement> = useCallback(
+    (e) => {
+      setChangeCalculationModal(e.target.checked);
+    }, []);
+
   return (
     <>
       {isLoading && <Spinner />}
@@ -256,6 +263,13 @@ const Reciept = () => {
                     checked={isToGo}
                     onChange={toGoHandler}
                   />
+                  <Checkbox
+                    label="Сдача"
+                    id="change"
+                    className={styles.checkbox}
+                    checked={changeCalculationModal}
+                    onChange={calculateChangeHandler}
+                  />
                 </div>
               </>
             )}
@@ -281,6 +295,12 @@ const Reciept = () => {
         <DiscountPayModal
           onClose={() => setDiscountPayTypeModal(false)}
           choiceHandler={(payInDebt) => setIsDebt(payInDebt)}
+        />
+      )}
+      {changeCalculationModal && (
+        <ChangeCalculationModal
+          onClose={() => setChangeCalculationModal(false)}
+          amount={total}
         />
       )}
     </>
