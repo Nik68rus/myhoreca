@@ -7,8 +7,13 @@ import {
   useGetTodayStatQuery,
 } from '../redux/api/consumption';
 import styles from './DayMoney.module.scss';
+import classNames from 'classnames';
 
-const DayMoney = () => {
+interface IDayMoneyProps {
+  main?: boolean;
+}
+
+const DayMoney = ({main}: IDayMoneyProps) => {
   const [stat, setStat] = useState({ total: 0, card: 0, transfer: 0, debt: 0 });
   const { activeShop } = useAppSelector((store) => store.shop);
 
@@ -28,7 +33,7 @@ const DayMoney = () => {
   }, [isSuccess, data]);
 
   return (
-    <div className={styles.money}>
+    <div className={classNames(styles.money, main && styles.main)}>
       <div className={styles.total}>
         {stat.total.toLocaleString('ru-Ru')} руб
       </div>

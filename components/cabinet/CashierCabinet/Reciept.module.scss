@@ -76,7 +76,7 @@
 .modifiers {
   display: flex;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   padding: 10px;
   padding-top: 6px;
 
@@ -91,6 +91,7 @@
 
   label {
     padding-left: 0;
+    white-space: nowrap;
   }
 
   input {

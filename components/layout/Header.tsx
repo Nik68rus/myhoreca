@@ -13,6 +13,7 @@ import SelectShopModal from '../modals/SelectShopModal';
 import { useDeleteTokenMutation } from '../../redux/api/refresh';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { toggleMenu } from '../../redux/slices/layoutSlice';
+import { UserRole } from '../../types/user';
 
 const Header = () => {
   const router = useRouter();
@@ -105,12 +106,12 @@ const Header = () => {
           {authData ? (
             <>
               <User name={authData.name} role={authData.role} />
-              <button
+              {authData.role === UserRole.CASHIER && <button
                 className={cx('button button--heavy', styles.headerBtn)}
                 onClick={logoutHandler}
               >
                 Выйти
-              </button>
+              </button>}
             </>
           ) : (
             <Link

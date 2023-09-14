@@ -93,6 +93,8 @@
 }
 
 .headerBtn {
+  padding: 8px;
+
   @include mixins.vp-767 {
     padding: 6px;
   }
